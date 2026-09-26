@@ -1,0 +1,153 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../configs/constants/app_constants.dart';
+import '../../configs/l10n/l10n_extensions.dart';
+import '../../configs/routes/app_routes.dart';
+import '../../configs/theme/app_colors.dart';
+import '../../controllers/daily_log_controller.dart';
+import '../../controllers/session_controller.dart';
+import '../../services/validators.dart';
+import '../../widgets/branding/oz_background.dart';
+import '../../widgets/branding/oz_logo.dart';
+import '../../widgets/buttons/primary_button.dart';
+import '../../widgets/inputs/app_text_field.dart';
+
+/// Login (Figma "Login"): fundo da marca com um painel inferior.
+/// Na Fase 1 qualquer e-mail/senha válidos entram com o perfil em memória.
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _email = TextEditingController();
+  final _password = TextEditingController();
+  bool _submitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _email.addListener(_refresh);
+    _password.addListener(_refresh);
+  }
+
+  @override
+  void dispose() {
+    _email.dispose();
+    _password.dispose();
+    super.dispose();
+  }
+
+  void _refresh() => setState(() {});
+
+  bool get _isValid =>
+      Validators.email(_email.text) == null &&
+      Validators.password(_password.text) == null;
+
+  Future<void> _submit() async {
+    FocusScope.of(context).unfocus();
+    if (!_formKey.currentState!.validate()) return;
+    setState(() => _submitting = true);
+    await context.read<SessionController>().login(
+      email: _email.text.trim(),
+      password: _password.text,
+    );
+    if (!mounted) return;
+    context.read<DailyLogController>().selectDate(DateTime.now());
+    Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.main, (_) => false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Scaffold(
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          const OzBackground(),
+          SafeArea(
+            bottom: false,
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    const BackButton(color: Colors.white),
+                    const Spacer(),
+                    const OzLogo(fontSize: 40),
+                    const Spacer(),
+                    const SizedBox(width: 48),
+                  ],
+                ),
+                const Spacer(),
+                Container(
+                  decoration: const BoxDecoration(
+                    color: AppColors.background,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(AppConstants.spacingXl),
+                    ),
+                  ),
+                  child: SafeArea(
+                    top: false,
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(AppConstants.spacingXl),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              l10n.loginTitle,
+                              style: textTheme.headlineMedium,
+                            ),
+                            const SizedBox(height: AppConstants.spacingXl),
+                            AppTextField(
+                              label: l10n.emailLabel,
+                              hint: l10n.emailHint,
+                              controller: _email,
+                              keyboardType: TextInputType.emailAddress,
+                              autofillHints: const [AutofillHints.email],
+                              validator: localizedValidator(
+                                context,
+                                Validators.email,
+                              ),
+                            ),
+                            const SizedBox(height: AppConstants.spacingLg),
+                            AppTextField(
+                              label: l10n.passwordLabel,
+                              hint: l10n.passwordHint,
+                              controller: _password,
+                              obscureText: true,
+                              textInputAction: TextInputAction.done,
+                              autofillHints: const [AutofillHints.password],
+                              validator: localizedValidator(
+                                context,
+                                Validators.password,
+                              ),
+                            ),
+                            const SizedBox(height: AppConstants.spacingXl),
+                            PrimaryButton(
+                              label: l10n.loginButton,
+                              onPressed: _isValid && !_submitting
+                                  ? _submit
+                                  : null,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
