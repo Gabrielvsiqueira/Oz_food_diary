@@ -41,12 +41,12 @@ class OnboardingController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setHeight(double heightCm) {
+  void setHeight(double height) {
     _height = height;
     notifyListeners();
   }
 
-  void setWeight(double weightKg) {
+  void setWeight(double weight) {
     _weight = weight;
     notifyListeners();
   }
