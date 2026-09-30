@@ -36,6 +36,8 @@ registrar, editar e excluir refeições, acompanhando o progresso do dia.
 - **Home** com seletor de dia, gráfico de calorias/macros consumidos e lista
   de refeições do dia.
 - **Refeições**: cadastro, edição e exclusão (com diálogo de confirmação).
+  O usuário informa só os macros; as calorias são calculadas automaticamente
+  (4 kcal/g de carboidrato e proteína, 9 kcal/g de gordura).
 - **Metas**: edição manual da meta de calorias e de macros.
 - **Perfil**: edição de nome, altura e peso, com recálculo das metas quando
   peso ou altura mudam, e logout.
@@ -96,6 +98,12 @@ flutter doctor
    flutter run
    ```
 
+5. **Rode os testes (opcional)**
+
+   ```bash
+   flutter test
+   ```
+
 ### Build de release (opcional)
 
 ```bash
@@ -108,15 +116,15 @@ flutter build ios --release
 
 ### Configurações relevantes
 
-| Item                   | Onde fica                                        | Observação                                                                 |
-| ---------------------- | ------------------------------------------------ | -------------------------------------------------------------------------- |
-| Dependências           | `pubspec.yaml`                                   | `provider`, `intl`, `uuid`, `flutter_localizations`                        |
-| Traduções              | `lib/configs/l10n/app_pt.arb`, `app_en.arb`      | `app_pt.arb` é o arquivo base (ver `l10n.yaml`)                            |
-| Tema e cores           | `lib/configs/theme/`                             | Apenas tema escuro                                                         |
-| Constantes de nutrição | `lib/configs/constants/nutrition_constants.dart` | Fatores de atividade, limites de altura/peso/idade, tolerância de calorias |
-| Constantes de UI       | `lib/configs/constants/app_constants.dart`       | Espaçamentos, raios, durações de splash/loading                            |
-| Dados de exemplo       | `lib/mocks/`                                     | Perfil e refeições pré-carregados                                          |
-| Idioma                 | Sistema do dispositivo                           | O app segue o idioma do aparelho (pt-BR ou en-US)                          |
+| Item                   | Onde fica                                        | Observação                                                                       |
+| ---------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------- |
+| Dependências           | `pubspec.yaml`                                   | `provider`, `intl`, `uuid`, `flutter_localizations`                              |
+| Traduções              | `lib/configs/l10n/app_pt.arb`, `app_en.arb`      | `app_pt.arb` é o arquivo base (ver `l10n.yaml`)                                  |
+| Tema e cores           | `lib/configs/theme/`                             | Apenas tema escuro                                                               |
+| Constantes de nutrição | `lib/configs/constants/nutrition_constants.dart` | Fatores de atividade, kcal por grama de cada macro, limites de altura/peso/idade |
+| Constantes de UI       | `lib/configs/constants/app_constants.dart`       | Espaçamentos, raios, durações de splash/loading                                  |
+| Dados de exemplo       | `lib/mocks/`                                     | Perfil e refeições pré-carregados                                                |
+| Idioma                 | Sistema do dispositivo                           | O app segue o idioma do aparelho (pt-BR ou en-US)                                |
 
 Não há variáveis de ambiente, chaves de API ou backend a configurar nesta fase.
 
@@ -155,13 +163,13 @@ lib/
 
 ### Controllers
 
-| Controller             | Responsabilidade                                                                                                   |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `SessionController`    | Estado de autenticação (login/logout)                                                                              |
-| `OnboardingController` | Guarda as respostas do onboarding e monta o `UserProfile`                                                          |
-| `ProfileController`    | Perfil do usuário e metas; recalcula metas quando peso/altura mudam                                                |
-| `DailyLogController`   | Dia selecionado na Home e refeições agrupadas por dia                                                              |
-| `MealController`       | CRUD de refeições e validação calorias × macros; depende do `DailyLogController` via `ChangeNotifierProxyProvider` |
+| Controller             | Responsabilidade                                                                                                                  |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `SessionController`    | Estado de autenticação (login/logout)                                                                                             |
+| `OnboardingController` | Guarda as respostas do onboarding e monta o `UserProfile`                                                                         |
+| `ProfileController`    | Perfil do usuário e metas; recalcula metas quando peso/altura mudam                                                               |
+| `DailyLogController`   | Dia selecionado na Home e refeições agrupadas por dia                                                                             |
+| `MealController`       | CRUD de refeições, cálculo das calorias e validação dos macros; depende do `DailyLogController` via `ChangeNotifierProxyProvider` |
 
 ---
 
@@ -216,18 +224,18 @@ tradução para texto acontece na camada de View
 (`lib/configs/l10n/l10n_extensions.dart`), então a mesma regra exibe a
 mensagem em pt-BR ou en-US.
 
-| Campo                          | Regra                                                                                 | Mensagem de erro                                |
-| ------------------------------ | ------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| Obrigatórios (nome, descrição) | Não pode ser vazio/só espaços                                                         | Campo obrigatório                               |
-| E-mail                         | Formato `usuario@dominio.ext`                                                         | E-mail inválido                                 |
-| Senha                          | Mínimo de 8 caracteres                                                                | Senha muito curta                               |
-| Confirmação de senha           | Igual à senha                                                                         | As senhas não coincidem                         |
-| Data de nascimento             | Formato `DD/MM/AAAA`, data existente, não futura, idade entre 13 e 100 anos           | Data inválida / Idade fora do intervalo         |
-| Altura                         | Número entre 100 e 250 cm                                                             | Fora do intervalo (mín–máx)                     |
-| Peso                           | Número entre 30 e 300 kg                                                              | Fora do intervalo (mín–máx)                     |
-| Calorias (refeição/meta)       | Número maior que zero                                                                 | Deve ser positivo                               |
-| Macros (refeição/meta)         | Número maior ou igual a zero                                                          | Não pode ser negativo                           |
-| Calorias × macros (refeição)   | Calorias informadas devem bater com `4·carb + 4·prot + 9·gord` com tolerância de ±10% | Calorias não conferem (mostra o valor esperado) |
+| Campo                          | Regra                                                                         | Mensagem de erro                         |
+| ------------------------------ | ----------------------------------------------------------------------------- | ---------------------------------------- |
+| Obrigatórios (nome, descrição) | Não pode ser vazio/só espaços                                                 | Campo obrigatório                        |
+| E-mail                         | Formato `usuario@dominio.ext`                                                 | E-mail inválido                          |
+| Senha                          | Mínimo de 8 caracteres                                                        | Senha muito curta                        |
+| Confirmação de senha           | Igual à senha                                                                 | As senhas não coincidem                  |
+| Data de nascimento             | Formato `DD/MM/AAAA`, data existente, não futura, idade entre 13 e 100 anos   | Data inválida / Idade fora do intervalo  |
+| Altura                         | Número entre 100 e 250 cm                                                     | Fora do intervalo (mín–máx)              |
+| Peso                           | Número entre 30 e 300 kg                                                      | Fora do intervalo (mín–máx)              |
+| Calorias (meta)                | Número maior que zero                                                         | Deve ser positivo                        |
+| Macros (refeição/meta)         | Número maior ou igual a zero                                                  | Não pode ser negativo                    |
+| Macros (refeição)              | Ao menos um macro maior que zero (as calorias são `4·carb + 4·prot + 9·gord`) | Informe ao menos um macro maior que zero |
 
 ### Tratamento de variáveis e entrada de dados
 
@@ -249,46 +257,6 @@ mensagem em pt-BR ou en-US.
 
 ---
 
-## Particularidades, limitações e bugs conhecidos
-
-### Particularidades
-
-- **Sem persistência:** perfil, metas e refeições ficam só em memória.
-  Fechar o app restaura os dados de exemplo em `lib/mocks/`.
-- **Autenticação simulada:** o login aceita qualquer e-mail/senha que passe
-  na validação. O e-mail e a senha da tela "Crie sua conta" são validados,
-  mas não são armazenados.
-- **Dados de exemplo:** ao abrir o app, o perfil mockado e refeições dos dois
-  dias anteriores já estão carregados, para que a Home e o histórico tenham
-  conteúdo desde o início.
-- **Idioma automático:** não há seletor de idioma no app; ele segue o idioma
-  do sistema (pt-BR ou en-US).
-
-### Funcionalidades faltantes (previstas para as próximas fases)
-
-- Backend/banco de dados para persistir usuários, metas e refeições.
-- Autenticação real (cadastro, login, recuperação de senha).
-- Cadastro de refeições em dias anteriores: novas refeições são sempre
-  registradas no dia de hoje.
-- Busca de alimentos em uma base nutricional (hoje os valores são digitados
-  manualmente).
-- Tema claro.
-- Testes automatizados (o teste padrão do template foi removido e ainda não
-  há testes de widget/unidade).
-
-### Bugs e limitações conhecidos
-
-- Ao entrar pelo **login**, o app exibe o perfil mockado, e não os dados de
-  uma conta criada anteriormente no onboarding (consequência da ausência de
-  backend).
-- O `SessionController` guarda o estado de autenticação, mas as rotas ainda
-  não são protegidas por ele: a proteção atual depende apenas da limpeza da
-  pilha de navegação.
-- O **logout** encerra a sessão, mas mantém perfil, metas e refeições em
-  memória até o app ser fechado.
-
----
-
 ## Equipe e atividades desenvolvidas
 
 | Integrante           | Atividades                                                                                                                                                                                                                                                                                                                                                                        |
@@ -296,11 +264,3 @@ mensagem em pt-BR ou en-US.
 | **Gabriel Siqueira** | Estrutura do projeto e padrão MVC; models, enums e mocks; controllers com Provider; cálculo nutricional (Mifflin-St Jeor); validadores e tratamento de dados; tema, tipografia e componentes reutilizáveis; internacionalização pt-BR/en-US; telas de splash, boas-vindas, login e onboarding; Home, refeições, metas e perfil; rotas nomeadas e navegação com bottom navigation. |
 
 ---
-
-## Tecnologias
-
-- [Flutter](https://flutter.dev/) / Dart
-- [provider](https://pub.dev/packages/provider) — gerenciamento de estado
-- [intl](https://pub.dev/packages/intl) + `flutter_localizations` — i18n e formatação de datas/números
-- [uuid](https://pub.dev/packages/uuid) — identificadores de refeições
-- Fonte [Host Grotesk](https://fonts.google.com/specimen/Host+Grotesk) (licença OFL)
