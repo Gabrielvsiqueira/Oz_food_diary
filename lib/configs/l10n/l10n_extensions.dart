@@ -48,9 +48,7 @@ extension ValidationErrorL10n on ValidationError {
       min,
       max,
     ),
-    CaloriesMismatchError(:final expected) => l10n.errorCaloriesMismatch(
-      expected,
-    ),
+    EmptyMacrosError() => l10n.errorMacrosEmpty,
   };
 }
 

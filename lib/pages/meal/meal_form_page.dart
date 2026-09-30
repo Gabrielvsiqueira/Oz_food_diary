@@ -13,7 +13,6 @@ import '../../widgets/dialogs/confirm_dialog.dart';
 import '../../widgets/inputs/app_text_field.dart';
 import '../../widgets/inputs/unit_text_field.dart';
 
-/// Formulário de refeição: cria quando [meal] é nulo, edita caso contrário.
 class MealFormPage extends StatefulWidget {
   const MealFormPage({super.key, this.meal});
 
@@ -27,11 +26,10 @@ class _MealFormPageState extends State<MealFormPage> {
   final _formKey = GlobalKey<FormState>();
   late MealType _type;
   late final TextEditingController _description;
-  late final TextEditingController _calories;
   late final TextEditingController _carbs;
   late final TextEditingController _protein;
   late final TextEditingController _fat;
-  ValidationError? _caloriesMismatch;
+  ValidationError? _macrosError;
 
   bool get _isEditing => widget.meal != null;
 
@@ -43,24 +41,22 @@ class _MealFormPageState extends State<MealFormPage> {
         value == null ? '' : formatEditableNumber(value, 'en');
     _type = meal?.type ?? _suggestedType(DateTime.now());
     _description = TextEditingController(text: meal?.description ?? '');
-    _calories = TextEditingController(text: number(meal?.calories));
     _carbs = TextEditingController(text: number(meal?.carbsG));
     _protein = TextEditingController(text: number(meal?.proteinG));
     _fat = TextEditingController(text: number(meal?.fatG));
-    for (final c in [_calories, _carbs, _protein, _fat]) {
+    for (final c in [_carbs, _protein, _fat]) {
       c.addListener(_onNumbersChanged);
     }
   }
 
   @override
   void dispose() {
-    for (final c in [_description, _calories, _carbs, _protein, _fat]) {
+    for (final c in [_description, _carbs, _protein, _fat]) {
       c.dispose();
     }
     super.dispose();
   }
 
-  /// Sugere o tipo pelo horário para agilizar o cadastro.
   static MealType _suggestedType(DateTime now) => switch (now.hour) {
     >= 5 && < 11 => MealType.breakfast,
     >= 11 && < 15 => MealType.lunch,
@@ -70,13 +66,9 @@ class _MealFormPageState extends State<MealFormPage> {
 
   double? _parse(TextEditingController c) => Validators.parseDecimal(c.text);
 
-  /// Limpa o aviso de calorias assim que o usuário corrige os números.
-  void _onNumbersChanged() {
-    if (_caloriesMismatch != null) setState(() => _caloriesMismatch = null);
-    setState(() {});
-  }
+  void _onNumbersChanged() => setState(() => _macrosError = null);
 
-  int? get _estimatedCalories {
+  int? get _calories {
     final carbs = _parse(_carbs);
     final protein = _parse(_protein);
     final fat = _parse(_fat);
@@ -93,19 +85,17 @@ class _MealFormPageState extends State<MealFormPage> {
     if (!_formKey.currentState!.validate()) return;
 
     final controller = context.read<MealController>();
-    final calories = _parse(_calories)!.round();
     final carbs = _parse(_carbs)!;
     final protein = _parse(_protein)!;
     final fat = _parse(_fat)!;
 
-    final mismatch = controller.validateCalories(
-      calories: calories,
+    final error = controller.validateMacros(
       carbsG: carbs,
       proteinG: protein,
       fatG: fat,
     );
-    if (mismatch != null) {
-      setState(() => _caloriesMismatch = mismatch);
+    if (error != null) {
+      setState(() => _macrosError = error);
       return;
     }
 
@@ -114,7 +104,6 @@ class _MealFormPageState extends State<MealFormPage> {
         widget.meal!.copyWith(
           type: _type,
           description: _description.text.trim(),
-          calories: calories,
           carbsG: carbs,
           proteinG: protein,
           fatG: fat,
@@ -124,7 +113,6 @@ class _MealFormPageState extends State<MealFormPage> {
       controller.addMeal(
         type: _type,
         description: _description.text,
-        calories: calories,
         carbsG: carbs,
         proteinG: protein,
         fatG: fat,
@@ -159,7 +147,6 @@ class _MealFormPageState extends State<MealFormPage> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final textTheme = Theme.of(context).textTheme;
-    final estimate = _estimatedCalories;
 
     return Scaffold(
       appBar: AppBar(
@@ -216,24 +203,6 @@ class _MealFormPageState extends State<MealFormPage> {
             ),
             const SizedBox(height: AppConstants.spacingLg),
             UnitTextField(
-              label: l10n.calories,
-              unit: l10n.unitKcal,
-              controller: _calories,
-              allowDecimal: false,
-              validator: localizedValidator(context, Validators.positiveNumber),
-              helperText: estimate == null
-                  ? null
-                  : l10n.mealMacrosEstimate(estimate),
-            ),
-            if (_caloriesMismatch != null) ...[
-              const SizedBox(height: AppConstants.spacingSm),
-              Text(
-                _caloriesMismatch!.message(l10n),
-                style: textTheme.bodyMedium?.copyWith(color: AppColors.error),
-              ),
-            ],
-            const SizedBox(height: AppConstants.spacingLg),
-            UnitTextField(
               label: l10n.carbs,
               unit: l10n.unitGrams,
               controller: _carbs,
@@ -264,12 +233,68 @@ class _MealFormPageState extends State<MealFormPage> {
                 Validators.nonNegativeNumber,
               ),
             ),
+            const SizedBox(height: AppConstants.spacingLg),
+            _CaloriesSummary(calories: _calories),
+            if (_macrosError != null) ...[
+              const SizedBox(height: AppConstants.spacingSm),
+              Text(
+                _macrosError!.message(l10n),
+                style: textTheme.bodyMedium?.copyWith(color: AppColors.error),
+              ),
+            ],
           ],
         ),
       ),
       bottomNavigationBar: FormActionsBar(
         onCancel: () => Navigator.of(context).pop(),
         onSave: _save,
+      ),
+    );
+  }
+}
+
+/// Calorias da refeição, somente leitura: sempre calculadas pelos macros.
+class _CaloriesSummary extends StatelessWidget {
+  const _CaloriesSummary({required this.calories});
+
+  final int? calories;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final textTheme = Theme.of(context).textTheme;
+    final value = calories == null
+        ? '—'
+        : formatNumber(calories!, context.localeName);
+    return Container(
+      padding: const EdgeInsets.all(AppConstants.spacingMd),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceVariant,
+        borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l10n.calories, style: textTheme.labelLarge),
+                const SizedBox(height: AppConstants.spacingXs),
+                Text(
+                  l10n.mealCaloriesAuto,
+                  style: textTheme.bodySmall?.copyWith(
+                    color: AppColors.onSurfaceSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppConstants.spacingSm),
+          Text(
+            '$value ${l10n.unitKcal}',
+            style: textTheme.titleLarge?.copyWith(color: AppColors.calories),
+          ),
+        ],
       ),
     );
   }

@@ -65,9 +65,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String errorCaloriesMismatch(int expected) {
-    return 'Calories don\'t match the macros (≈ $expected kcal)';
-  }
+  String get errorMacrosEmpty => 'Enter at least one macro greater than zero';
 
   @override
   String get goalLose => 'Lose weight';
@@ -310,9 +308,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mealDescriptionHint => 'Bread, butter and coffee';
 
   @override
-  String mealMacrosEstimate(int value) {
-    return 'From macros: ≈ $value kcal';
-  }
+  String get mealCaloriesAuto => 'Calculated automatically from the macros';
 
   @override
   String get mealDeleteTitle => 'Delete meal?';

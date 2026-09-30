@@ -53,21 +53,4 @@ class NutritionCalculator {
         proteinG * NutritionConstants.kcalPerGramProtein +
         fatG * NutritionConstants.kcalPerGramFat;
   }
-
-  /// Confere se as calorias informadas batem com os macros dentro da
-  /// tolerância definida em [NutritionConstants.mealCaloriesTolerance].
-  bool caloriesMatchMacros({
-    required int calories,
-    required double carbsG,
-    required double proteinG,
-    required double fatG,
-  }) {
-    final fromMacros = caloriesFromMacros(
-      carbsG: carbsG,
-      proteinG: proteinG,
-      fatG: fatG,
-    );
-    return (calories - fromMacros).abs() <=
-        calories * NutritionConstants.mealCaloriesTolerance;
-  }
 }

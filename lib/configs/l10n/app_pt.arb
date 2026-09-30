@@ -25,10 +25,7 @@
   "@errorAgeOutOfRange": {
     "placeholders": { "min": { "type": "int" }, "max": { "type": "int" } }
   },
-  "errorCaloriesMismatch": "As calorias não batem com os macros (≈ {expected} kcal)",
-  "@errorCaloriesMismatch": {
-    "placeholders": { "expected": { "type": "int" } }
-  },
+  "errorMacrosEmpty": "Informe ao menos um macro maior que zero",
 
   "goalLose": "Perder peso",
   "goalMaintain": "Manter peso",
@@ -118,10 +115,7 @@
   "mealTypeLabel": "Tipo",
   "mealDescriptionLabel": "Descrição",
   "mealDescriptionHint": "Pão, manteiga e café",
-  "mealMacrosEstimate": "Pelos macros: ≈ {value} kcal",
-  "@mealMacrosEstimate": {
-    "placeholders": { "value": { "type": "int" } }
-  },
+  "mealCaloriesAuto": "Calculadas automaticamente a partir dos macros",
   "mealDeleteTitle": "Excluir refeição?",
   "mealDeleteMessage": "Essa ação não pode ser desfeita.",
   "mealSaved": "Refeição salva",

@@ -19,7 +19,7 @@
   "errorPasswordMismatch": "Passwords don't match",
   "errorInvalidDate": "Enter a valid date",
   "errorAgeOutOfRange": "Age must be between {min} and {max} years",
-  "errorCaloriesMismatch": "Calories don't match the macros (≈ {expected} kcal)",
+  "errorMacrosEmpty": "Enter at least one macro greater than zero",
 
   "goalLose": "Lose weight",
   "goalMaintain": "Maintain weight",
@@ -109,7 +109,7 @@
   "mealTypeLabel": "Type",
   "mealDescriptionLabel": "Description",
   "mealDescriptionHint": "Bread, butter and coffee",
-  "mealMacrosEstimate": "From macros: ≈ {value} kcal",
+  "mealCaloriesAuto": "Calculated automatically from the macros",
   "mealDeleteTitle": "Delete meal?",
   "mealDeleteMessage": "This action can't be undone.",
   "mealSaved": "Meal saved",

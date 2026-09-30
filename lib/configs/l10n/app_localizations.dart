@@ -200,11 +200,11 @@ abstract class AppLocalizations {
   /// **'A idade deve estar entre {min} e {max} anos'**
   String errorAgeOutOfRange(int min, int max);
 
-  /// No description provided for @errorCaloriesMismatch.
+  /// No description provided for @errorMacrosEmpty.
   ///
   /// In pt, this message translates to:
-  /// **'As calorias não batem com os macros (≈ {expected} kcal)'**
-  String errorCaloriesMismatch(int expected);
+  /// **'Informe ao menos um macro maior que zero'**
+  String get errorMacrosEmpty;
 
   /// No description provided for @goalLose.
   ///
@@ -680,11 +680,11 @@ abstract class AppLocalizations {
   /// **'Pão, manteiga e café'**
   String get mealDescriptionHint;
 
-  /// No description provided for @mealMacrosEstimate.
+  /// No description provided for @mealCaloriesAuto.
   ///
   /// In pt, this message translates to:
-  /// **'Pelos macros: ≈ {value} kcal'**
-  String mealMacrosEstimate(int value);
+  /// **'Calculadas automaticamente a partir dos macros'**
+  String get mealCaloriesAuto;
 
   /// No description provided for @mealDeleteTitle.
   ///

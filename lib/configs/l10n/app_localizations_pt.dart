@@ -65,9 +65,7 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String errorCaloriesMismatch(int expected) {
-    return 'As calorias não batem com os macros (≈ $expected kcal)';
-  }
+  String get errorMacrosEmpty => 'Informe ao menos um macro maior que zero';
 
   @override
   String get goalLose => 'Perder peso';
@@ -312,9 +310,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get mealDescriptionHint => 'Pão, manteiga e café';
 
   @override
-  String mealMacrosEstimate(int value) {
-    return 'Pelos macros: ≈ $value kcal';
-  }
+  String get mealCaloriesAuto =>
+      'Calculadas automaticamente a partir dos macros';
 
   @override
   String get mealDeleteTitle => 'Excluir refeição?';

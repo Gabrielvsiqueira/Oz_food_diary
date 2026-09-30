@@ -1,7 +1,5 @@
 import '../configs/constants/nutrition_constants.dart';
 
-/// Erros de validação independentes de idioma. A tradução para texto
-/// acontece na UI (ver `configs/l10n/l10n_extensions.dart`).
 sealed class ValidationError {
   const ValidationError();
 }
@@ -50,9 +48,8 @@ class AgeOutOfRangeError extends ValidationError {
   final int max;
 }
 
-class CaloriesMismatchError extends ValidationError {
-  const CaloriesMismatchError(this.expected);
-  final int expected;
+class EmptyMacrosError extends ValidationError {
+  const EmptyMacrosError();
 }
 
 class Validators {
@@ -67,11 +64,9 @@ class Validators {
     return double.tryParse(value.trim().replaceAll(',', '.'));
   }
 
-  /// Converte "DD/MM/AAAA" em data, rejeitando datas inexistentes (31/02).
   static DateTime? parseDate(String? value) {
-    final match = RegExp(
-      r'^(\d{2})/(\d{2})/(\d{4})$',
-    ).firstMatch(value?.trim() ?? '');
+    final match = RegExp(r'^(\d{2})/(\d{2})/(\d{4})$')
+        .firstMatch(value?.trim() ?? '');
     if (match == null) return null;
     final day = int.parse(match.group(1)!);
     final month = int.parse(match.group(2)!);
