@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../configs/constants/app_constants.dart';
-import '../../configs/l10n/l10n_extensions.dart';
+import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
 import '../../controllers/onboarding_controller.dart';
 import '../../models/enums/goal_type.dart';
@@ -14,13 +14,12 @@ class OnboardingGoalPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     final controller = context.watch<OnboardingController>();
 
     return OnboardingScaffold(
       step: 1,
-      title: l10n.onboardingGoalTitle,
-      subtitle: l10n.onboardingGoalSubtitle,
+      title: AppStrings.onboardingGoalTitle,
+      subtitle: AppStrings.onboardingGoalSubtitle,
       onNext: controller.goal == null
           ? null
           : () => Navigator.of(context).pushNamed(AppRoutes.onboardingGender),
@@ -30,7 +29,7 @@ class OnboardingGoalPage extends StatelessWidget {
           for (final goal in GoalType.values) ...[
             OnboardingOptionCard(
               emoji: goal.emoji,
-              title: goal.label(l10n),
+              title: goal.label,
               selected: controller.goal == goal,
               onTap: () => controller.selectGoal(goal),
             ),

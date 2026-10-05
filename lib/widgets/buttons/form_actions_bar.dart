@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../configs/constants/app_constants.dart';
-import '../../configs/l10n/l10n_extensions.dart';
+import '../../configs/strings/string_extensions.dart';
 import '../../configs/theme/app_colors.dart';
 import 'primary_button.dart';
 
@@ -18,7 +18,6 @@ class FormActionsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     return DecoratedBox(
       decoration: const BoxDecoration(
         border: Border(top: BorderSide(color: AppColors.surfaceVariant)),
@@ -31,14 +30,14 @@ class FormActionsBar extends StatelessWidget {
             children: [
               Expanded(
                 child: PrimaryButton(
-                  label: l10n.commonCancel,
+                  label: AppStrings.commonCancel,
                   variant: PrimaryButtonVariant.secondary,
                   onPressed: onCancel,
                 ),
               ),
               const SizedBox(width: AppConstants.spacingMd),
               Expanded(
-                child: PrimaryButton(label: l10n.commonSave, onPressed: onSave),
+                child: PrimaryButton(label: AppStrings.commonSave, onPressed: onSave),
               ),
             ],
           ),

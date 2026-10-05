@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../configs/l10n/l10n_extensions.dart';
+import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
 import '../../controllers/onboarding_controller.dart';
 import '../../services/validators.dart';
@@ -46,17 +46,16 @@ class _OnboardingHeightPageState extends State<OnboardingHeightPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     return OnboardingScaffold(
       step: 4,
-      title: l10n.onboardingHeightTitle,
-      subtitle: l10n.onboardingEstimateSubtitle,
+      title: AppStrings.onboardingHeightTitle,
+      subtitle: AppStrings.onboardingEstimateSubtitle,
       onNext: _isValid ? _submit : null,
       body: OnboardingMeasureBody(
         formKey: _formKey,
         controller: _textController,
-        label: l10n.heightLabel,
-        unit: l10n.unitCm,
+        label: AppStrings.heightLabel,
+        unit: AppStrings.unitCm,
         hint: '175',
         allowDecimal: false,
         validator: Validators.height,

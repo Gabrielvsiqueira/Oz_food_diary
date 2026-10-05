@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../configs/constants/app_constants.dart';
-import '../../configs/l10n/l10n_extensions.dart';
+import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
 import '../../configs/theme/app_colors.dart';
 import '../../widgets/branding/oz_background.dart';
@@ -15,7 +15,6 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
@@ -33,13 +32,13 @@ class WelcomePage extends StatelessWidget {
                   const Center(child: OzLogo(fontSize: 40)),
                   const Spacer(),
                   Text(
-                    l10n.welcomeTitle,
+                    AppStrings.welcomeTitle,
                     style: textTheme.displaySmall,
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: AppConstants.spacingXl),
                   PrimaryButton(
-                    label: l10n.welcomeCreateAccount,
+                    label: AppStrings.welcomeCreateAccount,
                     onPressed: () => Navigator.of(
                       context,
                     ).pushNamed(AppRoutes.onboardingGoal),
@@ -51,7 +50,7 @@ class WelcomePage extends StatelessWidget {
                     alignment: WrapAlignment.center,
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      Text(l10n.welcomeHaveAccount, style: textTheme.bodyLarge),
+                      Text(AppStrings.welcomeHaveAccount, style: textTheme.bodyLarge),
                       TextButton(
                         onPressed: () =>
                             Navigator.of(context).pushNamed(AppRoutes.login),
@@ -59,7 +58,7 @@ class WelcomePage extends StatelessWidget {
                           foregroundColor: AppColors.primary,
                           textStyle: textTheme.titleMedium,
                         ),
-                        child: Text(l10n.welcomeLogin),
+                        child: Text(AppStrings.welcomeLogin),
                       ),
                     ],
                   ),
@@ -80,7 +79,6 @@ class _GoogleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     final textTheme = Theme.of(context).textTheme;
 
     return SizedBox(
@@ -102,7 +100,7 @@ class _GoogleButton extends StatelessWidget {
             const SizedBox(width: AppConstants.spacingXs),
             Flexible(
               child: Text(
-                l10n.welcomeGoogle,
+                AppStrings.welcomeGoogle,
                 style: textTheme.labelLarge,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -118,7 +116,7 @@ class _GoogleButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppConstants.radiusXxl),
               ),
               child: Text(
-                l10n.commonComingSoon,
+                AppStrings.commonComingSoon,
                 style: textTheme.labelSmall?.copyWith(color: AppColors.primary),
               ),
             ),

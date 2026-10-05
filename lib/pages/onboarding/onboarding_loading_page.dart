@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../configs/constants/app_constants.dart';
-import '../../configs/l10n/l10n_extensions.dart';
+import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
 import '../../controllers/daily_log_controller.dart';
 import '../../controllers/onboarding_controller.dart';
@@ -57,7 +57,7 @@ class _OnboardingLoadingPageState extends State<OnboardingLoadingPage> {
                 ),
                 const SizedBox(height: AppConstants.spacingXl),
                 Text(
-                  context.l10n.onboardingLoadingTitle,
+                  AppStrings.onboardingLoadingTitle,
                   style: Theme.of(context).textTheme.headlineSmall,
                   textAlign: TextAlign.center,
                 ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../configs/constants/app_constants.dart';
-import '../../configs/l10n/l10n_extensions.dart';
+import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
 import '../../controllers/onboarding_controller.dart';
 import '../../models/enums/gender.dart';
@@ -14,13 +14,12 @@ class OnboardingGenderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     final controller = context.watch<OnboardingController>();
 
     return OnboardingScaffold(
       step: 2,
-      title: l10n.onboardingGenderTitle,
-      subtitle: l10n.onboardingGenderSubtitle,
+      title: AppStrings.onboardingGenderTitle,
+      subtitle: AppStrings.onboardingGenderSubtitle,
       onNext: controller.gender == null
           ? null
           : () =>
@@ -36,7 +35,7 @@ class OnboardingGenderPage extends StatelessWidget {
                 Expanded(
                   child: GenderOptionCard(
                     emoji: gender.emoji,
-                    label: gender.label(l10n),
+                    label: gender.label,
                     selected: controller.gender == gender,
                     onTap: () => controller.selectGender(gender),
                   ),

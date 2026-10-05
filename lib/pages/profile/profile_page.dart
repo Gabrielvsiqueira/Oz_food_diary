@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../configs/constants/app_constants.dart';
 import '../../configs/constants/nutrition_constants.dart';
-import '../../configs/l10n/l10n_extensions.dart';
+import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
 import '../../controllers/profile_controller.dart';
 import '../../controllers/session_controller.dart';
@@ -40,10 +40,10 @@ class _ProfilePageState extends State<ProfilePage> {
     final profile = context.read<ProfileController>().profile;
     _name = TextEditingController(text: profile.name)..addListener(_refresh);
     _height = TextEditingController(
-      text: formatEditableNumber(profile.height, 'en'),
+      text: formatEditableNumber(profile.height),
     );
     _weight = TextEditingController(
-      text: formatEditableNumber(profile.weight, 'en'),
+      text: formatEditableNumber(profile.weight),
     );
     _birthDate = profile.birthDate;
     _gender = profile.gender;
@@ -66,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void _refresh() => setState(() {});
 
   String _formatDate(DateTime date) =>
-      DateFormat.yMd(context.localeName).format(date);
+      DateFormat.yMd(appLocale).format(date);
 
   Future<void> _pickBirthDate() async {
     final now = DateTime.now();
@@ -94,8 +94,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _save() async {
     FocusScope.of(context).unfocus();
     if (!_formKey.currentState!.validate()) return;
-
-    final l10n = context.l10n;
     final controller = context.read<ProfileController>();
     final updated = controller.profile.copyWith(
       name: _name.text.trim(),
@@ -109,9 +107,9 @@ class _ProfilePageState extends State<ProfilePage> {
     if (recalculate) {
       final confirmed = await showConfirmDialog(
         context,
-        title: l10n.profileRecalculateTitle,
-        message: l10n.profileRecalculateMessage,
-        confirmLabel: l10n.commonYes,
+        title: AppStrings.profileRecalculateTitle,
+        message: AppStrings.profileRecalculateMessage,
+        confirmLabel: AppStrings.commonYes,
       );
       if (!confirmed || !mounted) return;
     }
@@ -120,7 +118,7 @@ class _ProfilePageState extends State<ProfilePage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          recalculate ? l10n.profileGoalsRecalculated : l10n.profileSaved,
+          recalculate ? AppStrings.profileGoalsRecalculated : AppStrings.profileSaved,
         ),
         duration: AppConstants.snackBarDuration,
       ),
@@ -128,12 +126,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _logout() async {
-    final l10n = context.l10n;
     final confirmed = await showConfirmDialog(
       context,
-      title: l10n.profileLogoutTitle,
-      message: l10n.profileLogoutMessage,
-      confirmLabel: l10n.profileLogout,
+      title: AppStrings.profileLogoutTitle,
+      message: AppStrings.profileLogoutMessage,
+      confirmLabel: AppStrings.profileLogout,
       destructive: true,
     );
     if (!confirmed || !mounted) return;
@@ -146,15 +143,14 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.profileTitle),
+        title: Text(AppStrings.profileTitle),
         actions: [
           IconButton(
-            tooltip: l10n.profileLogout,
+            tooltip: AppStrings.profileLogout,
             onPressed: _logout,
             icon: const Icon(Icons.logout_rounded),
           ),
@@ -168,14 +164,14 @@ class _ProfilePageState extends State<ProfilePage> {
             Center(child: InitialsAvatar(name: _name.text, size: 80)),
             const SizedBox(height: AppConstants.spacingXl),
             AppTextField(
-              label: l10n.nameLabel,
+              label: AppStrings.nameLabel,
               controller: _name,
               textCapitalization: TextCapitalization.words,
-              validator: localizedValidator(context, Validators.required),
+              validator: fieldValidator(Validators.required),
             ),
             const SizedBox(height: AppConstants.spacingLg),
             AppTextField(
-              label: l10n.birthDateLabel,
+              label: AppStrings.birthDateLabel,
               controller: _birthDateText,
               readOnly: true,
               onTap: _pickBirthDate,
@@ -183,22 +179,22 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: AppConstants.spacingLg),
             UnitTextField(
-              label: l10n.heightLabel,
-              unit: l10n.unitCm,
+              label: AppStrings.heightLabel,
+              unit: AppStrings.unitCm,
               controller: _height,
               allowDecimal: false,
-              validator: localizedValidator(context, Validators.height),
+              validator: fieldValidator(Validators.height),
             ),
             const SizedBox(height: AppConstants.spacingLg),
             UnitTextField(
-              label: l10n.weightLabel,
-              unit: l10n.unitKg,
+              label: AppStrings.weightLabel,
+              unit: AppStrings.unitKg,
               controller: _weight,
               textInputAction: TextInputAction.done,
-              validator: localizedValidator(context, Validators.weight),
+              validator: fieldValidator(Validators.weight),
             ),
             const SizedBox(height: AppConstants.spacingLg),
-            Text(l10n.sexLabel, style: textTheme.labelLarge),
+            Text(AppStrings.sexLabel, style: textTheme.labelLarge),
             const SizedBox(height: AppConstants.spacingSm),
             Row(
               children: [
@@ -208,7 +204,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Expanded(
                     child: GenderOptionCard(
                       emoji: gender.emoji,
-                      label: gender.label(l10n),
+                      label: gender.label,
                       selected: _gender == gender,
                       onTap: () => setState(() => _gender = gender),
                     ),
@@ -223,7 +219,7 @@ class _ProfilePageState extends State<ProfilePage> {
         top: false,
         child: Padding(
           padding: const EdgeInsets.all(AppConstants.spacingLg),
-          child: PrimaryButton(label: l10n.commonSave, onPressed: _save),
+          child: PrimaryButton(label: AppStrings.commonSave, onPressed: _save),
         ),
       ),
     );

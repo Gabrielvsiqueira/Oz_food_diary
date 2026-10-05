@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../configs/constants/app_constants.dart';
-import '../../configs/l10n/l10n_extensions.dart';
+import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
 import '../../configs/theme/app_colors.dart';
 import '../../controllers/profile_controller.dart';
@@ -15,15 +15,13 @@ class OnboardingResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final locale = context.localeName;
     final textTheme = Theme.of(context).textTheme;
     final profileController = context.watch<ProfileController>();
     final goal = profileController.goal;
     final goalType = profileController.profile.goal;
 
     String grams(double value) =>
-        '${formatNumber(value, locale)}${l10n.unitGrams}';
+        '${formatNumber(value)}${AppStrings.unitGrams}';
 
     return Scaffold(
       backgroundColor: AppColors.resultBackground,
@@ -54,12 +52,12 @@ class OnboardingResultPage extends StatelessWidget {
                   Text.rich(
                     TextSpan(
                       children: [
-                        TextSpan(text: '${l10n.onboardingResultTitlePrefix} '),
+                        TextSpan(text: '${AppStrings.onboardingResultTitlePrefix} '),
                         TextSpan(
-                          text: goalType.title(l10n),
+                          text: goalType.title,
                           style: const TextStyle(color: AppColors.primary),
                         ),
-                        TextSpan(text: ' ${l10n.onboardingResultTitleSuffix}'),
+                        TextSpan(text: ' ${AppStrings.onboardingResultTitleSuffix}'),
                       ],
                     ),
                     style: textTheme.displaySmall,
@@ -67,7 +65,7 @@ class OnboardingResultPage extends StatelessWidget {
                   ),
                   const SizedBox(height: AppConstants.spacingSm),
                   Text(
-                    l10n.onboardingResultDescription,
+                    AppStrings.onboardingResultDescription,
                     style: textTheme.bodyLarge?.copyWith(
                       color: AppColors.onSurfaceSecondary,
                     ),
@@ -90,13 +88,13 @@ class OnboardingResultPage extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            '${formatNumber(goal.caloriesTarget, locale)}${l10n.unitKcal}',
+                            '${formatNumber(goal.caloriesTarget)}${AppStrings.unitKcal}',
                             style: textTheme.titleLarge?.copyWith(
                               color: AppColors.calories,
                             ),
                           ),
                           Text(
-                            l10n.calories,
+                            AppStrings.calories,
                             style: textTheme.bodyMedium?.copyWith(
                               color: AppColors.onSurfaceSecondary,
                             ),
@@ -109,17 +107,17 @@ class OnboardingResultPage extends StatelessWidget {
                   MacroSummaryRow(
                     items: [
                       MacroSummaryItem(
-                        label: l10n.protein,
+                        label: AppStrings.protein,
                         value: grams(goal.proteinTargetG),
                         color: AppColors.protein,
                       ),
                       MacroSummaryItem(
-                        label: l10n.carbs,
+                        label: AppStrings.carbs,
                         value: grams(goal.carbsTargetG),
                         color: AppColors.carbs,
                       ),
                       MacroSummaryItem(
-                        label: l10n.fat,
+                        label: AppStrings.fat,
                         value: grams(goal.fatTargetG),
                         color: AppColors.fat,
                       ),
@@ -131,7 +129,7 @@ class OnboardingResultPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(AppConstants.spacingXl),
               child: PrimaryButton(
-                label: l10n.onboardingResultStart,
+                label: AppStrings.onboardingResultStart,
                 onPressed: () => Navigator.of(
                   context,
                 ).pushNamedAndRemoveUntil(AppRoutes.main, (_) => false),

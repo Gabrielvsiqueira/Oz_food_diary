@@ -4,8 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../configs/constants/app_constants.dart';
-import '../../configs/l10n/app_localizations.dart';
-import '../../configs/l10n/l10n_extensions.dart';
+import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
 import '../../configs/theme/app_colors.dart';
 import '../../configs/theme/app_typography.dart';
@@ -37,7 +36,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     final profile = context.watch<ProfileController>();
     final dailyLog = context.watch<DailyLogController>();
     final log = dailyLog.selectedLog;
@@ -48,7 +46,7 @@ class HomePage extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColors.primary,
         floatingActionButton: FloatingActionButton(
-          tooltip: l10n.homeAddMeal,
+          tooltip: AppStrings.homeAddMeal,
           backgroundColor: AppColors.primary,
           foregroundColor: AppColors.onPrimary,
           elevation: 0,
@@ -78,14 +76,14 @@ class HomePage extends StatelessWidget {
                           horizontal: AppConstants.spacingSm,
                         ),
                         child: DaySelector(
-                          label: _dayTitle(context, dailyLog.selectedDate),
+                          label: _dayTitle(dailyLog.selectedDate),
                           onPrevious: dailyLog.goToPreviousDay,
                           onNext: dailyLog.canGoToNextDay
                               ? dailyLog.goToNextDay
                               : null,
                           onLabelTap: () => _pickDate(context),
-                          previousTooltip: l10n.homePreviousDay,
-                          nextTooltip: l10n.homeNextDay,
+                          previousTooltip: AppStrings.homePreviousDay,
+                          nextTooltip: AppStrings.homeNextDay,
                         ),
                       ),
                       const SizedBox(height: AppConstants.spacingMd),
@@ -98,7 +96,7 @@ class HomePage extends StatelessWidget {
                           horizontal: AppConstants.spacingLg,
                         ),
                         child: Text(
-                          l10n.homeMealsSection,
+                          AppStrings.homeMealsSection,
                           style: AppTypography.caption.copyWith(
                             color: AppColors.onSurface,
                           ),
@@ -123,23 +121,21 @@ class HomePage extends StatelessWidget {
 }
 
 /// "Hoje, 12 de julho" / "Ontem, 11 de julho" / "10 de julho".
-String _dayTitle(BuildContext context, DateTime date) {
-  final l10n = context.l10n;
-  final locale = context.localeName;
+String _dayTitle(DateTime date) {
   final now = today();
   final format = date.year == now.year
-      ? DateFormat.MMMMd(locale)
-      : DateFormat.yMMMMd(locale);
+      ? DateFormat.MMMMd(appLocale)
+      : DateFormat.yMMMMd(appLocale);
   final formatted = format.format(date);
-  final relative = _relativeDay(l10n, date);
+  final relative = _relativeDay(date);
   return relative == null ? formatted : '$relative, $formatted';
 }
 
-String? _relativeDay(AppLocalizations l10n, DateTime date) {
+String? _relativeDay(DateTime date) {
   final now = today();
-  if (isSameDay(date, now)) return l10n.homeToday;
+  if (isSameDay(date, now)) return AppStrings.homeToday;
   if (isSameDay(date, now.subtract(const Duration(days: 1)))) {
-    return l10n.homeYesterday;
+    return AppStrings.homeYesterday;
   }
   return null;
 }
@@ -174,7 +170,7 @@ class _Header extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    context.l10n.homeGreeting,
+                    AppStrings.homeGreeting,
                     style: textTheme.bodyMedium?.copyWith(
                       color: AppColors.onPrimary.withValues(alpha: 0.7),
                     ),
@@ -207,11 +203,9 @@ class _DaySummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final locale = context.localeName;
     final textTheme = Theme.of(context).textTheme;
-    String n(num value) => formatNumber(value, locale);
-    String grams(num value) => '${n(value)}${l10n.unitGrams}';
+    String n(num value) => formatNumber(value);
+    String grams(num value) => '${n(value)}${AppStrings.unitGrams}';
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingLg),
@@ -225,7 +219,7 @@ class _DaySummary extends StatelessWidget {
               strokeWidth: 10,
               gap: 4,
               semanticsLabel:
-                  '${l10n.calories}: ${n(log.totalCalories)} / ${n(goal.caloriesTarget)}',
+                  '${AppStrings.calories}: ${n(log.totalCalories)} / ${n(goal.caloriesTarget)}',
               arcs: [
                 RainbowArc(
                   progress: _progress(log.totalCalories, goal.caloriesTarget),
@@ -266,7 +260,7 @@ class _DaySummary extends StatelessWidget {
                     style: textTheme.headlineSmall,
                   ),
                   Text(
-                    l10n.calories,
+                    AppStrings.calories,
                     style: textTheme.bodyMedium?.copyWith(
                       color: AppColors.onSurfaceSecondary,
                     ),
@@ -279,19 +273,19 @@ class _DaySummary extends StatelessWidget {
           MacroSummaryRow(
             items: [
               MacroSummaryItem(
-                label: l10n.protein,
+                label: AppStrings.protein,
                 value: n(log.totalProteinG),
                 target: grams(goal.proteinTargetG),
                 color: AppColors.protein,
               ),
               MacroSummaryItem(
-                label: l10n.carbs,
+                label: AppStrings.carbs,
                 value: n(log.totalCarbsG),
                 target: grams(goal.carbsTargetG),
                 color: AppColors.carbs,
               ),
               MacroSummaryItem(
-                label: l10n.fat,
+                label: AppStrings.fat,
                 value: n(log.totalFatG),
                 target: grams(goal.fatTargetG),
                 color: AppColors.fat,
@@ -311,12 +305,10 @@ class _MealEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final locale = context.localeName;
-    final time = DateFormat.Hm(locale).format(meal.createdAt);
+    final time = DateFormat.Hm(appLocale).format(meal.createdAt);
     final day =
-        _relativeDay(l10n, meal.createdAt) ??
-        DateFormat.MMMd(locale).format(meal.createdAt);
+        _relativeDay(meal.createdAt) ??
+        DateFormat.MMMd(appLocale).format(meal.createdAt);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(
@@ -354,7 +346,6 @@ class _EmptyMeals extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     final textTheme = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -365,10 +356,10 @@ class _EmptyMeals extends StatelessWidget {
         children: [
           const Text('🍽️', style: TextStyle(fontSize: 40)),
           const SizedBox(height: AppConstants.spacingMd),
-          Text(l10n.homeNoMealsTitle, style: textTheme.titleMedium),
+          Text(AppStrings.homeNoMealsTitle, style: textTheme.titleMedium),
           const SizedBox(height: AppConstants.spacingXs),
           Text(
-            isToday ? l10n.homeNoMealsToday : l10n.homeNoMealsPast,
+            isToday ? AppStrings.homeNoMealsToday : AppStrings.homeNoMealsPast,
             style: textTheme.bodyMedium?.copyWith(
               color: AppColors.onSurfaceSecondary,
             ),
