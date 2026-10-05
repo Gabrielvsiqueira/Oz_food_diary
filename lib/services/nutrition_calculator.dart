@@ -43,14 +43,4 @@ class NutritionCalculator {
       fatTargetG: fat.roundToDouble(),
     );
   }
-
-  double caloriesFromMacros({
-    required double carbsG,
-    required double proteinG,
-    required double fatG,
-  }) {
-    return carbsG * NutritionConstants.kcalPerGramCarbs +
-        proteinG * NutritionConstants.kcalPerGramProtein +
-        fatG * NutritionConstants.kcalPerGramFat;
-  }
 }

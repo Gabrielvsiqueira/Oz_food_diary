@@ -3,56 +3,24 @@ import 'package:uuid/uuid.dart';
 
 import '../models/enums/meal_type.dart';
 import '../models/meal.dart';
-import '../services/nutrition_calculator.dart';
+import '../models/meal_item.dart';
 import '../services/validators.dart';
 import 'daily_log_controller.dart';
 
 class MealController extends ChangeNotifier {
-  MealController(
-    this._dailyLog, {
-    this._calculator = const NutritionCalculator(),
-    this._uuid = const Uuid(),
-  });
+  MealController(this._dailyLog, {this._uuid = const Uuid()});
 
   DailyLogController _dailyLog;
-  final NutritionCalculator _calculator;
   final Uuid _uuid;
 
   void updateDailyLog(DailyLogController dailyLog) => _dailyLog = dailyLog;
 
-  int caloriesFromMacros({
-    required double carbsG,
-    required double proteinG,
-    required double fatG,
-  }) => _calculator
-      .caloriesFromMacros(carbsG: carbsG, proteinG: proteinG, fatG: fatG)
-      .round();
+  ValidationError? validateItems(List<MealItem> items) =>
+      items.isEmpty ? const EmptyMealError() : null;
 
-  ValidationError? validateMacros({
-    required double carbsG,
-    required double proteinG,
-    required double fatG,
-  }) => caloriesFromMacros(carbsG: carbsG, proteinG: proteinG, fatG: fatG) > 0
-      ? null
-      : const EmptyMacrosError();
-
-  Meal addMeal({
-    required MealType type,
-    required String description,
-    required double carbsG,
-    required double proteinG,
-    required double fatG,
-  }) {
+  Meal addMeal({required MealType type, required List<MealItem> items}) {
     final now = DateTime.now();
-    final meal = Meal(
-      id: _uuid.v4(),
-      type: type,
-      description: description.trim(),
-      carbsG: carbsG,
-      proteinG: proteinG,
-      fatG: fatG,
-      createdAt: now,
-    );
+    final meal = Meal(id: _uuid.v4(), type: type, items: items, createdAt: now);
     _dailyLog
       ..appendMealToDay(now, meal)
       ..selectDate(now);

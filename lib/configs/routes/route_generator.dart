@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/meal.dart';
+import '../../pages/food_search/food_search_page.dart';
 import '../../pages/login/login_page.dart';
 import '../../pages/main_shell/main_shell_page.dart';
 import '../../pages/meal/meal_form_page.dart';
@@ -36,6 +37,7 @@ class RouteGenerator {
       AppRoutes.onboardingResult => const OnboardingResultPage(),
       AppRoutes.main => const MainShellPage(),
       AppRoutes.mealForm => MealFormPage(meal: settings.arguments as Meal?),
+      AppRoutes.foodSearch => const FoodSearchPage(),
       _ => const SplashPage(),
     };
     return MaterialPageRoute(builder: (_) => page, settings: settings);

@@ -31,4 +31,5 @@ class NutritionConstants {
   static const double maxWeightKg = 300;
   static const int minAge = 13;
   static const int maxAge = 100;
+  static const int maxFoodGrams = 5000;
 }

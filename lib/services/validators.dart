@@ -48,8 +48,13 @@ class AgeOutOfRangeError extends ValidationError {
   final int max;
 }
 
-class EmptyMacrosError extends ValidationError {
-  const EmptyMacrosError();
+class EmptyMealError extends ValidationError {
+  const EmptyMealError();
+}
+
+class FoodQuantityTooLargeError extends ValidationError {
+  const FoodQuantityTooLargeError(this.maxGrams);
+  final int maxGrams;
 }
 
 class Validators {
@@ -65,8 +70,9 @@ class Validators {
   }
 
   static DateTime? parseDate(String? value) {
-    final match = RegExp(r'^(\d{2})/(\d{2})/(\d{4})$')
-        .firstMatch(value?.trim() ?? '');
+    final match = RegExp(
+      r'^(\d{2})/(\d{2})/(\d{4})$',
+    ).firstMatch(value?.trim() ?? '');
     if (match == null) return null;
     final day = int.parse(match.group(1)!);
     final month = int.parse(match.group(2)!);
@@ -137,6 +143,16 @@ class Validators {
     NutritionConstants.minWeightKg,
     NutritionConstants.maxWeightKg,
   );
+
+  /// Quantidade na medida escolhida (ex.: 2 fatias de 25 g).
+  static ValidationError? foodQuantity(String? value, double gramsPerPortion) {
+    final error = positiveNumber(value);
+    if (error != null) return error;
+    final grams = parseDecimal(value)! * gramsPerPortion;
+    return grams > NutritionConstants.maxFoodGrams
+        ? const FoodQuantityTooLargeError(NutritionConstants.maxFoodGrams)
+        : null;
+  }
 
   static ValidationError? birthDate(DateTime? date, {DateTime? now}) {
     if (date == null) return const InvalidDateError();

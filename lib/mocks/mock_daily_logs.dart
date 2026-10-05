@@ -1,7 +1,10 @@
 import '../models/daily_log.dart';
 import '../models/enums/meal_type.dart';
+import '../models/food.dart';
 import '../models/meal.dart';
+import '../models/meal_item.dart';
 import '../services/date_utils.dart';
+import 'mock_foods.dart';
 
 List<DailyLog> buildMockDailyLogs({DateTime? now}) {
   final base = dateOnly(now ?? DateTime.now());
@@ -11,6 +14,10 @@ List<DailyLog> buildMockDailyLogs({DateTime? now}) {
   DateTime at(DateTime day, int hour, int minute) =>
       DateTime(day.year, day.month, day.day, hour, minute);
 
+  /// Item na medida caseira padrão do alimento.
+  MealItem portions(Food food, double quantity) =>
+      MealItem(food: food, portion: food.defaultPortion, quantity: quantity);
+
   return [
     DailyLog(
       date: yesterday,
@@ -18,28 +25,32 @@ List<DailyLog> buildMockDailyLogs({DateTime? now}) {
         Meal(
           id: 'mock-1',
           type: MealType.breakfast,
-          description: 'Pão, manteiga e café',
-          carbsG: 25,
-          proteinG: 5,
-          fatG: 9,
+          items: [
+            portions(MockFoods.frenchBread, 1),
+            portions(MockFoods.butter, 1),
+            portions(MockFoods.coffee, 1),
+          ],
           createdAt: at(yesterday, 8, 15),
         ),
         Meal(
           id: 'mock-2',
           type: MealType.lunch,
-          description: 'Arroz, feijão, frango grelhado e salada',
-          carbsG: 75,
-          proteinG: 45,
-          fatG: 18,
+          items: [
+            portions(MockFoods.whiteRice, 4),
+            portions(MockFoods.pintoBeans, 1),
+            portions(MockFoods.chickenBreast, 1),
+            portions(MockFoods.tomato, 1),
+          ],
           createdAt: at(yesterday, 12, 30),
         ),
         Meal(
           id: 'mock-3',
           type: MealType.dinner,
-          description: 'Omelete com queijo',
-          carbsG: 4,
-          proteinG: 26,
-          fatG: 28,
+          items: [
+            portions(MockFoods.egg, 3),
+            portions(MockFoods.mozzarella, 1),
+            portions(MockFoods.oliveOil, 0.5),
+          ],
           createdAt: at(yesterday, 20, 0),
         ),
       ],
@@ -50,10 +61,7 @@ List<DailyLog> buildMockDailyLogs({DateTime? now}) {
         Meal(
           id: 'mock-4',
           type: MealType.snack,
-          description: 'Iogurte natural com banana',
-          carbsG: 32,
-          proteinG: 8,
-          fatG: 4,
+          items: [portions(MockFoods.yogurt, 1), portions(MockFoods.banana, 1)],
           createdAt: at(twoDaysAgo, 16, 0),
         ),
       ],
