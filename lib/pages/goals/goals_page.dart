@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../configs/constants/app_constants.dart';
-import '../../configs/l10n/l10n_extensions.dart';
+import '../../configs/strings/string_extensions.dart';
 import '../../controllers/profile_controller.dart';
 import '../../models/nutrition_goal.dart';
 import '../../services/validators.dart';
@@ -54,9 +54,9 @@ class _GoalsPageState extends State<GoalsPage> {
     // Limpa os erros antes: reset() também restaura o texto antigo dos campos.
     _formKey.currentState?.reset();
     _calories.text = goal.caloriesTarget.toString();
-    _carbs.text = formatEditableNumber(goal.carbsTargetG, 'en');
-    _protein.text = formatEditableNumber(goal.proteinTargetG, 'en');
-    _fat.text = formatEditableNumber(goal.fatTargetG, 'en');
+    _carbs.text = formatEditableNumber(goal.carbsTargetG);
+    _protein.text = formatEditableNumber(goal.proteinTargetG);
+    _fat.text = formatEditableNumber(goal.fatTargetG);
   }
 
   void _cancel() {
@@ -77,7 +77,7 @@ class _GoalsPageState extends State<GoalsPage> {
     );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(context.l10n.goalsSaved),
+        content: Text(AppStrings.goalsSaved),
         duration: AppConstants.snackBarDuration,
       ),
     );
@@ -85,44 +85,41 @@ class _GoalsPageState extends State<GoalsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final nonNegative = localizedValidator(
-      context,
-      Validators.nonNegativeNumber,
+    final nonNegative = fieldValidator(Validators.nonNegativeNumber,
     );
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.goalsTitle)),
+      appBar: AppBar(title: Text(AppStrings.goalsTitle)),
       body: Form(
         key: _formKey,
         child: ListView(
           padding: const EdgeInsets.all(AppConstants.spacingLg),
           children: [
             UnitTextField(
-              label: l10n.calories,
-              unit: l10n.unitKcal,
+              label: AppStrings.calories,
+              unit: AppStrings.unitKcal,
               controller: _calories,
               allowDecimal: false,
-              validator: localizedValidator(context, Validators.positiveNumber),
+              validator: fieldValidator(Validators.positiveNumber),
             ),
             const SizedBox(height: AppConstants.spacingLg),
             UnitTextField(
-              label: l10n.carbs,
-              unit: l10n.unitGrams,
+              label: AppStrings.carbs,
+              unit: AppStrings.unitGrams,
               controller: _carbs,
               validator: nonNegative,
             ),
             const SizedBox(height: AppConstants.spacingLg),
             UnitTextField(
-              label: l10n.protein,
-              unit: l10n.unitGrams,
+              label: AppStrings.protein,
+              unit: AppStrings.unitGrams,
               controller: _protein,
               validator: nonNegative,
             ),
             const SizedBox(height: AppConstants.spacingLg),
             UnitTextField(
-              label: l10n.fat,
-              unit: l10n.unitGrams,
+              label: AppStrings.fat,
+              unit: AppStrings.unitGrams,
               controller: _fat,
               textInputAction: TextInputAction.done,
               onSubmitted: _save,

@@ -1,7 +1,5 @@
 import '../configs/constants/nutrition_constants.dart';
 
-/// Erros de validação independentes de idioma. A tradução para texto
-/// acontece na UI (ver `configs/l10n/l10n_extensions.dart`).
 sealed class ValidationError {
   const ValidationError();
 }
@@ -50,9 +48,13 @@ class AgeOutOfRangeError extends ValidationError {
   final int max;
 }
 
-class CaloriesMismatchError extends ValidationError {
-  const CaloriesMismatchError(this.expected);
-  final int expected;
+class EmptyMealError extends ValidationError {
+  const EmptyMealError();
+}
+
+class FoodQuantityTooLargeError extends ValidationError {
+  const FoodQuantityTooLargeError(this.maxGrams);
+  final int maxGrams;
 }
 
 class Validators {
@@ -67,7 +69,6 @@ class Validators {
     return double.tryParse(value.trim().replaceAll(',', '.'));
   }
 
-  /// Converte "DD/MM/AAAA" em data, rejeitando datas inexistentes (31/02).
   static DateTime? parseDate(String? value) {
     final match = RegExp(
       r'^(\d{2})/(\d{2})/(\d{4})$',
@@ -142,6 +143,16 @@ class Validators {
     NutritionConstants.minWeightKg,
     NutritionConstants.maxWeightKg,
   );
+
+  /// Quantidade na medida escolhida (ex.: 2 fatias de 25 g).
+  static ValidationError? foodQuantity(String? value, double gramsPerPortion) {
+    final error = positiveNumber(value);
+    if (error != null) return error;
+    final grams = parseDecimal(value)! * gramsPerPortion;
+    return grams > NutritionConstants.maxFoodGrams
+        ? const FoodQuantityTooLargeError(NutritionConstants.maxFoodGrams)
+        : null;
+  }
 
   static ValidationError? birthDate(DateTime? date, {DateTime? now}) {
     if (date == null) return const InvalidDateError();

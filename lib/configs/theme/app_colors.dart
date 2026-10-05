@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Tokens de cor do Oz. Destaques e cores de macros vêm do Figma;
-/// as superfícies são a versão escura do tema.
 class AppColors {
   AppColors._();
 

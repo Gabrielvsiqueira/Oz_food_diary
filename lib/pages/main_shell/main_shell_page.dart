@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../configs/l10n/l10n_extensions.dart';
+import '../../configs/strings/string_extensions.dart';
 import '../../widgets/navigation/app_bottom_nav_bar.dart';
 import '../goals/goals_page.dart';
 import '../home/home_page.dart';
@@ -20,7 +20,6 @@ class _MainShellPageState extends State<MainShellPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
@@ -33,17 +32,17 @@ class _MainShellPageState extends State<MainShellPage> {
           AppBottomNavItem(
             icon: Icons.home_outlined,
             selectedIcon: Icons.home_rounded,
-            label: l10n.tabHome,
+            label: AppStrings.tabHome,
           ),
           AppBottomNavItem(
             icon: Icons.track_changes_outlined,
             selectedIcon: Icons.track_changes_rounded,
-            label: l10n.tabGoals,
+            label: AppStrings.tabGoals,
           ),
           AppBottomNavItem(
             icon: Icons.person_outline_rounded,
             selectedIcon: Icons.person_rounded,
-            label: l10n.tabProfile,
+            label: AppStrings.tabProfile,
           ),
         ],
       ),

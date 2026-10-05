@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../configs/constants/app_constants.dart';
-import '../../configs/l10n/l10n_extensions.dart';
+import '../../configs/strings/string_extensions.dart';
 import '../../configs/theme/app_colors.dart';
 import '../../models/meal.dart';
 import '../layout/emoji_box.dart';
 
-/// Card de refeição: tipo + descrição + grade de kcal e macros.
+/// Card de refeição: tipo + alimentos + grade de kcal e macros.
 class MealCard extends StatelessWidget {
   const MealCard({super.key, required this.meal, required this.onTap});
 
@@ -15,13 +15,11 @@ class MealCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final locale = context.localeName;
     final textTheme = Theme.of(context).textTheme;
     final radius = BorderRadius.circular(AppConstants.radiusXxl);
 
     String grams(double value) =>
-        '${formatNumber(value, locale)}${l10n.unitGrams}';
+        '${formatNumber(value)}${AppStrings.unitGrams}';
 
     return Material(
       color: AppColors.surface,
@@ -47,13 +45,13 @@ class MealCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            meal.type.label(l10n),
+                            meal.type.label,
                             style: textTheme.bodyLarge?.copyWith(
                               color: AppColors.onSurfaceSecondary,
                             ),
                           ),
                           Text(
-                            meal.description,
+                            meal.summary,
                             style: textTheme.titleMedium,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -78,13 +76,13 @@ class MealCard extends StatelessWidget {
                     Row(
                       children: [
                         _MacroCell(
-                          value: formatNumber(meal.calories, locale),
-                          label: l10n.kcal,
+                          value: formatNumber(meal.calories),
+                          label: AppStrings.kcal,
                           color: AppColors.calories,
                         ),
                         _MacroCell(
                           value: grams(meal.proteinG),
-                          label: l10n.protein,
+                          label: AppStrings.protein,
                           color: AppColors.protein,
                         ),
                       ],
@@ -94,12 +92,12 @@ class MealCard extends StatelessWidget {
                       children: [
                         _MacroCell(
                           value: grams(meal.carbsG),
-                          label: l10n.carbs,
+                          label: AppStrings.carbs,
                           color: AppColors.carbs,
                         ),
                         _MacroCell(
                           value: grams(meal.fatG),
-                          label: l10n.fat,
+                          label: AppStrings.fat,
                           color: AppColors.fat,
                         ),
                       ],

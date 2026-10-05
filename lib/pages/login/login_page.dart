@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../configs/constants/app_constants.dart';
-import '../../configs/l10n/l10n_extensions.dart';
+import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
 import '../../configs/theme/app_colors.dart';
 import '../../controllers/daily_log_controller.dart';
@@ -63,7 +63,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
@@ -102,37 +101,33 @@ class _LoginPageState extends State<LoginPage> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Text(
-                              l10n.loginTitle,
+                              AppStrings.loginTitle,
                               style: textTheme.headlineMedium,
                             ),
                             const SizedBox(height: AppConstants.spacingXl),
                             AppTextField(
-                              label: l10n.emailLabel,
-                              hint: l10n.emailHint,
+                              label: AppStrings.emailLabel,
+                              hint: AppStrings.emailHint,
                               controller: _email,
                               keyboardType: TextInputType.emailAddress,
                               autofillHints: const [AutofillHints.email],
-                              validator: localizedValidator(
-                                context,
-                                Validators.email,
+                              validator: fieldValidator(Validators.email,
                               ),
                             ),
                             const SizedBox(height: AppConstants.spacingLg),
                             AppTextField(
-                              label: l10n.passwordLabel,
-                              hint: l10n.passwordHint,
+                              label: AppStrings.passwordLabel,
+                              hint: AppStrings.passwordHint,
                               controller: _password,
                               obscureText: true,
                               textInputAction: TextInputAction.done,
                               autofillHints: const [AutofillHints.password],
-                              validator: localizedValidator(
-                                context,
-                                Validators.password,
+                              validator: fieldValidator(Validators.password,
                               ),
                             ),
                             const SizedBox(height: AppConstants.spacingXl),
                             PrimaryButton(
-                              label: l10n.loginButton,
+                              label: AppStrings.loginButton,
                               onPressed: _isValid && !_submitting
                                   ? _submit
                                   : null,

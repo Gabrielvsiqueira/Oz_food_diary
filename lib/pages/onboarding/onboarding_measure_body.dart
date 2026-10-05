@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../configs/l10n/l10n_extensions.dart';
+import '../../configs/strings/string_extensions.dart';
 import '../../services/validators.dart';
 import '../../widgets/inputs/unit_text_field.dart';
 
@@ -42,7 +42,7 @@ class OnboardingMeasureBody extends StatelessWidget {
           controller: controller,
           allowDecimal: allowDecimal,
           textInputAction: TextInputAction.done,
-          validator: localizedValidator(context, validator),
+          validator: fieldValidator(validator),
           onChanged: onChanged,
           onSubmitted: onSubmitted,
         ),

@@ -25,14 +25,11 @@ class NutritionConstants {
   static const double proteinGramsPerKg = 2.2;
   static const double fatCaloriesShare = 0.25;
 
-  /// Diferença máxima aceita entre as calorias informadas e as calculadas
-  /// a partir dos macros (0.10 = 10%).
-  static const double mealCaloriesTolerance = 0.10;
-
   static const double minHeightCm = 100;
   static const double maxHeightCm = 250;
   static const double minWeightKg = 30;
   static const double maxWeightKg = 300;
   static const int minAge = 13;
   static const int maxAge = 100;
+  static const int maxFoodGrams = 5000;
 }

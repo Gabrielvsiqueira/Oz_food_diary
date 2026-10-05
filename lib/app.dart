@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
-import 'configs/l10n/app_localizations.dart';
 import 'configs/routes/app_routes.dart';
 import 'configs/routes/route_generator.dart';
 import 'configs/theme/app_theme.dart';
@@ -11,6 +10,8 @@ import 'controllers/meal_controller.dart';
 import 'controllers/onboarding_controller.dart';
 import 'controllers/profile_controller.dart';
 import 'controllers/session_controller.dart';
+import 'repositories/food_repository.dart';
+import 'repositories/mock_food_repository.dart';
 
 class OzApp extends StatelessWidget {
   const OzApp({super.key});
@@ -19,6 +20,7 @@ class OzApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        Provider<FoodRepository>(create: (_) => const MockFoodRepository()),
         ChangeNotifierProvider(create: (_) => SessionController()),
         ChangeNotifierProvider(create: (_) => OnboardingController()),
         ChangeNotifierProvider(create: (_) => ProfileController()),
@@ -34,9 +36,9 @@ class OzApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: AppTheme.dark(),
         themeMode: ThemeMode.dark,
-        supportedLocales: const [Locale('pt', 'BR'), Locale('en', 'US')],
+        locale: const Locale('pt', 'BR'),
+        supportedLocales: const [Locale('pt', 'BR')],
         localizationsDelegates: const [
-          AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,

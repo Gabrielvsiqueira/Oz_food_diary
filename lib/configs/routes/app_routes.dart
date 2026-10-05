@@ -19,4 +19,7 @@ class AppRoutes {
 
   /// Argumento opcional: `Meal` para edição.
   static const mealForm = '/meal/form';
+
+  /// Retorna o `MealItem` escolhido ao fechar.
+  static const foodSearch = '/meal/food-search';
 }

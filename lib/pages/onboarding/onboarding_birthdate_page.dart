@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../configs/l10n/l10n_extensions.dart';
+import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
 import '../../configs/theme/app_colors.dart';
 import '../../controllers/onboarding_controller.dart';
@@ -60,13 +60,12 @@ class _OnboardingBirthdatePageState extends State<OnboardingBirthdatePage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     final textTheme = Theme.of(context).textTheme;
 
     return OnboardingScaffold(
       step: 3,
-      title: l10n.onboardingBirthdateTitle,
-      subtitle: l10n.onboardingBirthdateSubtitle,
+      title: AppStrings.onboardingBirthdateTitle,
+      subtitle: AppStrings.onboardingBirthdateSubtitle,
       onNext: _isFilled && _error == null ? _submit : null,
       body: Center(
         child: TextField(
@@ -79,11 +78,11 @@ class _OnboardingBirthdatePageState extends State<OnboardingBirthdatePage> {
           textAlign: TextAlign.center,
           style: textTheme.displaySmall,
           decoration: InputDecoration(
-            hintText: l10n.onboardingBirthdateHint,
+            hintText: AppStrings.onboardingBirthdateHint,
             hintStyle: textTheme.displaySmall?.copyWith(
               color: AppColors.onSurfaceMuted,
             ),
-            errorText: _error?.message(l10n),
+            errorText: _error?.message,
             filled: false,
             border: InputBorder.none,
             enabledBorder: InputBorder.none,
