@@ -36,12 +36,13 @@ registrar, editar e excluir refeições, acompanhando o progresso do dia.
 - **Home** com seletor de dia, gráfico de calorias/macros consumidos e lista
   de refeições do dia.
 - **Refeições**: cadastro, edição e exclusão (com diálogo de confirmação).
-  O usuário informa só os macros; as calorias são calculadas automaticamente
-  (4 kcal/g de carboidrato e proteína, 9 kcal/g de gordura).
+  O usuário busca cada alimento e informa só a quantidade (em gramas ou em
+  medida caseira, como fatia ou colher); calorias e macros vêm da base de
+  alimentos e são somados automaticamente.
 - **Metas**: edição manual da meta de calorias e de macros.
 - **Perfil**: edição de nome, altura e peso, com recálculo das metas quando
   peso ou altura mudam, e logout.
-- **Internacionalização** em português (pt-BR) e inglês (en-US).
+- **Idioma**: app todo em português (pt-BR), com textos centralizados em `AppStrings`.
 - **Tema escuro** com tokens de cor e tipografia (fonte Host Grotesk).
 
 ---
@@ -78,14 +79,6 @@ flutter doctor
    flutter pub get
    ```
 
-   Como o `pubspec.yaml` usa `generate: true`, esse comando também gera as
-   classes de tradução em `lib/configs/l10n/` a partir dos arquivos `.arb`.
-   Se precisar gerá-las manualmente:
-
-   ```bash
-   flutter gen-l10n
-   ```
-
 3. **Abra um emulador/simulador ou conecte um dispositivo**
 
    ```bash
@@ -119,12 +112,12 @@ flutter build ios --release
 | Item                   | Onde fica                                        | Observação                                                                       |
 | ---------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------- |
 | Dependências           | `pubspec.yaml`                                   | `provider`, `intl`, `uuid`, `flutter_localizations`                              |
-| Traduções              | `lib/configs/l10n/app_pt.arb`, `app_en.arb`      | `app_pt.arb` é o arquivo base (ver `l10n.yaml`)                                  |
+| Textos                 | `lib/configs/strings/app_strings.dart`           | Todos os textos da interface, em português                                       |
 | Tema e cores           | `lib/configs/theme/`                             | Apenas tema escuro                                                               |
 | Constantes de nutrição | `lib/configs/constants/nutrition_constants.dart` | Fatores de atividade, kcal por grama de cada macro, limites de altura/peso/idade |
 | Constantes de UI       | `lib/configs/constants/app_constants.dart`       | Espaçamentos, raios, durações de splash/loading                                  |
-| Dados de exemplo       | `lib/mocks/`                                     | Perfil e refeições pré-carregados                                                |
-| Idioma                 | Sistema do dispositivo                           | O app segue o idioma do aparelho (pt-BR ou en-US)                                |
+| Dados de exemplo       | `lib/mocks/`                                     | Perfil, refeições e base de alimentos (valores aproximados da TACO)              |
+| Idioma                 | `lib/app.dart`                                   | Fixo em pt-BR; `flutter_localizations` traduz os widgets do Flutter (calendário) |
 
 Não há variáveis de ambiente, chaves de API ou backend a configurar nesta fase.
 
@@ -135,41 +128,61 @@ Não há variáveis de ambiente, chaves de API ou backend a configurar nesta fas
 O projeto segue o padrão **MVC (Model–View–Controller)** com gerenciamento de
 estado via **Provider**:
 
-| Camada         | Pasta                        | Responsabilidade                                                                                                                     |
-| -------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| **Model**      | `lib/models/`                | Entidades imutáveis (`UserProfile`, `Meal`, `DailyLog`, `NutritionGoal`) e enums (`GoalType`, `Gender`, `ActivityLevel`, `MealType`) |
-| **View**       | `lib/pages/`, `lib/widgets/` | Telas e componentes reutilizáveis; só exibem dados e repassam ações aos controllers                                                  |
-| **Controller** | `lib/controllers/`           | `ChangeNotifier`s que guardam o estado e as regras de cada fluxo                                                                     |
-| **Services**   | `lib/services/`              | Lógica pura e testável: cálculo nutricional, validadores e utilitários de data                                                       |
+| Camada         | Pasta                        | Responsabilidade                                                                                                    |
+| -------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **Model**      | `lib/models/`                | Entidades imutáveis (`UserProfile`, `Meal`, `MealItem`, `Food`, `FoodPortion`, `DailyLog`, `NutritionGoal`) e enums |
+| **View**       | `lib/pages/`, `lib/widgets/` | Telas e componentes reutilizáveis; só exibem dados e repassam ações aos controllers                                 |
+| **Controller** | `lib/controllers/`           | `ChangeNotifier`s que guardam o estado e as regras de cada fluxo                                                    |
+| **Services**   | `lib/services/`              | Lógica pura e testável: cálculo nutricional, validadores e utilitários de data e texto                              |
+| **Repository** | `lib/repositories/`          | Acesso a dados atrás de interfaces; hoje `FoodRepository` com implementação de exemplo (`MockFoodRepository`)       |
 
 ### Estrutura de pastas
 
 ```
 lib/
 ├── main.dart                 # Ponto de entrada
-├── app.dart                  # MultiProvider, MaterialApp, tema, i18n e rotas
+├── app.dart                  # MultiProvider, MaterialApp, tema, idioma e rotas
 ├── configs/
 │   ├── constants/            # Constantes de UI e de nutrição
-│   ├── l10n/                 # Traduções (.arb) e classes geradas
+│   ├── strings/              # Textos (AppStrings), rótulos e formatação de números
 │   ├── routes/               # Nomes de rotas e RouteGenerator
 │   └── theme/                # Cores, tipografia e ThemeData
-├── controllers/              # Session, Onboarding, Profile, DailyLog, Meal
-├── mocks/                    # Dados em memória da Fase 1
+├── controllers/              # Session, Onboarding, Profile, DailyLog, Meal, FoodSearch
+├── mocks/                    # Dados em memória da Fase 1 (perfil, refeições, alimentos)
 ├── models/                   # Entidades e enums
 ├── pages/                    # Uma pasta por tela/fluxo
-├── services/                 # NutritionCalculator, Validators, DateUtils
+├── repositories/             # Interfaces de acesso a dados e implementações
+├── services/                 # NutritionCalculator, Validators, DateUtils, TextUtils
 └── widgets/                  # Botões, inputs, cards, gráficos, navbar, etc.
 ```
 
 ### Controllers
 
-| Controller             | Responsabilidade                                                                                                                  |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `SessionController`    | Estado de autenticação (login/logout)                                                                                             |
-| `OnboardingController` | Guarda as respostas do onboarding e monta o `UserProfile`                                                                         |
-| `ProfileController`    | Perfil do usuário e metas; recalcula metas quando peso/altura mudam                                                               |
-| `DailyLogController`   | Dia selecionado na Home e refeições agrupadas por dia                                                                             |
-| `MealController`       | CRUD de refeições, cálculo das calorias e validação dos macros; depende do `DailyLogController` via `ChangeNotifierProxyProvider` |
+| Controller             | Responsabilidade                                                                                                         |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `SessionController`    | Estado de autenticação (login/logout)                                                                                    |
+| `OnboardingController` | Guarda as respostas do onboarding e monta o `UserProfile`                                                                |
+| `ProfileController`    | Perfil do usuário e metas; recalcula metas quando peso/altura mudam                                                      |
+| `DailyLogController`   | Dia selecionado na Home e refeições agrupadas por dia                                                                    |
+| `MealController`       | CRUD de refeições e validação dos itens; depende do `DailyLogController` via `ChangeNotifierProxyProvider`               |
+| `FoodSearchController` | Busca de alimentos com debounce, estados de carregando/erro/vazio e descarte de respostas fora de ordem; criado por tela |
+
+### Repository pattern
+
+A UI e os controllers dependem só da interface `FoodRepository`, injetada via
+`Provider` em `app.dart`. Para trocar a base de exemplo por uma API real
+(TACO, Open Food Facts ou um backend próprio) basta criar outra implementação
+e trocar uma linha:
+
+```dart
+Provider<FoodRepository>(create: (_) => const MockFoodRepository()),
+```
+
+O `MockFoodRepository` simula latência de rede para que os estados de
+carregamento e erro da tela de busca já funcionem como numa chamada real.
+
+Cada `MealItem` guarda uma cópia do alimento, com seus nutrientes. Assim,
+correções futuras na base não alteram o histórico de refeições do usuário.
 
 ---
 
@@ -195,6 +208,8 @@ flowchart TD
         Perfil
     end
     Home -->|Nova / editar refeição| MealForm[Formulário de refeição]
+    MealForm -->|Adicionar alimento| FoodSearch[Busca de alimentos]
+    FoodSearch -->|Quantidade e medida| MealForm
     Perfil -->|Logout| Welcome
 ```
 
@@ -207,6 +222,7 @@ flowchart TD
 | `/onboarding/loading`, `/onboarding/result` | Cálculo e resultado da meta                                                        |
 | `/main`                                     | Shell com abas Home, Metas e Perfil (`IndexedStack` preserva o estado de cada aba) |
 | `/meal/form`                                | Cadastro de refeição; recebe um `Meal` opcional como argumento para edição         |
+| `/meal/food-search`                         | Busca de alimentos; fecha retornando o `MealItem` escolhido                        |
 
 Após login, conclusão do onboarding e logout, a pilha de navegação é limpa
 (`pushNamedAndRemoveUntil`) para impedir que o botão "voltar" retorne a
@@ -219,23 +235,23 @@ telas de autenticação ou ao app após sair.
 ### Validadores
 
 Os validadores ficam em `lib/services/validators.dart` e retornam erros
-**tipados e independentes de idioma** (`sealed class ValidationError`). A
-tradução para texto acontece na camada de View
-(`lib/configs/l10n/l10n_extensions.dart`), então a mesma regra exibe a
-mensagem em pt-BR ou en-US.
+**tipados** (`sealed class ValidationError`). A conversão para a mensagem
+exibida acontece na camada de View (`lib/configs/strings/string_extensions.dart`),
+mantendo as regras de validação separadas dos textos da interface.
 
-| Campo                          | Regra                                                                         | Mensagem de erro                         |
-| ------------------------------ | ----------------------------------------------------------------------------- | ---------------------------------------- |
-| Obrigatórios (nome, descrição) | Não pode ser vazio/só espaços                                                 | Campo obrigatório                        |
-| E-mail                         | Formato `usuario@dominio.ext`                                                 | E-mail inválido                          |
-| Senha                          | Mínimo de 8 caracteres                                                        | Senha muito curta                        |
-| Confirmação de senha           | Igual à senha                                                                 | As senhas não coincidem                  |
-| Data de nascimento             | Formato `DD/MM/AAAA`, data existente, não futura, idade entre 13 e 100 anos   | Data inválida / Idade fora do intervalo  |
-| Altura                         | Número entre 100 e 250 cm                                                     | Fora do intervalo (mín–máx)              |
-| Peso                           | Número entre 30 e 300 kg                                                      | Fora do intervalo (mín–máx)              |
-| Calorias (meta)                | Número maior que zero                                                         | Deve ser positivo                        |
-| Macros (refeição/meta)         | Número maior ou igual a zero                                                  | Não pode ser negativo                    |
-| Macros (refeição)              | Ao menos um macro maior que zero (as calorias são `4·carb + 4·prot + 9·gord`) | Informe ao menos um macro maior que zero |
+| Campo                  | Regra                                                                       | Mensagem de erro                        |
+| ---------------------- | --------------------------------------------------------------------------- | --------------------------------------- |
+| Obrigatórios (nome)    | Não pode ser vazio/só espaços                                               | Campo obrigatório                       |
+| E-mail                 | Formato `usuario@dominio.ext`                                               | E-mail inválido                         |
+| Senha                  | Mínimo de 8 caracteres                                                      | Senha muito curta                       |
+| Confirmação de senha   | Igual à senha                                                               | As senhas não coincidem                 |
+| Data de nascimento     | Formato `DD/MM/AAAA`, data existente, não futura, idade entre 13 e 100 anos | Data inválida / Idade fora do intervalo |
+| Altura                 | Número entre 100 e 250 cm                                                   | Fora do intervalo (mín–máx)             |
+| Peso                   | Número entre 30 e 300 kg                                                    | Fora do intervalo (mín–máx)             |
+| Calorias (meta)        | Número maior que zero                                                       | Deve ser positivo                       |
+| Macros (meta)          | Número maior ou igual a zero                                                | Não pode ser negativo                   |
+| Quantidade do alimento | Número maior que zero e até 5 kg por alimento, em qualquer medida           | Máximo de 5000 g por alimento           |
+| Refeição               | Ao menos um alimento                                                        | Adicione ao menos um alimento           |
 
 ### Tratamento de variáveis e entrada de dados
 
@@ -250,6 +266,11 @@ mensagem em pt-BR ou en-US.
   válida (ex.: nenhuma opção selecionada, altura fora do intervalo).
 - **Textos** passam por `trim()` antes de serem salvos.
 - **Seletor de dia** nunca permite escolher uma data futura.
+- **Troca de medida** (ex.: de "unidade" para "gramas") converte a quantidade
+  para manter o mesmo peso.
+- **Busca de alimentos** ignora acentos e maiúsculas, espera o usuário parar
+  de digitar antes de buscar e mostra estados de carregando, erro (com
+  "Tentar novamente") e nenhum resultado.
 - **Ações destrutivas** (excluir refeição, logout, alterar peso/altura que
   recalcula metas) pedem confirmação em diálogo.
 - **Feedback** de sucesso (refeição salva, metas atualizadas, perfil
@@ -259,8 +280,8 @@ mensagem em pt-BR ou en-US.
 
 ## Equipe e atividades desenvolvidas
 
-| Integrante           | Atividades                                                                                                                                                                                                                                                                                                                                                                        |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Gabriel Siqueira** | Estrutura do projeto e padrão MVC; models, enums e mocks; controllers com Provider; cálculo nutricional (Mifflin-St Jeor); validadores e tratamento de dados; tema, tipografia e componentes reutilizáveis; internacionalização pt-BR/en-US; telas de splash, boas-vindas, login e onboarding; Home, refeições, metas e perfil; rotas nomeadas e navegação com bottom navigation. |
+| Integrante           | Atividades                                                                                                                                                                                                                                                                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Gabriel Siqueira** | Estrutura do projeto e padrão MVC; models, enums e mocks; controllers com Provider; cálculo nutricional (Mifflin-St Jeor); validadores e tratamento de dados; tema, tipografia e componentes reutilizáveis; telas de splash, boas-vindas, login e onboarding; Home, refeições, metas e perfil; rotas nomeadas e navegação com bottom navigation. |
 
 ---
