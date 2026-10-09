@@ -5,8 +5,10 @@ macronutrientes (carboidratos, proteínas e gorduras). A partir de um
 onboarding curto, o app calcula a meta calórica do usuário e permite
 registrar, editar e excluir refeições, acompanhando o progresso do dia.
 
-> **Fase 1 — Interface e navegação.** Nesta etapa o app não tem backend:
-> todos os dados ficam em memória (mocks) e são perdidos ao fechar o app.
+> **Entrega 2 em andamento.** Os dados já ficam salvos no aparelho (SQLite
+> com drift) e o app funciona offline. Autenticação real e sincronização com
+> o servidor (Supabase) vêm nas próximas etapas. As decisões de arquitetura
+> estão em [`docs/arquitetura.md`](docs/arquitetura.md).
 
 ---
 
@@ -101,12 +103,14 @@ flutter doctor
 
 | Item                   | Onde fica                                        | Observação                                                                       |
 | ---------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------- |
-| Dependências           | `pubspec.yaml`                                   | `provider`, `intl`, `uuid`, `flutter_localizations`                              |
+| Dependências           | `pubspec.yaml`                                   | `provider`, `intl`, `uuid`, `flutter_localizations`, `drift`, `drift_flutter`    |
+| Banco local            | `lib/database/`                                  | Tabelas do drift; após alterá-las, rode `dart run build_runner build`            |
+| Catálogo de alimentos  | `assets/data/foods.json`                         | Inserido no banco na primeira execução                                           |
 | Textos                 | `lib/configs/strings/app_strings.dart`           | Todos os textos da interface, em português                                       |
 | Tema e cores           | `lib/configs/theme/`                             | Apenas tema escuro                                                               |
 | Constantes de nutrição | `lib/configs/constants/nutrition_constants.dart` | Fatores de atividade, kcal por grama de cada macro, limites de altura/peso/idade |
 | Constantes de UI       | `lib/configs/constants/app_constants.dart`       | Espaçamentos, raios, durações de splash/loading                                  |
-| Dados de exemplo       | `lib/mocks/`                                     | Perfil, refeições e base de alimentos (valores aproximados da TACO)              |
+| Dados de exemplo       | `lib/mocks/`                                     | Conta de demonstração do login e dados dos testes (valores aproximados da TACO)  |
 | Idioma                 | `lib/app.dart`                                   | Fixo em pt-BR; `flutter_localizations` traduz os widgets do Flutter (calendário) |
 
 ---
@@ -122,7 +126,7 @@ estado via **Provider**:
 | **View**       | `lib/pages/`, `lib/widgets/` | Telas e componentes reutilizáveis; só exibem dados e repassam ações aos controllers                                 |
 | **Controller** | `lib/controllers/`           | `ChangeNotifier`s que guardam o estado e as regras de cada fluxo                                                    |
 | **Services**   | `lib/services/`              | Lógica pura e testável: cálculo nutricional, validadores e utilitários de data e texto                              |
-| **Repository** | `lib/repositories/`          | Acesso a dados atrás de interfaces; hoje `FoodRepository` com implementação de exemplo (`MockFoodRepository`)       |
+| **Repository** | `lib/repositories/`          | Acesso a dados atrás de interfaces (`Food`, `Meal`, `Profile`, `Session`), com implementações em drift e mocks para testes |
 
 ### Estrutura de pastas
 
@@ -136,7 +140,8 @@ lib/
 │   ├── routes/               # Nomes de rotas e RouteGenerator
 │   └── theme/                # Cores, tipografia e ThemeData
 ├── controllers/              # Session, Onboarding, Profile, DailyLog, Meal, FoodSearch
-├── mocks/                    # Dados em memória da Fase 1 (perfil, refeições, alimentos)
+├── database/                 # Banco local (drift): tabelas, IDs e catálogo inicial
+├── mocks/                    # Conta de demonstração e dados de teste
 ├── models/                   # Entidades e enums
 ├── pages/                    # Uma pasta por tela/fluxo
 ├── repositories/             # Interfaces de acesso a dados e implementações
@@ -157,17 +162,18 @@ lib/
 
 ### Repository pattern
 
-A UI e os controllers dependem só da interface `FoodRepository`, injetada via
-`Provider` em `app.dart`. Para trocar a base de exemplo por uma API real
-(TACO, Open Food Facts ou um backend próprio) basta criar outra implementação
-e trocar uma linha:
+Os controllers dependem só de interfaces, injetadas via `Provider` em
+`app.dart`:
 
-```dart
-Provider<FoodRepository>(create: (_) => const MockFoodRepository()),
-```
+| Interface           | Implementação no app    | Responsabilidade                                                       |
+| ------------------- | ----------------------- | ---------------------------------------------------------------------- |
+| `FoodRepository`    | `DriftFoodRepository`   | Busca no catálogo local, sem acentos e maiúsculas                      |
+| `MealRepository`    | `DriftMealRepository`   | Refeições do dia como stream: toda gravação atualiza a Home sozinha    |
+| `ProfileRepository` | `DriftProfileRepository`| Perfil, histórico de peso e histórico de metas                         |
+| `SessionRepository` | `LocalSessionRepository`| Sessão local até a autenticação real; o logout apaga os dados do aparelho |
 
-O `MockFoodRepository` simula latência de rede para que os estados de
-carregamento e erro da tela de busca já funcionem como numa chamada real.
+Os testes usam `MockFoodRepository` e `MockMealRepository` (em memória), e os
+repositórios do drift são testados com um banco SQLite em memória.
 
 Cada `MealItem` guarda uma cópia do alimento, com seus nutrientes. Assim,
 correções futuras na base não alteram o histórico de refeições do usuário.

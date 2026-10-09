@@ -77,7 +77,7 @@ controllers não sabem se o dado veio do disco ou da rede.
 
 | Decisão                         | Escolha                                      | Por quê                                                                                                          |
 | ------------------------------- | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Banco local                     | **SQLite com drift**                         | Funciona offline, UI responde na hora, busca local rápida com FTS5; drift dá tipagem, migrations e streams       |
+| Banco local                     | **SQLite com drift**                         | Funciona offline, UI responde na hora, busca local rápida; drift dá tipagem, migrations e streams       |
 | Backend                         | **Supabase**                                 | Postgres relacional (mesmo formato do SQLite local), Auth e Edge Functions inclusos, sem lock-in (Postgres comum) |
 | Alternativas descartadas        | Firebase; backend próprio                    | Firestore é NoSQL e já tem cache offline próprio (SQLite ficaria redundante); backend próprio aumenta risco de falha, deploy e segurança para um dev só |
 | Sincronização                   | **Implementação própria**                    | Dados são de um único usuário, conflitos são raros; simples de explicar; evita mais um serviço (ex.: PowerSync)  |
@@ -160,10 +160,11 @@ meals (
 
 meal_items (
   meal_id         uuid NOT NULL REFERENCES meals ON DELETE CASCADE,
-  food_id         uuid NULL REFERENCES foods,  -- referência, pode sumir
+  food_id         text NULL REFERENCES foods,  -- referência, pode sumir
   position        int  NOT NULL,
   -- cópia do alimento: correções na base não alteram o histórico
   food_name       text    NOT NULL,
+  food_emoji      text    NOT NULL,
   kcal_100g       numeric NOT NULL,
   carbs_100g      numeric NOT NULL,
   protein_100g    numeric NOT NULL,
@@ -175,13 +176,13 @@ meal_items (
 
 -- Catálogo: público (owner_id null) ou criado pelo usuário
 foods (
-  id              uuid PK,
+  id              text PK,            -- 'taco-…' no catálogo; uuid nos custom
   source          text NOT NULL CHECK (source IN ('taco','off','custom')),
   source_ref      text NULL,          -- id na TACO ou código na OFF
   barcode         text NULL UNIQUE,
   owner_id        uuid NULL REFERENCES auth.users,
   name            text NOT NULL,
-  emoji           text NULL,
+  emoji           text NOT NULL,      -- TACO não tem: mapeado pela categoria
   kcal_100g       numeric NOT NULL,
   carbs_100g      numeric NOT NULL,
   protein_100g    numeric NOT NULL,
@@ -190,16 +191,19 @@ foods (
 )
 
 food_portions (
-  id              uuid PK,
-  food_id         uuid NOT NULL REFERENCES foods ON DELETE CASCADE,
+  food_id         text NOT NULL REFERENCES foods ON DELETE CASCADE,
   unit            text NOT NULL,      -- PortionUnit, + 'serving' (porção da embalagem)
   grams           numeric NOT NULL CHECK (grams > 0),
-  UNIQUE (food_id, unit, grams)
+  position        int  NOT NULL,      -- ordem de exibição; a primeira é a sugerida
+  PRIMARY KEY (food_id, unit, grams)
 )
 ```
 
 Observações:
 
+- **ID dos itens:** UUID v5 de `meal_id` + `position`. Editar a refeição
+  reaproveita as mesmas linhas; itens que sobram de uma versão maior viram
+  exclusões lógicas.
 - `meal_items.user_id` é redundante com `meals.user_id` de propósito: a regra
   de acesso fica direta, sem subconsulta.
 - `profiles` perde a coluna de peso; o peso atual vem de `weight_entries`.
@@ -228,16 +232,24 @@ create function can_read_user(target uuid) returns boolean
 
 ### Banco local (drift)
 
-As mesmas tabelas, com as diferenças:
+As mesmas tabelas (`lib/database/tables.dart`), com as diferenças:
 
-| Item                 | Local                                                              |
-| -------------------- | ------------------------------------------------------------------ |
-| `is_dirty` (bool)    | Linha alterada localmente e ainda não enviada                      |
-| `server_updated_at`  | Guardado como veio do servidor (não é gerado localmente)           |
-| `sync_state`         | Tabela de uma linha com o último `server_updated_at` recebido      |
-| `foods_fts`          | Tabela virtual FTS5 para busca sem acento/maiúsculas               |
-| `reminder_settings`  | Horários dos lembretes; **só local**, não sincroniza               |
-| Seed                 | Catálogo TACO carregado na primeira execução a partir de um asset |
+| Item                 | Local                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------------- |
+| `user_id`            | **Não existe**: o banco local só guarda dados de um usuário (apagado no logout); o envio preenche com `auth.uid()` |
+| `is_dirty` (bool)    | Linha alterada localmente e ainda não enviada                                               |
+| `server_updated_at`  | Guardado como veio do servidor (não é gerado localmente)                                    |
+| Datas sem horário    | Texto `AAAA-MM-DD` (`DateOnlyConverter`), imune a fuso; ordena corretamente como texto     |
+| Timestamps           | Texto ISO-8601 (`store_date_time_values_as_text`), com milissegundos                        |
+| `foods.search_name`  | Nome minúsculo e sem acentos; a busca usa `LIKE '%termo%'` para cada palavra                |
+| `sync_state`         | Tabela de uma linha com o último `server_updated_at` recebido (etapa 3)                     |
+| `reminder_settings`  | Horários dos lembretes; **só local**, não sincroniza (etapa 5)                              |
+| Seed                 | Catálogo em `assets/data/foods.json`, inserido quando o banco é criado                      |
+
+> **Busca:** com algumas centenas de alimentos, `LIKE` numa coluna já
+> normalizada é rápido e mantém o comportamento atual (encontra "rroz" em
+> "Arroz"). FTS5 só busca por início de palavra; fica como opção se o
+> catálogo crescer muito.
 
 ---
 
