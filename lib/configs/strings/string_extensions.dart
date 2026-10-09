@@ -140,6 +140,7 @@ extension PortionUnitLabels on PortionUnit {
     PortionUnit.teaspoon => AppStrings.portionTeaspoon(count),
     PortionUnit.cup => AppStrings.portionCup(count),
     PortionUnit.ladle => AppStrings.portionLadle(count),
+    PortionUnit.servingSpoon => AppStrings.portionServingSpoon(count),
   };
 }
 

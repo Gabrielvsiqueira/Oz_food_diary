@@ -1,317 +1,2918 @@
 [
   {
-    "id": "taco-arroz-branco",
-    "name": "Arroz branco cozido",
+    "id": "taco-1",
+    "name": "Arroz, integral, cozido",
     "emoji": "🍚",
-    "kcal": 128.0,
-    "carbs": 28.1,
-    "protein": 2.5,
-    "fat": 0.2,
-    "portions": [
-      {
-        "unit": "tablespoon",
-        "grams": 25.0
-      }
-    ]
-  },
-  {
-    "id": "taco-arroz-integral",
-    "name": "Arroz integral cozido",
-    "emoji": "🍚",
-    "kcal": 124.0,
+    "kcal": 123.5,
     "carbs": 25.8,
     "protein": 2.6,
     "fat": 1.0,
     "portions": [
       {
+        "unit": "servingSpoon",
+        "grams": 63
+      },
+      {
         "unit": "tablespoon",
-        "grams": 25.0
+        "grams": 20
       }
     ]
   },
   {
-    "id": "taco-feijao-carioca",
-    "name": "Feijão carioca cozido",
-    "emoji": "🫘",
-    "kcal": 76.0,
-    "carbs": 13.6,
-    "protein": 4.8,
-    "fat": 0.5,
+    "id": "taco-2",
+    "name": "Arroz, integral, cru",
+    "emoji": "🍚",
+    "kcal": 359.7,
+    "carbs": 77.5,
+    "protein": 7.3,
+    "fat": 1.9,
+    "portions": []
+  },
+  {
+    "id": "taco-3",
+    "name": "Arroz, tipo 1, cozido",
+    "emoji": "🍚",
+    "kcal": 128.3,
+    "carbs": 28.1,
+    "protein": 2.5,
+    "fat": 0.2,
     "portions": [
       {
-        "unit": "ladle",
-        "grams": 86.0
+        "unit": "servingSpoon",
+        "grams": 45
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 25
       }
     ]
   },
   {
-    "id": "taco-feijao-preto",
-    "name": "Feijão preto cozido",
-    "emoji": "🫘",
-    "kcal": 77.0,
-    "carbs": 14.0,
-    "protein": 4.5,
-    "fat": 0.5,
+    "id": "taco-4",
+    "name": "Arroz, tipo 1, cru",
+    "emoji": "🍚",
+    "kcal": 357.8,
+    "carbs": 78.8,
+    "protein": 7.2,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-5",
+    "name": "Arroz, tipo 2, cozido",
+    "emoji": "🍚",
+    "kcal": 130.1,
+    "carbs": 28.2,
+    "protein": 2.6,
+    "fat": 0.4,
     "portions": [
       {
-        "unit": "ladle",
-        "grams": 86.0
-      }
-    ]
-  },
-  {
-    "id": "taco-frango-peito-grelhado",
-    "name": "Peito de frango grelhado",
-    "emoji": "🍗",
-    "kcal": 159.0,
-    "carbs": 0.0,
-    "protein": 32.0,
-    "fat": 2.5,
-    "portions": [
+        "unit": "servingSpoon",
+        "grams": 45
+      },
       {
-        "unit": "unit",
-        "grams": 120.0
+        "unit": "tablespoon",
+        "grams": 25
       }
     ]
   },
   {
-    "id": "taco-patinho-grelhado",
-    "name": "Carne bovina, patinho grelhado",
-    "emoji": "🥩",
-    "kcal": 219.0,
-    "carbs": 0.0,
-    "protein": 35.9,
-    "fat": 7.3,
-    "portions": [
-      {
-        "unit": "unit",
-        "grams": 100.0
-      }
-    ]
+    "id": "taco-6",
+    "name": "Arroz, tipo 2, cru",
+    "emoji": "🍚",
+    "kcal": 358.1,
+    "carbs": 78.9,
+    "protein": 7.2,
+    "fat": 0.3,
+    "portions": []
   },
   {
-    "id": "taco-ovo-cozido",
-    "name": "Ovo de galinha cozido",
-    "emoji": "🥚",
-    "kcal": 146.0,
-    "carbs": 0.6,
-    "protein": 13.3,
-    "fat": 9.5,
-    "portions": [
-      {
-        "unit": "unit",
-        "grams": 50.0
-      }
-    ]
-  },
-  {
-    "id": "taco-pao-frances",
-    "name": "Pão francês",
-    "emoji": "🥖",
-    "kcal": 300.0,
-    "carbs": 58.6,
-    "protein": 8.0,
-    "fat": 3.1,
-    "portions": [
-      {
-        "unit": "unit",
-        "grams": 50.0
-      }
-    ]
-  },
-  {
-    "id": "taco-pao-forma-integral",
-    "name": "Pão de forma integral",
-    "emoji": "🍞",
-    "kcal": 253.0,
-    "carbs": 49.9,
-    "protein": 9.4,
-    "fat": 3.7,
-    "portions": [
-      {
-        "unit": "slice",
-        "grams": 25.0
-      }
-    ]
-  },
-  {
-    "id": "taco-manteiga",
-    "name": "Manteiga com sal",
-    "emoji": "🧈",
-    "kcal": 726.0,
-    "carbs": 0.1,
-    "protein": 0.4,
-    "fat": 82.4,
-    "portions": [
-      {
-        "unit": "teaspoon",
-        "grams": 5.0
-      }
-    ]
-  },
-  {
-    "id": "taco-cafe-coado",
-    "name": "Café coado sem açúcar",
-    "emoji": "☕",
-    "kcal": 9.0,
-    "carbs": 1.5,
-    "protein": 0.7,
-    "fat": 0.1,
-    "portions": [
-      {
-        "unit": "cup",
-        "grams": 100.0
-      }
-    ]
-  },
-  {
-    "id": "taco-leite-integral",
-    "name": "Leite de vaca integral",
-    "emoji": "🥛",
-    "kcal": 61.0,
-    "carbs": 4.7,
-    "protein": 3.2,
-    "fat": 3.3,
-    "portions": [
-      {
-        "unit": "cup",
-        "grams": 240.0
-      }
-    ]
-  },
-  {
-    "id": "taco-banana-prata",
-    "name": "Banana prata",
-    "emoji": "🍌",
-    "kcal": 98.0,
-    "carbs": 26.0,
-    "protein": 1.3,
-    "fat": 0.1,
-    "portions": [
-      {
-        "unit": "unit",
-        "grams": 70.0
-      }
-    ]
-  },
-  {
-    "id": "taco-maca-fuji",
-    "name": "Maçã fuji",
-    "emoji": "🍎",
-    "kcal": 56.0,
-    "carbs": 15.2,
-    "protein": 0.3,
-    "fat": 0.0,
-    "portions": [
-      {
-        "unit": "unit",
-        "grams": 130.0
-      }
-    ]
-  },
-  {
-    "id": "taco-iogurte-natural",
-    "name": "Iogurte natural integral",
-    "emoji": "🥣",
-    "kcal": 51.0,
-    "carbs": 1.9,
-    "protein": 4.1,
-    "fat": 3.0,
-    "portions": [
-      {
-        "unit": "unit",
-        "grams": 170.0
-      }
-    ]
-  },
-  {
-    "id": "taco-aveia-flocos",
-    "name": "Aveia em flocos",
+    "id": "taco-7",
+    "name": "Aveia, flocos, crua",
     "emoji": "🌾",
-    "kcal": 394.0,
+    "kcal": 393.8,
     "carbs": 66.6,
     "protein": 13.9,
     "fat": 8.5,
     "portions": [
       {
         "unit": "tablespoon",
-        "grams": 15.0
+        "grams": 15
+      },
+      {
+        "unit": "teaspoon",
+        "grams": 2
       }
     ]
   },
   {
-    "id": "taco-batata-doce-cozida",
-    "name": "Batata-doce cozida",
-    "emoji": "🍠",
-    "kcal": 77.0,
-    "carbs": 18.4,
+    "id": "taco-8",
+    "name": "Biscoito, doce, maisena",
+    "emoji": "🍪",
+    "kcal": 442.8,
+    "carbs": 75.2,
+    "protein": 8.1,
+    "fat": 12.0,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 5
+      }
+    ]
+  },
+  {
+    "id": "taco-9",
+    "name": "Biscoito, doce, recheado com chocolate",
+    "emoji": "🍪",
+    "kcal": 471.8,
+    "carbs": 70.5,
+    "protein": 6.4,
+    "fat": 19.6,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 13
+      }
+    ]
+  },
+  {
+    "id": "taco-10",
+    "name": "Biscoito, doce, recheado com morango",
+    "emoji": "🍪",
+    "kcal": 471.2,
+    "carbs": 71.0,
+    "protein": 5.7,
+    "fat": 19.6,
+    "portions": []
+  },
+  {
+    "id": "taco-11",
+    "name": "Biscoito, doce, wafer, recheado de chocolate",
+    "emoji": "🍪",
+    "kcal": 502.5,
+    "carbs": 67.5,
+    "protein": 5.6,
+    "fat": 24.7,
+    "portions": []
+  },
+  {
+    "id": "taco-12",
+    "name": "Biscoito, doce, wafer, recheado de morango",
+    "emoji": "🍪",
+    "kcal": 513.4,
+    "carbs": 67.4,
+    "protein": 4.5,
+    "fat": 26.4,
+    "portions": []
+  },
+  {
+    "id": "taco-13",
+    "name": "Biscoito, salgado, cream cracker",
+    "emoji": "🍪",
+    "kcal": 431.7,
+    "carbs": 68.7,
+    "protein": 10.1,
+    "fat": 14.4,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 5
+      }
+    ]
+  },
+  {
+    "id": "taco-14",
+    "name": "Bolo, mistura para",
+    "emoji": "🍰",
+    "kcal": 418.6,
+    "carbs": 84.7,
+    "protein": 6.2,
+    "fat": 6.1,
+    "portions": []
+  },
+  {
+    "id": "taco-15",
+    "name": "Bolo, pronto, aipim",
+    "emoji": "🍰",
+    "kcal": 323.9,
+    "carbs": 47.9,
+    "protein": 4.4,
+    "fat": 12.7,
+    "portions": []
+  },
+  {
+    "id": "taco-16",
+    "name": "Bolo, pronto, chocolate",
+    "emoji": "🍰",
+    "kcal": 410.0,
+    "carbs": 54.7,
+    "protein": 6.2,
+    "fat": 18.5,
+    "portions": []
+  },
+  {
+    "id": "taco-17",
+    "name": "Bolo, pronto, coco",
+    "emoji": "🍰",
+    "kcal": 333.4,
+    "carbs": 52.3,
+    "protein": 5.7,
+    "fat": 11.3,
+    "portions": []
+  },
+  {
+    "id": "taco-18",
+    "name": "Bolo, pronto, milho",
+    "emoji": "🍰",
+    "kcal": 311.4,
+    "carbs": 45.1,
+    "protein": 4.8,
+    "fat": 12.4,
+    "portions": []
+  },
+  {
+    "id": "taco-19",
+    "name": "Canjica, branca, crua",
+    "emoji": "🌾",
+    "kcal": 357.6,
+    "carbs": 78.1,
+    "protein": 7.2,
+    "fat": 1.0,
+    "portions": []
+  },
+  {
+    "id": "taco-20",
+    "name": "Canjica, com leite integral",
+    "emoji": "🌾",
+    "kcal": 112.5,
+    "carbs": 23.6,
+    "protein": 2.4,
+    "fat": 1.2,
+    "portions": []
+  },
+  {
+    "id": "taco-21",
+    "name": "Cereais, milho, flocos, com sal",
+    "emoji": "🌾",
+    "kcal": 369.6,
+    "carbs": 80.8,
+    "protein": 7.3,
+    "fat": 1.6,
+    "portions": []
+  },
+  {
+    "id": "taco-22",
+    "name": "Cereais, milho, flocos, sem sal",
+    "emoji": "🌾",
+    "kcal": 363.3,
+    "carbs": 80.4,
+    "protein": 6.9,
+    "fat": 1.2,
+    "portions": []
+  },
+  {
+    "id": "taco-23",
+    "name": "Cereais, mingau, milho, infantil",
+    "emoji": "🌾",
+    "kcal": 394.4,
+    "carbs": 87.3,
+    "protein": 6.4,
+    "fat": 1.1,
+    "portions": []
+  },
+  {
+    "id": "taco-24",
+    "name": "Cereais, mistura para vitamina, trigo, cevada e aveia",
+    "emoji": "🌾",
+    "kcal": 381.1,
+    "carbs": 81.6,
+    "protein": 8.9,
+    "fat": 2.1,
+    "portions": []
+  },
+  {
+    "id": "taco-25",
+    "name": "Cereal matinal, milho",
+    "emoji": "🌾",
+    "kcal": 365.4,
+    "carbs": 83.8,
+    "protein": 7.2,
+    "fat": 1.0,
+    "portions": []
+  },
+  {
+    "id": "taco-26",
+    "name": "Cereal matinal, milho, açúcar",
+    "emoji": "🌾",
+    "kcal": 376.6,
+    "carbs": 88.8,
+    "protein": 4.7,
+    "fat": 0.7,
+    "portions": []
+  },
+  {
+    "id": "taco-27",
+    "name": "Creme de arroz, pó",
+    "emoji": "🌾",
+    "kcal": 386.0,
+    "carbs": 83.9,
+    "protein": 7.0,
+    "fat": 1.2,
+    "portions": []
+  },
+  {
+    "id": "taco-28",
+    "name": "Creme de milho, pó",
+    "emoji": "🌾",
+    "kcal": 333.0,
+    "carbs": 86.1,
+    "protein": 4.8,
+    "fat": 1.6,
+    "portions": []
+  },
+  {
+    "id": "taco-29",
+    "name": "Curau, milho verde",
+    "emoji": "🌾",
+    "kcal": 78.4,
+    "carbs": 13.9,
+    "protein": 2.4,
+    "fat": 1.6,
+    "portions": []
+  },
+  {
+    "id": "taco-30",
+    "name": "Curau, milho verde, mistura para",
+    "emoji": "🌾",
+    "kcal": 402.3,
+    "carbs": 79.8,
+    "protein": 2.2,
+    "fat": 13.4,
+    "portions": []
+  },
+  {
+    "id": "taco-31",
+    "name": "Farinha, de arroz, enriquecida",
+    "emoji": "🌾",
+    "kcal": 363.1,
+    "carbs": 85.5,
+    "protein": 1.3,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-32",
+    "name": "Farinha, de centeio, integral",
+    "emoji": "🌾",
+    "kcal": 335.8,
+    "carbs": 73.3,
+    "protein": 12.5,
+    "fat": 1.8,
+    "portions": []
+  },
+  {
+    "id": "taco-33",
+    "name": "Farinha, de milho, amarela",
+    "emoji": "🌾",
+    "kcal": 350.6,
+    "carbs": 79.1,
+    "protein": 7.2,
+    "fat": 1.5,
+    "portions": []
+  },
+  {
+    "id": "taco-34",
+    "name": "Farinha, de rosca",
+    "emoji": "🌾",
+    "kcal": 370.6,
+    "carbs": 75.8,
+    "protein": 11.4,
+    "fat": 1.5,
+    "portions": []
+  },
+  {
+    "id": "taco-35",
+    "name": "Farinha, de trigo",
+    "emoji": "🌾",
+    "kcal": 360.5,
+    "carbs": 75.1,
+    "protein": 9.8,
+    "fat": 1.4,
+    "portions": []
+  },
+  {
+    "id": "taco-36",
+    "name": "Farinha, láctea, de cereais",
+    "emoji": "🌾",
+    "kcal": 414.9,
+    "carbs": 77.8,
+    "protein": 11.9,
+    "fat": 5.8,
+    "portions": []
+  },
+  {
+    "id": "taco-37",
+    "name": "Lasanha, massa fresca, cozida",
+    "emoji": "🍝",
+    "kcal": 163.8,
+    "carbs": 32.5,
+    "protein": 5.8,
+    "fat": 1.2,
+    "portions": []
+  },
+  {
+    "id": "taco-38",
+    "name": "Lasanha, massa fresca, crua",
+    "emoji": "🍝",
+    "kcal": 220.3,
+    "carbs": 45.1,
+    "protein": 7.0,
+    "fat": 1.3,
+    "portions": []
+  },
+  {
+    "id": "taco-39",
+    "name": "Macarrão, instantâneo",
+    "emoji": "🍝",
+    "kcal": 435.9,
+    "carbs": 62.4,
+    "protein": 8.8,
+    "fat": 17.2,
+    "portions": []
+  },
+  {
+    "id": "taco-40",
+    "name": "Macarrão, trigo, cru",
+    "emoji": "🍝",
+    "kcal": 371.1,
+    "carbs": 77.9,
+    "protein": 10.0,
+    "fat": 1.3,
+    "portions": []
+  },
+  {
+    "id": "taco-41",
+    "name": "Macarrão, trigo, cru, com ovos",
+    "emoji": "🍝",
+    "kcal": 370.6,
+    "carbs": 76.6,
+    "protein": 10.3,
+    "fat": 2.0,
+    "portions": []
+  },
+  {
+    "id": "taco-42",
+    "name": "Milho, amido, cru",
+    "emoji": "🌽",
+    "kcal": 361.4,
+    "carbs": 87.1,
+    "protein": 0.6,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-43",
+    "name": "Milho, fubá, cru",
+    "emoji": "🌽",
+    "kcal": 353.5,
+    "carbs": 78.9,
+    "protein": 7.2,
+    "fat": 1.9,
+    "portions": []
+  },
+  {
+    "id": "taco-44",
+    "name": "Milho, verde, cru",
+    "emoji": "🌽",
+    "kcal": 138.2,
+    "carbs": 28.6,
+    "protein": 6.6,
+    "fat": 0.6,
+    "portions": []
+  },
+  {
+    "id": "taco-45",
+    "name": "Milho, verde, enlatado, drenado",
+    "emoji": "🌽",
+    "kcal": 97.6,
+    "carbs": 17.1,
+    "protein": 3.2,
+    "fat": 2.4,
+    "portions": []
+  },
+  {
+    "id": "taco-46",
+    "name": "Mingau tradicional, pó",
+    "emoji": "🌾",
+    "kcal": 373.4,
+    "carbs": 89.3,
+    "protein": 0.6,
+    "fat": 0.4,
+    "portions": []
+  },
+  {
+    "id": "taco-47",
+    "name": "Pamonha, barra para cozimento, pré-cozida",
+    "emoji": "🌾",
+    "kcal": 171.2,
+    "carbs": 30.7,
+    "protein": 2.6,
+    "fat": 4.8,
+    "portions": []
+  },
+  {
+    "id": "taco-48",
+    "name": "Pão, aveia, forma",
+    "emoji": "🍞",
+    "kcal": 343.1,
+    "carbs": 59.6,
+    "protein": 12.3,
+    "fat": 5.7,
+    "portions": [
+      {
+        "unit": "slice",
+        "grams": 25
+      }
+    ]
+  },
+  {
+    "id": "taco-49",
+    "name": "Pão, de soja",
+    "emoji": "🍞",
+    "kcal": 308.7,
+    "carbs": 56.5,
+    "protein": 11.3,
+    "fat": 3.6,
+    "portions": []
+  },
+  {
+    "id": "taco-50",
+    "name": "Pão, glúten, forma",
+    "emoji": "🍞",
+    "kcal": 253.0,
+    "carbs": 44.1,
+    "protein": 12.0,
+    "fat": 2.7,
+    "portions": []
+  },
+  {
+    "id": "taco-51",
+    "name": "Pão, milho, forma",
+    "emoji": "🍞",
+    "kcal": 292.0,
+    "carbs": 56.4,
+    "protein": 8.3,
+    "fat": 3.1,
+    "portions": []
+  },
+  {
+    "id": "taco-52",
+    "name": "Pão, trigo, forma, integral",
+    "emoji": "🍞",
+    "kcal": 253.2,
+    "carbs": 49.9,
+    "protein": 9.4,
+    "fat": 3.7,
+    "portions": [
+      {
+        "unit": "slice",
+        "grams": 25
+      }
+    ]
+  },
+  {
+    "id": "taco-53",
+    "name": "Pão, trigo, francês",
+    "emoji": "🍞",
+    "kcal": 299.8,
+    "carbs": 58.6,
+    "protein": 8.0,
+    "fat": 3.1,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 50
+      }
+    ]
+  },
+  {
+    "id": "taco-54",
+    "name": "Pão, trigo, sovado",
+    "emoji": "🍞",
+    "kcal": 311.0,
+    "carbs": 61.5,
+    "protein": 8.4,
+    "fat": 2.8,
+    "portions": []
+  },
+  {
+    "id": "taco-55",
+    "name": "Pastel, de carne, cru",
+    "emoji": "🥟",
+    "kcal": 288.7,
+    "carbs": 42.0,
+    "protein": 10.7,
+    "fat": 8.8,
+    "portions": []
+  },
+  {
+    "id": "taco-56",
+    "name": "Pastel, de carne, frito",
+    "emoji": "🥟",
+    "kcal": 388.4,
+    "carbs": 43.8,
+    "protein": 10.1,
+    "fat": 20.1,
+    "portions": []
+  },
+  {
+    "id": "taco-57",
+    "name": "Pastel, de queijo, cru",
+    "emoji": "🥟",
+    "kcal": 308.5,
+    "carbs": 45.9,
+    "protein": 9.9,
+    "fat": 9.6,
+    "portions": []
+  },
+  {
+    "id": "taco-58",
+    "name": "Pastel, de queijo, frito",
+    "emoji": "🥟",
+    "kcal": 422.1,
+    "carbs": 48.1,
+    "protein": 8.7,
+    "fat": 22.7,
+    "portions": []
+  },
+  {
+    "id": "taco-59",
+    "name": "Pastel, massa, crua",
+    "emoji": "🥟",
+    "kcal": 310.2,
+    "carbs": 57.4,
+    "protein": 6.9,
+    "fat": 5.5,
+    "portions": []
+  },
+  {
+    "id": "taco-60",
+    "name": "Pastel, massa, frita",
+    "emoji": "🥟",
+    "kcal": 569.7,
+    "carbs": 49.3,
+    "protein": 6.0,
+    "fat": 40.9,
+    "portions": []
+  },
+  {
+    "id": "taco-61",
+    "name": "Pipoca, com óleo de soja, sem sal",
+    "emoji": "🍿",
+    "kcal": 448.3,
+    "carbs": 70.3,
+    "protein": 9.9,
+    "fat": 15.9,
+    "portions": [
+      {
+        "unit": "cup",
+        "grams": 10
+      }
+    ]
+  },
+  {
+    "id": "taco-62",
+    "name": "Polenta, pré-cozida",
+    "emoji": "🌾",
+    "kcal": 102.7,
+    "carbs": 23.3,
+    "protein": 2.3,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-63",
+    "name": "Torrada, pão francês",
+    "emoji": "🍞",
+    "kcal": 377.4,
+    "carbs": 74.6,
+    "protein": 10.5,
+    "fat": 3.3,
+    "portions": []
+  },
+  {
+    "id": "taco-64",
+    "name": "Abóbora, cabotian, cozida",
+    "emoji": "🥬",
+    "kcal": 48.0,
+    "carbs": 10.8,
+    "protein": 1.4,
+    "fat": 0.7,
+    "portions": []
+  },
+  {
+    "id": "taco-65",
+    "name": "Abóbora, cabotian, crua",
+    "emoji": "🥬",
+    "kcal": 38.6,
+    "carbs": 8.4,
+    "protein": 1.7,
+    "fat": 0.5,
+    "portions": []
+  },
+  {
+    "id": "taco-66",
+    "name": "Abóbora, menina brasileira, crua",
+    "emoji": "🥬",
+    "kcal": 13.6,
+    "carbs": 3.3,
+    "protein": 0.6,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-67",
+    "name": "Abóbora, moranga, crua",
+    "emoji": "🥬",
+    "kcal": 12.4,
+    "carbs": 2.7,
+    "protein": 1.0,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-68",
+    "name": "Abóbora, moranga, refogada",
+    "emoji": "🥬",
+    "kcal": 29.0,
+    "carbs": 6.0,
+    "protein": 0.4,
+    "fat": 0.8,
+    "portions": []
+  },
+  {
+    "id": "taco-69",
+    "name": "Abóbora, pescoço, crua",
+    "emoji": "🥬",
+    "kcal": 24.5,
+    "carbs": 6.1,
+    "protein": 0.7,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-70",
+    "name": "Abobrinha, italiana, cozida",
+    "emoji": "🥬",
+    "kcal": 15.0,
+    "carbs": 3.0,
+    "protein": 1.1,
+    "fat": 0.2,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 30
+      },
+      {
+        "unit": "servingSpoon",
+        "grams": 70
+      }
+    ]
+  },
+  {
+    "id": "taco-71",
+    "name": "Abobrinha, italiana, crua",
+    "emoji": "🥬",
+    "kcal": 19.3,
+    "carbs": 4.3,
+    "protein": 1.1,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-72",
+    "name": "Abobrinha, italiana, refogada",
+    "emoji": "🥬",
+    "kcal": 24.4,
+    "carbs": 4.2,
+    "protein": 1.1,
+    "fat": 0.8,
+    "portions": []
+  },
+  {
+    "id": "taco-73",
+    "name": "Abobrinha, paulista, crua",
+    "emoji": "🥬",
+    "kcal": 30.8,
+    "carbs": 7.9,
     "protein": 0.6,
     "fat": 0.1,
-    "portions": [
-      {
-        "unit": "unit",
-        "grams": 150.0
-      }
-    ]
+    "portions": []
   },
   {
-    "id": "taco-batata-inglesa-cozida",
-    "name": "Batata inglesa cozida",
-    "emoji": "🥔",
-    "kcal": 52.0,
-    "carbs": 11.9,
-    "protein": 1.2,
-    "fat": 0.0,
-    "portions": [
-      {
-        "unit": "unit",
-        "grams": 130.0
-      }
-    ]
-  },
-  {
-    "id": "taco-alface-crespa",
-    "name": "Alface crespa",
+    "id": "taco-74",
+    "name": "Acelga, crua",
     "emoji": "🥬",
-    "kcal": 11.0,
+    "kcal": 20.9,
+    "carbs": 4.6,
+    "protein": 1.4,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-75",
+    "name": "Agrião, cru",
+    "emoji": "🥬",
+    "kcal": 16.6,
+    "carbs": 2.3,
+    "protein": 2.7,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-76",
+    "name": "Aipo, cru",
+    "emoji": "🥬",
+    "kcal": 19.1,
+    "carbs": 4.3,
+    "protein": 0.8,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-77",
+    "name": "Alface, americana, crua",
+    "emoji": "🥬",
+    "kcal": 8.8,
+    "carbs": 1.7,
+    "protein": 0.6,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-78",
+    "name": "Alface, crespa, crua",
+    "emoji": "🥬",
+    "kcal": 10.7,
     "carbs": 1.7,
     "protein": 1.3,
     "fat": 0.2,
     "portions": []
   },
   {
-    "id": "taco-tomate",
-    "name": "Tomate",
+    "id": "taco-79",
+    "name": "Alface, lisa, crua",
+    "emoji": "🥬",
+    "kcal": 13.8,
+    "carbs": 2.4,
+    "protein": 1.7,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-80",
+    "name": "Alface, roxa, crua",
+    "emoji": "🥬",
+    "kcal": 12.7,
+    "carbs": 2.5,
+    "protein": 0.9,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-81",
+    "name": "Alfavaca, crua",
+    "emoji": "🥬",
+    "kcal": 29.2,
+    "carbs": 5.2,
+    "protein": 2.7,
+    "fat": 0.5,
+    "portions": []
+  },
+  {
+    "id": "taco-82",
+    "name": "Alho, cru",
+    "emoji": "🧄",
+    "kcal": 113.1,
+    "carbs": 23.9,
+    "protein": 7.0,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-83",
+    "name": "Alho-poró, cru",
+    "emoji": "🧄",
+    "kcal": 31.5,
+    "carbs": 6.9,
+    "protein": 1.4,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-84",
+    "name": "Almeirão, cru",
+    "emoji": "🥬",
+    "kcal": 18.0,
+    "carbs": 3.3,
+    "protein": 1.8,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-85",
+    "name": "Almeirão, refogado",
+    "emoji": "🥬",
+    "kcal": 65.1,
+    "carbs": 5.7,
+    "protein": 1.7,
+    "fat": 4.8,
+    "portions": []
+  },
+  {
+    "id": "taco-86",
+    "name": "Batata, baroa, cozida",
+    "emoji": "🥔",
+    "kcal": 80.1,
+    "carbs": 18.9,
+    "protein": 0.9,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-87",
+    "name": "Batata, baroa, crua",
+    "emoji": "🥔",
+    "kcal": 101.0,
+    "carbs": 24.0,
+    "protein": 1.0,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-88",
+    "name": "Batata, doce, cozida",
+    "emoji": "🍠",
+    "kcal": 76.8,
+    "carbs": 18.4,
+    "protein": 0.6,
+    "fat": 0.1,
+    "portions": [
+      {
+        "unit": "slice",
+        "grams": 70
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 42
+      },
+      {
+        "unit": "unit",
+        "grams": 355
+      }
+    ]
+  },
+  {
+    "id": "taco-89",
+    "name": "Batata, doce, crua",
+    "emoji": "🍠",
+    "kcal": 118.2,
+    "carbs": 28.2,
+    "protein": 1.3,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-90",
+    "name": "Batata, frita, tipo chips, industrializada",
+    "emoji": "🥔",
+    "kcal": 542.7,
+    "carbs": 51.2,
+    "protein": 5.6,
+    "fat": 36.6,
+    "portions": []
+  },
+  {
+    "id": "taco-91",
+    "name": "Batata, inglesa, cozida",
+    "emoji": "🥔",
+    "kcal": 51.6,
+    "carbs": 11.9,
+    "protein": 1.2,
+    "fat": 0.0,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 140
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 30
+      },
+      {
+        "unit": "servingSpoon",
+        "grams": 60
+      }
+    ]
+  },
+  {
+    "id": "taco-92",
+    "name": "Batata, inglesa, crua",
+    "emoji": "🥔",
+    "kcal": 64.4,
+    "carbs": 14.7,
+    "protein": 1.8,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-93",
+    "name": "Batata, inglesa, frita",
+    "emoji": "🥔",
+    "kcal": 267.2,
+    "carbs": 35.6,
+    "protein": 5.0,
+    "fat": 13.1,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 25
+      },
+      {
+        "unit": "servingSpoon",
+        "grams": 50
+      }
+    ]
+  },
+  {
+    "id": "taco-94",
+    "name": "Batata, inglesa, sauté",
+    "emoji": "🥔",
+    "kcal": 67.9,
+    "carbs": 14.1,
+    "protein": 1.3,
+    "fat": 0.9,
+    "portions": []
+  },
+  {
+    "id": "taco-95",
+    "name": "Berinjela, cozida",
+    "emoji": "🍆",
+    "kcal": 18.8,
+    "carbs": 4.5,
+    "protein": 0.7,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-96",
+    "name": "Berinjela, crua",
+    "emoji": "🍆",
+    "kcal": 19.6,
+    "carbs": 4.4,
+    "protein": 1.2,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-97",
+    "name": "Beterraba, cozida",
+    "emoji": "🥬",
+    "kcal": 32.2,
+    "carbs": 7.2,
+    "protein": 1.3,
+    "fat": 0.1,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 20
+      },
+      {
+        "unit": "slice",
+        "grams": 12
+      }
+    ]
+  },
+  {
+    "id": "taco-98",
+    "name": "Beterraba, crua",
+    "emoji": "🥬",
+    "kcal": 48.8,
+    "carbs": 11.1,
+    "protein": 1.9,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-99",
+    "name": "Biscoito, polvilho doce",
+    "emoji": "🍪",
+    "kcal": 437.5,
+    "carbs": 80.5,
+    "protein": 1.3,
+    "fat": 12.2,
+    "portions": []
+  },
+  {
+    "id": "taco-100",
+    "name": "Brócolis, cozido",
+    "emoji": "🥦",
+    "kcal": 24.6,
+    "carbs": 4.4,
+    "protein": 2.1,
+    "fat": 0.5,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 10
+      }
+    ]
+  },
+  {
+    "id": "taco-101",
+    "name": "Brócolis, cru",
+    "emoji": "🥦",
+    "kcal": 25.5,
+    "carbs": 4.0,
+    "protein": 3.6,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-102",
+    "name": "Cará, cozido",
+    "emoji": "🥬",
+    "kcal": 77.6,
+    "carbs": 18.9,
+    "protein": 1.5,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-103",
+    "name": "Cará, cru",
+    "emoji": "🥬",
+    "kcal": 95.6,
+    "carbs": 23.0,
+    "protein": 2.3,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-104",
+    "name": "Caruru, cru",
+    "emoji": "🥬",
+    "kcal": 34.0,
+    "carbs": 6.0,
+    "protein": 3.2,
+    "fat": 0.6,
+    "portions": []
+  },
+  {
+    "id": "taco-105",
+    "name": "Catalonha, crua",
+    "emoji": "🥬",
+    "kcal": 23.9,
+    "carbs": 4.8,
+    "protein": 1.9,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-106",
+    "name": "Catalonha, refogada",
+    "emoji": "🥬",
+    "kcal": 63.4,
+    "carbs": 4.8,
+    "protein": 1.9,
+    "fat": 4.8,
+    "portions": []
+  },
+  {
+    "id": "taco-107",
+    "name": "Cebola, crua",
+    "emoji": "🧅",
+    "kcal": 39.4,
+    "carbs": 8.9,
+    "protein": 1.7,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-108",
+    "name": "Cebolinha, crua",
+    "emoji": "🥬",
+    "kcal": 19.5,
+    "carbs": 3.4,
+    "protein": 1.9,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-109",
+    "name": "Cenoura, cozida",
+    "emoji": "🥕",
+    "kcal": 29.9,
+    "carbs": 6.7,
+    "protein": 0.8,
+    "fat": 0.2,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 25
+      },
+      {
+        "unit": "servingSpoon",
+        "grams": 40
+      }
+    ]
+  },
+  {
+    "id": "taco-110",
+    "name": "Cenoura, crua",
+    "emoji": "🥕",
+    "kcal": 34.1,
+    "carbs": 7.7,
+    "protein": 1.3,
+    "fat": 0.2,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 12
+      },
+      {
+        "unit": "unit",
+        "grams": 120
+      }
+    ]
+  },
+  {
+    "id": "taco-111",
+    "name": "Chicória, crua",
+    "emoji": "🥬",
+    "kcal": 13.8,
+    "carbs": 2.9,
+    "protein": 1.1,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-112",
+    "name": "Chuchu, cozido",
+    "emoji": "🥬",
+    "kcal": 18.5,
+    "carbs": 4.8,
+    "protein": 0.4,
+    "fat": 0.0,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 20
+      },
+      {
+        "unit": "servingSpoon",
+        "grams": 45
+      }
+    ]
+  },
+  {
+    "id": "taco-113",
+    "name": "Chuchu, cru",
+    "emoji": "🥬",
+    "kcal": 17.0,
+    "carbs": 4.1,
+    "protein": 0.7,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-114",
+    "name": "Coentro, folhas desidratadas",
+    "emoji": "🥬",
+    "kcal": 309.1,
+    "carbs": 48.0,
+    "protein": 20.9,
+    "fat": 10.4,
+    "portions": []
+  },
+  {
+    "id": "taco-115",
+    "name": "Couve, manteiga, crua",
+    "emoji": "🥬",
+    "kcal": 27.1,
+    "carbs": 4.3,
+    "protein": 2.9,
+    "fat": 0.5,
+    "portions": []
+  },
+  {
+    "id": "taco-116",
+    "name": "Couve, manteiga, refogada",
+    "emoji": "🥬",
+    "kcal": 90.3,
+    "carbs": 8.7,
+    "protein": 1.7,
+    "fat": 6.6,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 20
+      }
+    ]
+  },
+  {
+    "id": "taco-117",
+    "name": "Couve-flor, crua",
+    "emoji": "🥬",
+    "kcal": 22.6,
+    "carbs": 4.5,
+    "protein": 1.9,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-118",
+    "name": "Couve-flor, cozida",
+    "emoji": "🥬",
+    "kcal": 19.1,
+    "carbs": 3.9,
+    "protein": 1.2,
+    "fat": 0.3,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 25
+      }
+    ]
+  },
+  {
+    "id": "taco-119",
+    "name": "Espinafre, Nova Zelândia, cru",
+    "emoji": "🥬",
+    "kcal": 16.1,
+    "carbs": 2.6,
+    "protein": 2.0,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-120",
+    "name": "Espinafre, Nova Zelândia, refogado",
+    "emoji": "🥬",
+    "kcal": 67.3,
+    "carbs": 4.2,
+    "protein": 2.7,
+    "fat": 5.4,
+    "portions": []
+  },
+  {
+    "id": "taco-121",
+    "name": "Farinha, de mandioca, crua",
+    "emoji": "🥬",
+    "kcal": 360.9,
+    "carbs": 87.9,
+    "protein": 1.6,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-122",
+    "name": "Farinha, de mandioca, torrada",
+    "emoji": "🥬",
+    "kcal": 365.3,
+    "carbs": 89.2,
+    "protein": 1.2,
+    "fat": 0.3,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 16
+      }
+    ]
+  },
+  {
+    "id": "taco-123",
+    "name": "Farinha, de puba",
+    "emoji": "🥬",
+    "kcal": 360.2,
+    "carbs": 87.3,
+    "protein": 1.6,
+    "fat": 0.5,
+    "portions": []
+  },
+  {
+    "id": "taco-124",
+    "name": "Fécula, de mandioca",
+    "emoji": "🥬",
+    "kcal": 330.9,
+    "carbs": 81.1,
+    "protein": 0.5,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-125",
+    "name": "Feijão, broto, cru",
+    "emoji": "🫘",
+    "kcal": 38.7,
+    "carbs": 7.8,
+    "protein": 4.2,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-126",
+    "name": "Inhame, cru",
+    "emoji": "🥬",
+    "kcal": 96.7,
+    "carbs": 23.2,
+    "protein": 2.1,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-127",
+    "name": "Jiló, cru",
+    "emoji": "🥬",
+    "kcal": 27.4,
+    "carbs": 6.2,
+    "protein": 1.4,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-128",
+    "name": "Jurubeba, crua",
+    "emoji": "🥬",
+    "kcal": 125.8,
+    "carbs": 23.1,
+    "protein": 4.4,
+    "fat": 3.9,
+    "portions": []
+  },
+  {
+    "id": "taco-129",
+    "name": "Mandioca, cozida",
+    "emoji": "🍠",
+    "kcal": 125.4,
+    "carbs": 30.1,
+    "protein": 0.6,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-130",
+    "name": "Mandioca, crua",
+    "emoji": "🍠",
+    "kcal": 151.4,
+    "carbs": 36.2,
+    "protein": 1.1,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-131",
+    "name": "Mandioca, farofa, temperada",
+    "emoji": "🍠",
+    "kcal": 405.7,
+    "carbs": 80.3,
+    "protein": 2.1,
+    "fat": 9.1,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 15
+      },
+      {
+        "unit": "servingSpoon",
+        "grams": 45
+      }
+    ]
+  },
+  {
+    "id": "taco-132",
+    "name": "Mandioca, frita",
+    "emoji": "🍠",
+    "kcal": 300.1,
+    "carbs": 50.3,
+    "protein": 1.4,
+    "fat": 11.2,
+    "portions": []
+  },
+  {
+    "id": "taco-133",
+    "name": "Manjericão, cru",
+    "emoji": "🥬",
+    "kcal": 21.1,
+    "carbs": 3.6,
+    "protein": 2.0,
+    "fat": 0.4,
+    "portions": []
+  },
+  {
+    "id": "taco-134",
+    "name": "Maxixe, cru",
+    "emoji": "🥬",
+    "kcal": 13.7,
+    "carbs": 2.7,
+    "protein": 1.4,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-135",
+    "name": "Mostarda, folha, crua",
+    "emoji": "🥬",
+    "kcal": 18.1,
+    "carbs": 3.2,
+    "protein": 2.1,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-136",
+    "name": "Nhoque, batata, cozido",
+    "emoji": "🥬",
+    "kcal": 180.8,
+    "carbs": 36.8,
+    "protein": 5.9,
+    "fat": 1.9,
+    "portions": []
+  },
+  {
+    "id": "taco-137",
+    "name": "Nabo, cru",
+    "emoji": "🥬",
+    "kcal": 18.2,
+    "carbs": 4.1,
+    "protein": 1.2,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-138",
+    "name": "Palmito, juçara, em conserva",
+    "emoji": "🥬",
+    "kcal": 23.2,
+    "carbs": 4.3,
+    "protein": 1.8,
+    "fat": 0.4,
+    "portions": []
+  },
+  {
+    "id": "taco-139",
+    "name": "Palmito, pupunha, em conserva",
+    "emoji": "🥬",
+    "kcal": 29.4,
+    "carbs": 5.5,
+    "protein": 2.5,
+    "fat": 0.5,
+    "portions": []
+  },
+  {
+    "id": "taco-140",
+    "name": "Pão, de queijo, assado",
+    "emoji": "🧀",
+    "kcal": 363.1,
+    "carbs": 34.2,
+    "protein": 5.1,
+    "fat": 24.6,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 20
+      }
+    ]
+  },
+  {
+    "id": "taco-141",
+    "name": "Pão, de queijo, cru",
+    "emoji": "🧀",
+    "kcal": 294.5,
+    "carbs": 38.5,
+    "protein": 3.6,
+    "fat": 14.0,
+    "portions": []
+  },
+  {
+    "id": "taco-142",
+    "name": "Pepino, cru",
+    "emoji": "🥒",
+    "kcal": 9.5,
+    "carbs": 2.0,
+    "protein": 0.9,
+    "fat": 0.0,
+    "portions": [
+      {
+        "unit": "slice",
+        "grams": 7
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 18
+      }
+    ]
+  },
+  {
+    "id": "taco-143",
+    "name": "Pimentão, amarelo, cru",
+    "emoji": "🫑",
+    "kcal": 27.9,
+    "carbs": 6.0,
+    "protein": 1.2,
+    "fat": 0.4,
+    "portions": []
+  },
+  {
+    "id": "taco-144",
+    "name": "Pimentão, verde, cru",
+    "emoji": "🫑",
+    "kcal": 21.3,
+    "carbs": 4.9,
+    "protein": 1.1,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-145",
+    "name": "Pimentão, vermelho, cru",
+    "emoji": "🫑",
+    "kcal": 23.3,
+    "carbs": 5.5,
+    "protein": 1.0,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-146",
+    "name": "Polvilho, doce",
+    "emoji": "🥬",
+    "kcal": 351.2,
+    "carbs": 86.8,
+    "protein": 0.4,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-147",
+    "name": "Quiabo, cru",
+    "emoji": "🥬",
+    "kcal": 29.9,
+    "carbs": 6.4,
+    "protein": 1.9,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-148",
+    "name": "Rabanete, cru",
+    "emoji": "🥬",
+    "kcal": 13.7,
+    "carbs": 2.7,
+    "protein": 1.4,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-149",
+    "name": "Repolho, branco, cru",
+    "emoji": "🥬",
+    "kcal": 17.1,
+    "carbs": 3.9,
+    "protein": 0.9,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-150",
+    "name": "Repolho, roxo, cru",
+    "emoji": "🥬",
+    "kcal": 30.9,
+    "carbs": 7.2,
+    "protein": 1.9,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-151",
+    "name": "Repolho, roxo, refogado",
+    "emoji": "🥬",
+    "kcal": 41.8,
+    "carbs": 7.6,
+    "protein": 1.8,
+    "fat": 1.2,
+    "portions": []
+  },
+  {
+    "id": "taco-152",
+    "name": "Rúcula, crua",
+    "emoji": "🥬",
+    "kcal": 13.1,
+    "carbs": 2.2,
+    "protein": 1.8,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-153",
+    "name": "Salsa, crua",
+    "emoji": "🧂",
+    "kcal": 33.4,
+    "carbs": 5.7,
+    "protein": 3.3,
+    "fat": 0.6,
+    "portions": []
+  },
+  {
+    "id": "taco-154",
+    "name": "Seleta de legumes, enlatada",
+    "emoji": "🥬",
+    "kcal": 56.5,
+    "carbs": 12.7,
+    "protein": 3.4,
+    "fat": 0.4,
+    "portions": []
+  },
+  {
+    "id": "taco-155",
+    "name": "Serralha, crua",
+    "emoji": "🥬",
+    "kcal": 30.4,
+    "carbs": 4.9,
+    "protein": 2.7,
+    "fat": 0.7,
+    "portions": []
+  },
+  {
+    "id": "taco-156",
+    "name": "Taioba, crua",
+    "emoji": "🥬",
+    "kcal": 34.2,
+    "carbs": 5.4,
+    "protein": 2.9,
+    "fat": 0.9,
+    "portions": []
+  },
+  {
+    "id": "taco-157",
+    "name": "Tomate, com semente, cru",
     "emoji": "🍅",
-    "kcal": 15.0,
+    "kcal": 15.3,
     "carbs": 3.1,
     "protein": 1.1,
     "fat": 0.2,
     "portions": [
       {
         "unit": "unit",
-        "grams": 100.0
+        "grams": 100
+      },
+      {
+        "unit": "slice",
+        "grams": 15
       }
     ]
   },
   {
-    "id": "taco-queijo-mucarela",
-    "name": "Queijo muçarela",
-    "emoji": "🧀",
-    "kcal": 330.0,
-    "carbs": 3.0,
-    "protein": 22.6,
-    "fat": 25.2,
+    "id": "taco-158",
+    "name": "Tomate, extrato",
+    "emoji": "🍅",
+    "kcal": 60.9,
+    "carbs": 15.0,
+    "protein": 2.4,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-159",
+    "name": "Tomate, molho industrializado",
+    "emoji": "🍅",
+    "kcal": 38.4,
+    "carbs": 7.7,
+    "protein": 1.4,
+    "fat": 0.9,
+    "portions": []
+  },
+  {
+    "id": "taco-160",
+    "name": "Tomate, purê",
+    "emoji": "🍅",
+    "kcal": 27.9,
+    "carbs": 6.9,
+    "protein": 1.4,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-161",
+    "name": "Tomate, salada",
+    "emoji": "🍅",
+    "kcal": 20.5,
+    "carbs": 5.1,
+    "protein": 0.8,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-162",
+    "name": "Vagem, crua",
+    "emoji": "🥬",
+    "kcal": 24.9,
+    "carbs": 5.3,
+    "protein": 1.8,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-163",
+    "name": "Abacate, cru",
+    "emoji": "🥑",
+    "kcal": 96.2,
+    "carbs": 6.0,
+    "protein": 1.2,
+    "fat": 8.4,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 45
+      },
+      {
+        "unit": "unit",
+        "grams": 430
+      }
+    ]
+  },
+  {
+    "id": "taco-164",
+    "name": "Abacaxi, cru",
+    "emoji": "🍍",
+    "kcal": 48.3,
+    "carbs": 12.3,
+    "protein": 0.9,
+    "fat": 0.1,
     "portions": [
       {
         "unit": "slice",
-        "grams": 20.0
+        "grams": 75
       }
     ]
   },
   {
-    "id": "taco-azeite-oliva",
-    "name": "Azeite de oliva",
+    "id": "taco-165",
+    "name": "Abacaxi, polpa, congelada",
+    "emoji": "🍍",
+    "kcal": 30.6,
+    "carbs": 7.8,
+    "protein": 0.5,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-166",
+    "name": "Abiu, cru",
+    "emoji": "🍎",
+    "kcal": 62.4,
+    "carbs": 14.9,
+    "protein": 0.8,
+    "fat": 0.7,
+    "portions": []
+  },
+  {
+    "id": "taco-167",
+    "name": "Açaí, polpa, com xarope de guaraná e glucose",
+    "emoji": "🍎",
+    "kcal": 110.3,
+    "carbs": 21.5,
+    "protein": 0.7,
+    "fat": 3.7,
+    "portions": []
+  },
+  {
+    "id": "taco-168",
+    "name": "Açaí, polpa, congelada",
+    "emoji": "🍎",
+    "kcal": 58.0,
+    "carbs": 6.2,
+    "protein": 0.8,
+    "fat": 3.9,
+    "portions": []
+  },
+  {
+    "id": "taco-169",
+    "name": "Acerola, crua",
+    "emoji": "🍎",
+    "kcal": 33.5,
+    "carbs": 8.0,
+    "protein": 0.9,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-170",
+    "name": "Acerola, polpa, congelada",
+    "emoji": "🍎",
+    "kcal": 21.9,
+    "carbs": 5.5,
+    "protein": 0.6,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-171",
+    "name": "Ameixa, calda, enlatada",
+    "emoji": "🍎",
+    "kcal": 182.8,
+    "carbs": 46.9,
+    "protein": 0.4,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-172",
+    "name": "Ameixa, crua",
+    "emoji": "🍎",
+    "kcal": 52.5,
+    "carbs": 13.9,
+    "protein": 0.8,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-173",
+    "name": "Ameixa, em calda, enlatada, drenada",
+    "emoji": "🍎",
+    "kcal": 177.4,
+    "carbs": 47.7,
+    "protein": 1.0,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-174",
+    "name": "Atemóia, crua",
+    "emoji": "🍎",
+    "kcal": 97.0,
+    "carbs": 25.3,
+    "protein": 1.0,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-175",
+    "name": "Banana, da terra, crua",
+    "emoji": "🍌",
+    "kcal": 128.0,
+    "carbs": 33.7,
+    "protein": 1.4,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-176",
+    "name": "Banana, doce em barra",
+    "emoji": "🍌",
+    "kcal": 280.1,
+    "carbs": 75.7,
+    "protein": 2.2,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-177",
+    "name": "Banana, figo, crua",
+    "emoji": "🍌",
+    "kcal": 105.1,
+    "carbs": 27.8,
+    "protein": 1.1,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-178",
+    "name": "Banana, maçã, crua",
+    "emoji": "🍌",
+    "kcal": 86.8,
+    "carbs": 22.3,
+    "protein": 1.8,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-179",
+    "name": "Banana, nanica, crua",
+    "emoji": "🍌",
+    "kcal": 91.5,
+    "carbs": 23.8,
+    "protein": 1.4,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-180",
+    "name": "Banana, ouro, crua",
+    "emoji": "🍌",
+    "kcal": 112.4,
+    "carbs": 29.3,
+    "protein": 1.5,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-181",
+    "name": "Banana, pacova, crua",
+    "emoji": "🍌",
+    "kcal": 77.9,
+    "carbs": 20.3,
+    "protein": 1.2,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-182",
+    "name": "Banana, prata, crua",
+    "emoji": "🍌",
+    "kcal": 98.2,
+    "carbs": 26.0,
+    "protein": 1.3,
+    "fat": 0.1,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 75
+      }
+    ]
+  },
+  {
+    "id": "taco-183",
+    "name": "Cacau, cru",
+    "emoji": "🍎",
+    "kcal": 74.3,
+    "carbs": 19.4,
+    "protein": 1.0,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-184",
+    "name": "Cajá-Manga, cru",
+    "emoji": "🍎",
+    "kcal": 45.6,
+    "carbs": 11.4,
+    "protein": 1.3,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-185",
+    "name": "Cajá, polpa, congelada",
+    "emoji": "🍎",
+    "kcal": 26.3,
+    "carbs": 6.4,
+    "protein": 0.6,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-186",
+    "name": "Caju, cru",
+    "emoji": "🍎",
+    "kcal": 43.1,
+    "carbs": 10.3,
+    "protein": 1.0,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-187",
+    "name": "Caju, polpa, congelada",
+    "emoji": "🍎",
+    "kcal": 36.6,
+    "carbs": 9.4,
+    "protein": 0.5,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-188",
+    "name": "Caju, suco concentrado, envasado",
+    "emoji": "🍎",
+    "kcal": 45.1,
+    "carbs": 10.7,
+    "protein": 0.4,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-189",
+    "name": "Caqui, chocolate, cru",
+    "emoji": "🍎",
+    "kcal": 71.4,
+    "carbs": 19.3,
+    "protein": 0.4,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-190",
+    "name": "Carambola, crua",
+    "emoji": "🍎",
+    "kcal": 45.7,
+    "carbs": 11.5,
+    "protein": 0.9,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-191",
+    "name": "Ciriguela, crua",
+    "emoji": "🍎",
+    "kcal": 75.6,
+    "carbs": 18.9,
+    "protein": 1.4,
+    "fat": 0.4,
+    "portions": []
+  },
+  {
+    "id": "taco-192",
+    "name": "Cupuaçu, cru",
+    "emoji": "🍎",
+    "kcal": 49.4,
+    "carbs": 10.4,
+    "protein": 1.2,
+    "fat": 1.0,
+    "portions": []
+  },
+  {
+    "id": "taco-193",
+    "name": "Cupuaçu, polpa, congelada",
+    "emoji": "🍎",
+    "kcal": 48.8,
+    "carbs": 11.4,
+    "protein": 0.8,
+    "fat": 0.6,
+    "portions": []
+  },
+  {
+    "id": "taco-194",
+    "name": "Figo, cru",
+    "emoji": "🍎",
+    "kcal": 41.4,
+    "carbs": 10.2,
+    "protein": 1.0,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-195",
+    "name": "Figo, enlatado, em calda",
+    "emoji": "🍎",
+    "kcal": 184.4,
+    "carbs": 50.3,
+    "protein": 0.6,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-196",
+    "name": "Fruta-pão, crua",
+    "emoji": "🍎",
+    "kcal": 67.0,
+    "carbs": 17.2,
+    "protein": 1.1,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-197",
+    "name": "Goiaba, branca, com casca, crua",
+    "emoji": "🍎",
+    "kcal": 51.7,
+    "carbs": 12.4,
+    "protein": 0.9,
+    "fat": 0.5,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 170
+      }
+    ]
+  },
+  {
+    "id": "taco-198",
+    "name": "Goiaba, doce em pasta",
+    "emoji": "🍎",
+    "kcal": 269.0,
+    "carbs": 74.1,
+    "protein": 0.6,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-199",
+    "name": "Goiaba, doce, cascão",
+    "emoji": "🍎",
+    "kcal": 285.6,
+    "carbs": 78.7,
+    "protein": 0.4,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-200",
+    "name": "Goiaba, vermelha, com casca, crua",
+    "emoji": "🍎",
+    "kcal": 54.2,
+    "carbs": 13.0,
+    "protein": 1.1,
+    "fat": 0.4,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 170
+      }
+    ]
+  },
+  {
+    "id": "taco-201",
+    "name": "Graviola, crua",
+    "emoji": "🍎",
+    "kcal": 61.6,
+    "carbs": 15.8,
+    "protein": 0.8,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-202",
+    "name": "Graviola, polpa, congelada",
+    "emoji": "🍎",
+    "kcal": 38.3,
+    "carbs": 9.8,
+    "protein": 0.6,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-203",
+    "name": "Jabuticaba, crua",
+    "emoji": "🍎",
+    "kcal": 58.1,
+    "carbs": 15.3,
+    "protein": 0.6,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-204",
+    "name": "Jaca, crua",
+    "emoji": "🍎",
+    "kcal": 87.9,
+    "carbs": 22.5,
+    "protein": 1.4,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-205",
+    "name": "Jambo, cru",
+    "emoji": "🍎",
+    "kcal": 26.9,
+    "carbs": 6.5,
+    "protein": 0.9,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-206",
+    "name": "Jamelão, cru",
+    "emoji": "🍎",
+    "kcal": 41.0,
+    "carbs": 10.6,
+    "protein": 0.5,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-207",
+    "name": "Kiwi, cru",
+    "emoji": "🥝",
+    "kcal": 51.1,
+    "carbs": 11.5,
+    "protein": 1.3,
+    "fat": 0.6,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 94
+      }
+    ]
+  },
+  {
+    "id": "taco-208",
+    "name": "Laranja, baía, crua",
+    "emoji": "🍊",
+    "kcal": 45.4,
+    "carbs": 11.5,
+    "protein": 1.0,
+    "fat": 0.1,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 180
+      }
+    ]
+  },
+  {
+    "id": "taco-209",
+    "name": "Laranja, baía, suco",
+    "emoji": "🍊",
+    "kcal": 36.6,
+    "carbs": 8.7,
+    "protein": 0.7,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-210",
+    "name": "Laranja, da terra, crua",
+    "emoji": "🍊",
+    "kcal": 51.5,
+    "carbs": 12.9,
+    "protein": 1.1,
+    "fat": 0.2,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 180
+      }
+    ]
+  },
+  {
+    "id": "taco-211",
+    "name": "Laranja, da terra, suco",
+    "emoji": "🍊",
+    "kcal": 41.0,
+    "carbs": 9.6,
+    "protein": 0.7,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-212",
+    "name": "Laranja, lima, crua",
+    "emoji": "🍊",
+    "kcal": 45.7,
+    "carbs": 11.5,
+    "protein": 1.1,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-213",
+    "name": "Laranja, lima, suco",
+    "emoji": "🍊",
+    "kcal": 39.3,
+    "carbs": 9.2,
+    "protein": 0.7,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-214",
+    "name": "Laranja, pêra, crua",
+    "emoji": "🍊",
+    "kcal": 36.8,
+    "carbs": 8.9,
+    "protein": 1.0,
+    "fat": 0.1,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 180
+      }
+    ]
+  },
+  {
+    "id": "taco-215",
+    "name": "Laranja, pêra, suco",
+    "emoji": "🍊",
+    "kcal": 32.7,
+    "carbs": 7.6,
+    "protein": 0.7,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-216",
+    "name": "Laranja, valência, crua",
+    "emoji": "🍊",
+    "kcal": 46.1,
+    "carbs": 11.7,
+    "protein": 0.8,
+    "fat": 0.2,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 180
+      }
+    ]
+  },
+  {
+    "id": "taco-217",
+    "name": "Laranja, valência, suco",
+    "emoji": "🍊",
+    "kcal": 36.2,
+    "carbs": 8.6,
+    "protein": 0.5,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-218",
+    "name": "Limão, cravo, suco",
+    "emoji": "🍋",
+    "kcal": 14.1,
+    "carbs": 5.2,
+    "protein": 0.3,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-219",
+    "name": "Limão, galego, suco",
+    "emoji": "🍋",
+    "kcal": 22.2,
+    "carbs": 7.3,
+    "protein": 0.6,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-220",
+    "name": "Limão, tahiti, cru",
+    "emoji": "🍋",
+    "kcal": 31.8,
+    "carbs": 11.1,
+    "protein": 0.9,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-221",
+    "name": "Maçã, Argentina, com casca, crua",
+    "emoji": "🍎",
+    "kcal": 62.5,
+    "carbs": 16.6,
+    "protein": 0.2,
+    "fat": 0.2,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 150
+      }
+    ]
+  },
+  {
+    "id": "taco-222",
+    "name": "Maçã, Fuji, com casca, crua",
+    "emoji": "🍎",
+    "kcal": 55.5,
+    "carbs": 15.2,
+    "protein": 0.3,
+    "fat": 0.0,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 150
+      }
+    ]
+  },
+  {
+    "id": "taco-223",
+    "name": "Macaúba, crua",
+    "emoji": "🍎",
+    "kcal": 404.3,
+    "carbs": 13.9,
+    "protein": 2.1,
+    "fat": 40.7,
+    "portions": []
+  },
+  {
+    "id": "taco-224",
+    "name": "Mamão, doce em calda, drenado",
+    "emoji": "🍎",
+    "kcal": 195.6,
+    "carbs": 54.0,
+    "protein": 0.2,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-225",
+    "name": "Mamão, Formosa, cru",
+    "emoji": "🍎",
+    "kcal": 45.3,
+    "carbs": 11.6,
+    "protein": 0.8,
+    "fat": 0.1,
+    "portions": [
+      {
+        "unit": "slice",
+        "grams": 170
+      }
+    ]
+  },
+  {
+    "id": "taco-226",
+    "name": "Mamão, Papaia, cru",
+    "emoji": "🍎",
+    "kcal": 40.2,
+    "carbs": 10.4,
+    "protein": 0.5,
+    "fat": 0.1,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 310
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 40
+      }
+    ]
+  },
+  {
+    "id": "taco-227",
+    "name": "Mamão verde, doce em calda, drenado",
+    "emoji": "🍎",
+    "kcal": 209.4,
+    "carbs": 57.6,
+    "protein": 0.3,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-228",
+    "name": "Manga, Haden, crua",
+    "emoji": "🥭",
+    "kcal": 63.5,
+    "carbs": 16.7,
+    "protein": 0.4,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-229",
+    "name": "Manga, Palmer, crua",
+    "emoji": "🥭",
+    "kcal": 72.5,
+    "carbs": 19.4,
+    "protein": 0.4,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-230",
+    "name": "Manga, polpa, congelada",
+    "emoji": "🥭",
+    "kcal": 48.3,
+    "carbs": 12.5,
+    "protein": 0.4,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-231",
+    "name": "Manga, Tommy Atkins, crua",
+    "emoji": "🥭",
+    "kcal": 50.7,
+    "carbs": 12.8,
+    "protein": 0.9,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-232",
+    "name": "Maracujá, cru",
+    "emoji": "🍎",
+    "kcal": 68.4,
+    "carbs": 12.3,
+    "protein": 2.0,
+    "fat": 2.1,
+    "portions": []
+  },
+  {
+    "id": "taco-233",
+    "name": "Maracujá, polpa, congelada",
+    "emoji": "🍎",
+    "kcal": 38.8,
+    "carbs": 9.6,
+    "protein": 0.8,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-234",
+    "name": "Maracujá, suco concentrado, envasado",
+    "emoji": "🍎",
+    "kcal": 42.0,
+    "carbs": 9.6,
+    "protein": 0.8,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-235",
+    "name": "Melancia, crua",
+    "emoji": "🍉",
+    "kcal": 32.6,
+    "carbs": 8.1,
+    "protein": 0.9,
+    "fat": 0.0,
+    "portions": [
+      {
+        "unit": "slice",
+        "grams": 200
+      }
+    ]
+  },
+  {
+    "id": "taco-236",
+    "name": "Melão, cru",
+    "emoji": "🍈",
+    "kcal": 29.4,
+    "carbs": 7.5,
+    "protein": 0.7,
+    "fat": 0.0,
+    "portions": [
+      {
+        "unit": "slice",
+        "grams": 90
+      }
+    ]
+  },
+  {
+    "id": "taco-237",
+    "name": "Mexerica, Murcote, crua",
+    "emoji": "🍊",
+    "kcal": 57.6,
+    "carbs": 14.9,
+    "protein": 0.9,
+    "fat": 0.1,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 135
+      }
+    ]
+  },
+  {
+    "id": "taco-238",
+    "name": "Mexerica, Rio, crua",
+    "emoji": "🍊",
+    "kcal": 36.9,
+    "carbs": 9.3,
+    "protein": 0.7,
+    "fat": 0.1,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 135
+      }
+    ]
+  },
+  {
+    "id": "taco-239",
+    "name": "Morango, cru",
+    "emoji": "🍓",
+    "kcal": 30.1,
+    "carbs": 6.8,
+    "protein": 0.9,
+    "fat": 0.3,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 12
+      }
+    ]
+  },
+  {
+    "id": "taco-240",
+    "name": "Nêspera, crua",
+    "emoji": "🍎",
+    "kcal": 42.5,
+    "carbs": 11.5,
+    "protein": 0.3,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-241",
+    "name": "Pequi, cru",
+    "emoji": "🍎",
+    "kcal": 205.0,
+    "carbs": 13.0,
+    "protein": 2.3,
+    "fat": 18.0,
+    "portions": []
+  },
+  {
+    "id": "taco-242",
+    "name": "Pêra, Park, crua",
+    "emoji": "🍐",
+    "kcal": 60.6,
+    "carbs": 16.1,
+    "protein": 0.2,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-243",
+    "name": "Pêra, Williams, crua",
+    "emoji": "🍐",
+    "kcal": 53.3,
+    "carbs": 14.0,
+    "protein": 0.6,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-244",
+    "name": "Pêssego, Aurora, cru",
+    "emoji": "🍑",
+    "kcal": 36.3,
+    "carbs": 9.3,
+    "protein": 0.8,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-245",
+    "name": "Pêssego, enlatado, em calda",
+    "emoji": "🍑",
+    "kcal": 63.1,
+    "carbs": 16.9,
+    "protein": 0.7,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-246",
+    "name": "Pinha, crua",
+    "emoji": "🍎",
+    "kcal": 88.5,
+    "carbs": 22.4,
+    "protein": 1.5,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-247",
+    "name": "Pitanga, crua",
+    "emoji": "🍎",
+    "kcal": 41.4,
+    "carbs": 10.2,
+    "protein": 0.9,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-248",
+    "name": "Pitanga, polpa, congelada",
+    "emoji": "🍎",
+    "kcal": 19.1,
+    "carbs": 4.8,
+    "protein": 0.3,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-249",
+    "name": "Romã, crua",
+    "emoji": "🍎",
+    "kcal": 55.7,
+    "carbs": 15.1,
+    "protein": 0.4,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-250",
+    "name": "Tamarindo, cru",
+    "emoji": "🍎",
+    "kcal": 275.7,
+    "carbs": 72.5,
+    "protein": 3.2,
+    "fat": 0.5,
+    "portions": []
+  },
+  {
+    "id": "taco-251",
+    "name": "Tangerina, Poncã, crua",
+    "emoji": "🍊",
+    "kcal": 37.8,
+    "carbs": 9.6,
+    "protein": 0.8,
+    "fat": 0.1,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 135
+      }
+    ]
+  },
+  {
+    "id": "taco-252",
+    "name": "Tangerina, Poncã, suco",
+    "emoji": "🍊",
+    "kcal": 36.1,
+    "carbs": 8.8,
+    "protein": 0.5,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-253",
+    "name": "Tucumã, cru",
+    "emoji": "🍎",
+    "kcal": 262.0,
+    "carbs": 26.5,
+    "protein": 2.1,
+    "fat": 19.1,
+    "portions": []
+  },
+  {
+    "id": "taco-254",
+    "name": "Umbu, cru",
+    "emoji": "🍎",
+    "kcal": 37.0,
+    "carbs": 9.4,
+    "protein": 0.8,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-255",
+    "name": "Umbu, polpa, congelada",
+    "emoji": "🍎",
+    "kcal": 33.9,
+    "carbs": 8.8,
+    "protein": 0.5,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-256",
+    "name": "Uva, Itália, crua",
+    "emoji": "🍇",
+    "kcal": 52.9,
+    "carbs": 13.6,
+    "protein": 0.7,
+    "fat": 0.2,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 8
+      }
+    ]
+  },
+  {
+    "id": "taco-257",
+    "name": "Uva, Rubi, crua",
+    "emoji": "🍇",
+    "kcal": 49.1,
+    "carbs": 12.7,
+    "protein": 0.6,
+    "fat": 0.2,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 8
+      }
+    ]
+  },
+  {
+    "id": "taco-258",
+    "name": "Uva, suco concentrado, envasado",
+    "emoji": "🍇",
+    "kcal": 57.7,
+    "carbs": 14.7,
+    "protein": 0.0,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-259",
+    "name": "Azeite, de dendê",
+    "emoji": "🫒",
+    "kcal": 884.0,
+    "carbs": 0.0,
+    "protein": 0.0,
+    "fat": 100.0,
+    "portions": []
+  },
+  {
+    "id": "taco-260",
+    "name": "Azeite, de oliva, extra virgem",
     "emoji": "🫒",
     "kcal": 884.0,
     "carbs": 0.0,
@@ -320,8 +2921,3813 @@
     "portions": [
       {
         "unit": "tablespoon",
-        "grams": 13.0
+        "grams": 8
+      },
+      {
+        "unit": "teaspoon",
+        "grams": 2
       }
     ]
+  },
+  {
+    "id": "taco-261",
+    "name": "Manteiga, com sal",
+    "emoji": "🧈",
+    "kcal": 726.0,
+    "carbs": 0.1,
+    "protein": 0.4,
+    "fat": 82.4,
+    "portions": [
+      {
+        "unit": "teaspoon",
+        "grams": 8
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 32
+      }
+    ]
+  },
+  {
+    "id": "taco-262",
+    "name": "Manteiga, sem sal",
+    "emoji": "🧈",
+    "kcal": 757.5,
+    "carbs": 0.0,
+    "protein": 0.4,
+    "fat": 86.0,
+    "portions": [
+      {
+        "unit": "teaspoon",
+        "grams": 8
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 32
+      }
+    ]
+  },
+  {
+    "id": "taco-263",
+    "name": "Margarina, com óleo hidrogenado, com sal (65% de lipídeos)",
+    "emoji": "🧈",
+    "kcal": 596.1,
+    "carbs": 0.0,
+    "protein": 0.0,
+    "fat": 67.4,
+    "portions": [
+      {
+        "unit": "teaspoon",
+        "grams": 8
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 32
+      }
+    ]
+  },
+  {
+    "id": "taco-264",
+    "name": "Margarina, com óleo hidrogenado, sem sal (80% de lipídeos)",
+    "emoji": "🧈",
+    "kcal": 722.5,
+    "carbs": 0.0,
+    "protein": 0.0,
+    "fat": 81.7,
+    "portions": [
+      {
+        "unit": "teaspoon",
+        "grams": 8
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 32
+      }
+    ]
+  },
+  {
+    "id": "taco-265",
+    "name": "Margarina, com óleo interesterificado, com sal (65%de lipídeos)",
+    "emoji": "🧈",
+    "kcal": 594.5,
+    "carbs": 0.0,
+    "protein": 0.0,
+    "fat": 67.2,
+    "portions": [
+      {
+        "unit": "teaspoon",
+        "grams": 8
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 32
+      }
+    ]
+  },
+  {
+    "id": "taco-266",
+    "name": "Margarina, com óleo interesterificado, sem sal (65% de lipídeos)",
+    "emoji": "🧈",
+    "kcal": 593.1,
+    "carbs": 0.0,
+    "protein": 0.0,
+    "fat": 67.1,
+    "portions": [
+      {
+        "unit": "teaspoon",
+        "grams": 8
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 32
+      }
+    ]
+  },
+  {
+    "id": "taco-267",
+    "name": "Óleo, de babaçu",
+    "emoji": "🫗",
+    "kcal": 884.0,
+    "carbs": 0.0,
+    "protein": 0.0,
+    "fat": 100.0,
+    "portions": []
+  },
+  {
+    "id": "taco-268",
+    "name": "Óleo, de canola",
+    "emoji": "🫗",
+    "kcal": 884.0,
+    "carbs": 0.0,
+    "protein": 0.0,
+    "fat": 100.0,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 8
+      },
+      {
+        "unit": "teaspoon",
+        "grams": 2
+      }
+    ]
+  },
+  {
+    "id": "taco-269",
+    "name": "Óleo, de girassol",
+    "emoji": "🫗",
+    "kcal": 884.0,
+    "carbs": 0.0,
+    "protein": 0.0,
+    "fat": 100.0,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 8
+      },
+      {
+        "unit": "teaspoon",
+        "grams": 2
+      }
+    ]
+  },
+  {
+    "id": "taco-270",
+    "name": "Óleo, de milho",
+    "emoji": "🫗",
+    "kcal": 884.0,
+    "carbs": 0.0,
+    "protein": 0.0,
+    "fat": 100.0,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 8
+      },
+      {
+        "unit": "teaspoon",
+        "grams": 2
+      }
+    ]
+  },
+  {
+    "id": "taco-271",
+    "name": "Óleo, de pequi",
+    "emoji": "🫗",
+    "kcal": 884.0,
+    "carbs": 0.0,
+    "protein": 0.0,
+    "fat": 100.0,
+    "portions": []
+  },
+  {
+    "id": "taco-272",
+    "name": "Óleo, de soja",
+    "emoji": "🫗",
+    "kcal": 884.0,
+    "carbs": 0.0,
+    "protein": 0.0,
+    "fat": 100.0,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 8
+      },
+      {
+        "unit": "teaspoon",
+        "grams": 2
+      }
+    ]
+  },
+  {
+    "id": "taco-273",
+    "name": "Abadejo, filé, congelado, assado",
+    "emoji": "🐟",
+    "kcal": 111.6,
+    "carbs": 0.0,
+    "protein": 23.5,
+    "fat": 1.2,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 120
+      }
+    ]
+  },
+  {
+    "id": "taco-274",
+    "name": "Abadejo, filé, congelado,cozido",
+    "emoji": "🐟",
+    "kcal": 91.1,
+    "carbs": 0.0,
+    "protein": 19.3,
+    "fat": 0.9,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 120
+      }
+    ]
+  },
+  {
+    "id": "taco-275",
+    "name": "Abadejo, filé, congelado, cru",
+    "emoji": "🐟",
+    "kcal": 59.1,
+    "carbs": 0.0,
+    "protein": 13.1,
+    "fat": 0.4,
+    "portions": []
+  },
+  {
+    "id": "taco-276",
+    "name": "Abadejo, filé, congelado, grelhado",
+    "emoji": "🐟",
+    "kcal": 129.6,
+    "carbs": 0.0,
+    "protein": 27.6,
+    "fat": 1.3,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 120
+      }
+    ]
+  },
+  {
+    "id": "taco-277",
+    "name": "Atum, conserva em óleo",
+    "emoji": "🐟",
+    "kcal": 165.9,
+    "carbs": 0.0,
+    "protein": 26.2,
+    "fat": 6.0,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 16
+      }
+    ]
+  },
+  {
+    "id": "taco-278",
+    "name": "Atum, fresco, cru",
+    "emoji": "🐟",
+    "kcal": 117.5,
+    "carbs": 0.0,
+    "protein": 25.7,
+    "fat": 0.9,
+    "portions": []
+  },
+  {
+    "id": "taco-279",
+    "name": "Bacalhau, salgado, cru",
+    "emoji": "🐟",
+    "kcal": 135.9,
+    "carbs": 0.0,
+    "protein": 29.0,
+    "fat": 1.3,
+    "portions": []
+  },
+  {
+    "id": "taco-280",
+    "name": "Bacalhau, salgado, refogado",
+    "emoji": "🐟",
+    "kcal": 139.7,
+    "carbs": 1.2,
+    "protein": 24.0,
+    "fat": 3.6,
+    "portions": []
+  },
+  {
+    "id": "taco-281",
+    "name": "Cação, posta, com farinha de trigo, frita",
+    "emoji": "🐟",
+    "kcal": 208.3,
+    "carbs": 3.1,
+    "protein": 25.0,
+    "fat": 10.0,
+    "portions": []
+  },
+  {
+    "id": "taco-282",
+    "name": "Cação, posta, cozida",
+    "emoji": "🐟",
+    "kcal": 116.0,
+    "carbs": 0.0,
+    "protein": 25.6,
+    "fat": 0.7,
+    "portions": []
+  },
+  {
+    "id": "taco-283",
+    "name": "Cação, posta, crua",
+    "emoji": "🐟",
+    "kcal": 83.3,
+    "carbs": 0.0,
+    "protein": 17.9,
+    "fat": 0.8,
+    "portions": []
+  },
+  {
+    "id": "taco-284",
+    "name": "Camarão, Rio Grande, grande, cozido",
+    "emoji": "🦐",
+    "kcal": 90.0,
+    "carbs": 0.0,
+    "protein": 19.0,
+    "fat": 1.0,
+    "portions": []
+  },
+  {
+    "id": "taco-285",
+    "name": "Camarão, Rio Grande, grande, cru",
+    "emoji": "🦐",
+    "kcal": 47.2,
+    "carbs": 0.0,
+    "protein": 10.0,
+    "fat": 0.5,
+    "portions": []
+  },
+  {
+    "id": "taco-286",
+    "name": "Camarão, Sete Barbas, sem cabeça, com casca, frito",
+    "emoji": "🦐",
+    "kcal": 231.2,
+    "carbs": 2.9,
+    "protein": 18.4,
+    "fat": 15.6,
+    "portions": []
+  },
+  {
+    "id": "taco-287",
+    "name": "Caranguejo, cozido",
+    "emoji": "🦀",
+    "kcal": 82.7,
+    "carbs": 0.0,
+    "protein": 18.5,
+    "fat": 0.4,
+    "portions": []
+  },
+  {
+    "id": "taco-288",
+    "name": "Corimba, cru",
+    "emoji": "🐟",
+    "kcal": 128.2,
+    "carbs": -0.0,
+    "protein": 17.4,
+    "fat": 6.0,
+    "portions": []
+  },
+  {
+    "id": "taco-289",
+    "name": "Corimbatá, assado",
+    "emoji": "🐟",
+    "kcal": 261.5,
+    "carbs": 0.0,
+    "protein": 19.9,
+    "fat": 19.6,
+    "portions": []
+  },
+  {
+    "id": "taco-290",
+    "name": "Corimbatá, cozido",
+    "emoji": "🐟",
+    "kcal": 238.7,
+    "carbs": 0.0,
+    "protein": 20.1,
+    "fat": 16.9,
+    "portions": []
+  },
+  {
+    "id": "taco-291",
+    "name": "Corvina de água doce, crua",
+    "emoji": "🐟",
+    "kcal": 101.0,
+    "carbs": 0.0,
+    "protein": 18.9,
+    "fat": 2.2,
+    "portions": []
+  },
+  {
+    "id": "taco-292",
+    "name": "Corvina do mar, crua",
+    "emoji": "🐟",
+    "kcal": 94.0,
+    "carbs": 0.0,
+    "protein": 18.6,
+    "fat": 1.6,
+    "portions": []
+  },
+  {
+    "id": "taco-293",
+    "name": "Corvina grande, assada",
+    "emoji": "🐟",
+    "kcal": 146.5,
+    "carbs": 0.0,
+    "protein": 26.8,
+    "fat": 3.6,
+    "portions": []
+  },
+  {
+    "id": "taco-294",
+    "name": "Corvina grande, cozida",
+    "emoji": "🐟",
+    "kcal": 100.1,
+    "carbs": 0.0,
+    "protein": 23.4,
+    "fat": 2.6,
+    "portions": []
+  },
+  {
+    "id": "taco-295",
+    "name": "Dourada de água doce, fresca",
+    "emoji": "🐟",
+    "kcal": 131.2,
+    "carbs": 0.0,
+    "protein": 18.8,
+    "fat": 5.6,
+    "portions": []
+  },
+  {
+    "id": "taco-296",
+    "name": "Lambari, congelado, cru",
+    "emoji": "🐟",
+    "kcal": 130.8,
+    "carbs": 0.0,
+    "protein": 16.8,
+    "fat": 6.5,
+    "portions": []
+  },
+  {
+    "id": "taco-297",
+    "name": "Lambari, congelado, frito",
+    "emoji": "🐟",
+    "kcal": 326.9,
+    "carbs": 0.0,
+    "protein": 28.4,
+    "fat": 22.8,
+    "portions": []
+  },
+  {
+    "id": "taco-298",
+    "name": "Lambari, fresco, cru",
+    "emoji": "🐟",
+    "kcal": 151.6,
+    "carbs": 0.0,
+    "protein": 15.7,
+    "fat": 9.4,
+    "portions": []
+  },
+  {
+    "id": "taco-299",
+    "name": "Manjuba, com farinha de trigo, frita",
+    "emoji": "🐟",
+    "kcal": 343.6,
+    "carbs": 10.2,
+    "protein": 23.4,
+    "fat": 22.6,
+    "portions": []
+  },
+  {
+    "id": "taco-300",
+    "name": "Manjuba, frita",
+    "emoji": "🐟",
+    "kcal": 349.3,
+    "carbs": 0.0,
+    "protein": 30.1,
+    "fat": 24.5,
+    "portions": []
+  },
+  {
+    "id": "taco-301",
+    "name": "Merluza, filé, assado",
+    "emoji": "🐟",
+    "kcal": 121.9,
+    "carbs": 0.0,
+    "protein": 26.6,
+    "fat": 0.9,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 120
+      }
+    ]
+  },
+  {
+    "id": "taco-302",
+    "name": "Merluza, filé, cru",
+    "emoji": "🐟",
+    "kcal": 89.1,
+    "carbs": 0.0,
+    "protein": 16.6,
+    "fat": 2.0,
+    "portions": []
+  },
+  {
+    "id": "taco-303",
+    "name": "Merluza, filé, frito",
+    "emoji": "🐟",
+    "kcal": 191.6,
+    "carbs": 0.0,
+    "protein": 26.9,
+    "fat": 8.5,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 120
+      }
+    ]
+  },
+  {
+    "id": "taco-304",
+    "name": "Pescada, branca, crua",
+    "emoji": "🐟",
+    "kcal": 110.9,
+    "carbs": 0.0,
+    "protein": 16.3,
+    "fat": 4.6,
+    "portions": []
+  },
+  {
+    "id": "taco-305",
+    "name": "Pescada, branca, frita",
+    "emoji": "🐟",
+    "kcal": 223.0,
+    "carbs": 0.0,
+    "protein": 27.4,
+    "fat": 11.8,
+    "portions": []
+  },
+  {
+    "id": "taco-306",
+    "name": "Pescada, filé, com farinha de trigo, frito",
+    "emoji": "🐟",
+    "kcal": 283.4,
+    "carbs": 5.0,
+    "protein": 21.4,
+    "fat": 19.1,
+    "portions": []
+  },
+  {
+    "id": "taco-307",
+    "name": "Pescada, filé, cru",
+    "emoji": "🐟",
+    "kcal": 107.2,
+    "carbs": 0.0,
+    "protein": 16.6,
+    "fat": 4.0,
+    "portions": []
+  },
+  {
+    "id": "taco-308",
+    "name": "Pescada, filé, frito",
+    "emoji": "🐟",
+    "kcal": 154.3,
+    "carbs": 0.0,
+    "protein": 28.6,
+    "fat": 3.6,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 120
+      }
+    ]
+  },
+  {
+    "id": "taco-309",
+    "name": "Pescada, filé, molho escabeche",
+    "emoji": "🐟",
+    "kcal": 142.0,
+    "carbs": 5.0,
+    "protein": 11.8,
+    "fat": 8.0,
+    "portions": []
+  },
+  {
+    "id": "taco-310",
+    "name": "Pescadinha, crua",
+    "emoji": "🐟",
+    "kcal": 76.4,
+    "carbs": 0.0,
+    "protein": 15.5,
+    "fat": 1.1,
+    "portions": []
+  },
+  {
+    "id": "taco-311",
+    "name": "Pintado, assado",
+    "emoji": "🐟",
+    "kcal": 191.6,
+    "carbs": 0.0,
+    "protein": 36.5,
+    "fat": 4.0,
+    "portions": []
+  },
+  {
+    "id": "taco-312",
+    "name": "Pintado, cru",
+    "emoji": "🐟",
+    "kcal": 91.1,
+    "carbs": 0.0,
+    "protein": 18.6,
+    "fat": 1.3,
+    "portions": []
+  },
+  {
+    "id": "taco-313",
+    "name": "Pintado, grelhado",
+    "emoji": "🐟",
+    "kcal": 152.2,
+    "carbs": 0.0,
+    "protein": 30.8,
+    "fat": 2.3,
+    "portions": []
+  },
+  {
+    "id": "taco-314",
+    "name": "Porquinho, cru",
+    "emoji": "🐟",
+    "kcal": 93.0,
+    "carbs": 0.0,
+    "protein": 20.5,
+    "fat": 0.6,
+    "portions": []
+  },
+  {
+    "id": "taco-315",
+    "name": "Salmão, filé, com pele, fresco, grelhado",
+    "emoji": "🧂",
+    "kcal": 228.7,
+    "carbs": 0.0,
+    "protein": 23.9,
+    "fat": 14.0,
+    "portions": []
+  },
+  {
+    "id": "taco-316",
+    "name": "Salmão, sem pele, fresco, cru",
+    "emoji": "🧂",
+    "kcal": 169.8,
+    "carbs": 0.0,
+    "protein": 19.3,
+    "fat": 9.7,
+    "portions": []
+  },
+  {
+    "id": "taco-317",
+    "name": "Salmão, sem pele, fresco, grelhado",
+    "emoji": "🧂",
+    "kcal": 242.7,
+    "carbs": 0.0,
+    "protein": 26.1,
+    "fat": 14.5,
+    "portions": []
+  },
+  {
+    "id": "taco-318",
+    "name": "Sardinha, assada",
+    "emoji": "🐟",
+    "kcal": 164.4,
+    "carbs": 0.0,
+    "protein": 32.2,
+    "fat": 3.0,
+    "portions": []
+  },
+  {
+    "id": "taco-319",
+    "name": "Sardinha, conserva em óleo",
+    "emoji": "🐟",
+    "kcal": 285.0,
+    "carbs": 0.0,
+    "protein": 15.9,
+    "fat": 24.0,
+    "portions": []
+  },
+  {
+    "id": "taco-320",
+    "name": "Sardinha, frita",
+    "emoji": "🐟",
+    "kcal": 257.0,
+    "carbs": 0.0,
+    "protein": 33.4,
+    "fat": 12.7,
+    "portions": []
+  },
+  {
+    "id": "taco-321",
+    "name": "Sardinha, inteira, crua",
+    "emoji": "🐟",
+    "kcal": 113.9,
+    "carbs": 0.0,
+    "protein": 21.1,
+    "fat": 2.6,
+    "portions": []
+  },
+  {
+    "id": "taco-322",
+    "name": "Tucunaré, filé, congelado, cru",
+    "emoji": "🐟",
+    "kcal": 87.7,
+    "carbs": -0.0,
+    "protein": 18.0,
+    "fat": 1.2,
+    "portions": []
+  },
+  {
+    "id": "taco-323",
+    "name": "Apresuntado",
+    "emoji": "🥩",
+    "kcal": 128.9,
+    "carbs": 2.9,
+    "protein": 13.4,
+    "fat": 6.7,
+    "portions": []
+  },
+  {
+    "id": "taco-324",
+    "name": "Caldo de carne, tablete",
+    "emoji": "🥩",
+    "kcal": 240.6,
+    "carbs": 15.1,
+    "protein": 7.8,
+    "fat": 16.6,
+    "portions": []
+  },
+  {
+    "id": "taco-325",
+    "name": "Caldo de galinha, tablete",
+    "emoji": "🥩",
+    "kcal": 251.4,
+    "carbs": 10.6,
+    "protein": 6.3,
+    "fat": 20.4,
+    "portions": []
+  },
+  {
+    "id": "taco-326",
+    "name": "Carne, bovina, acém, moído, cozido",
+    "emoji": "🥩",
+    "kcal": 212.4,
+    "carbs": 0.0,
+    "protein": 26.7,
+    "fat": 10.9,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 25
+      },
+      {
+        "unit": "servingSpoon",
+        "grams": 60
+      }
+    ]
+  },
+  {
+    "id": "taco-327",
+    "name": "Carne, bovina, acém, moído, cru",
+    "emoji": "🥩",
+    "kcal": 136.6,
+    "carbs": 0.0,
+    "protein": 19.4,
+    "fat": 5.9,
+    "portions": []
+  },
+  {
+    "id": "taco-328",
+    "name": "Carne, bovina, acém, sem gordura, cozido",
+    "emoji": "🥩",
+    "kcal": 214.6,
+    "carbs": 0.0,
+    "protein": 27.3,
+    "fat": 10.9,
+    "portions": []
+  },
+  {
+    "id": "taco-329",
+    "name": "Carne, bovina, acém, sem gordura, cru",
+    "emoji": "🥩",
+    "kcal": 144.0,
+    "carbs": 0.0,
+    "protein": 20.8,
+    "fat": 6.1,
+    "portions": []
+  },
+  {
+    "id": "taco-330",
+    "name": "Carne, bovina, almôndegas, cruas",
+    "emoji": "🥩",
+    "kcal": 189.3,
+    "carbs": 9.8,
+    "protein": 12.3,
+    "fat": 11.2,
+    "portions": []
+  },
+  {
+    "id": "taco-331",
+    "name": "Carne, bovina, almôndegas, fritas",
+    "emoji": "🥩",
+    "kcal": 271.8,
+    "carbs": 14.3,
+    "protein": 18.2,
+    "fat": 15.8,
+    "portions": []
+  },
+  {
+    "id": "taco-332",
+    "name": "Carne, bovina, bucho, cozido",
+    "emoji": "🥩",
+    "kcal": 133.0,
+    "carbs": 0.0,
+    "protein": 21.6,
+    "fat": 4.5,
+    "portions": []
+  },
+  {
+    "id": "taco-333",
+    "name": "Carne, bovina, bucho, cru",
+    "emoji": "🥩",
+    "kcal": 137.3,
+    "carbs": 0.0,
+    "protein": 20.5,
+    "fat": 5.5,
+    "portions": []
+  },
+  {
+    "id": "taco-334",
+    "name": "Carne, bovina, capa de contra-filé, com gordura, crua",
+    "emoji": "🥩",
+    "kcal": 216.9,
+    "carbs": 0.0,
+    "protein": 19.2,
+    "fat": 15.0,
+    "portions": []
+  },
+  {
+    "id": "taco-335",
+    "name": "Carne, bovina, capa de contra-filé, com gordura, grelhada",
+    "emoji": "🥩",
+    "kcal": 311.7,
+    "carbs": 0.0,
+    "protein": 30.7,
+    "fat": 20.0,
+    "portions": []
+  },
+  {
+    "id": "taco-336",
+    "name": "Carne, bovina, capa de contra-filé, sem gordura, crua",
+    "emoji": "🥩",
+    "kcal": 131.1,
+    "carbs": 0.0,
+    "protein": 21.5,
+    "fat": 4.3,
+    "portions": []
+  },
+  {
+    "id": "taco-337",
+    "name": "Carne, bovina, capa de contra-filé, sem gordura, grelhada",
+    "emoji": "🥩",
+    "kcal": 239.4,
+    "carbs": -0.0,
+    "protein": 35.1,
+    "fat": 9.9,
+    "portions": []
+  },
+  {
+    "id": "taco-338",
+    "name": "Carne, bovina, charque, cozido",
+    "emoji": "🥩",
+    "kcal": 262.8,
+    "carbs": 0.0,
+    "protein": 36.4,
+    "fat": 11.9,
+    "portions": []
+  },
+  {
+    "id": "taco-339",
+    "name": "Carne, bovina, charque, cru",
+    "emoji": "🥩",
+    "kcal": 248.9,
+    "carbs": 0.0,
+    "protein": 22.7,
+    "fat": 16.8,
+    "portions": []
+  },
+  {
+    "id": "taco-340",
+    "name": "Carne, bovina, contra-filé, à milanesa",
+    "emoji": "🥩",
+    "kcal": 351.6,
+    "carbs": 12.2,
+    "protein": 20.6,
+    "fat": 24.0,
+    "portions": []
+  },
+  {
+    "id": "taco-341",
+    "name": "Carne, bovina, contra-filé de costela, cru",
+    "emoji": "🥩",
+    "kcal": 202.4,
+    "carbs": 0.0,
+    "protein": 19.8,
+    "fat": 13.1,
+    "portions": []
+  },
+  {
+    "id": "taco-342",
+    "name": "Carne, bovina, contra-filé de costela, grelhado",
+    "emoji": "🥩",
+    "kcal": 274.9,
+    "carbs": 0.0,
+    "protein": 29.9,
+    "fat": 16.3,
+    "portions": []
+  },
+  {
+    "id": "taco-343",
+    "name": "Carne, bovina, contra-filé, com gordura, cru",
+    "emoji": "🥩",
+    "kcal": 205.9,
+    "carbs": 0.0,
+    "protein": 21.1,
+    "fat": 12.8,
+    "portions": []
+  },
+  {
+    "id": "taco-344",
+    "name": "Carne, bovina, contra-filé, com gordura, grelhado",
+    "emoji": "🥩",
+    "kcal": 278.1,
+    "carbs": 0.0,
+    "protein": 32.4,
+    "fat": 15.5,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 100
+      }
+    ]
+  },
+  {
+    "id": "taco-345",
+    "name": "Carne, bovina, contra-filé, sem gordura, cru",
+    "emoji": "🥩",
+    "kcal": 156.6,
+    "carbs": 0.0,
+    "protein": 24.0,
+    "fat": 6.0,
+    "portions": []
+  },
+  {
+    "id": "taco-346",
+    "name": "Carne, bovina, contra-filé, sem gordura, grelhado",
+    "emoji": "🥩",
+    "kcal": 193.7,
+    "carbs": 0.0,
+    "protein": 35.9,
+    "fat": 4.5,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 100
+      }
+    ]
+  },
+  {
+    "id": "taco-347",
+    "name": "Carne, bovina, costela, assada",
+    "emoji": "🥩",
+    "kcal": 373.0,
+    "carbs": 0.0,
+    "protein": 28.8,
+    "fat": 27.7,
+    "portions": []
+  },
+  {
+    "id": "taco-348",
+    "name": "Carne, bovina, costela, crua",
+    "emoji": "🥩",
+    "kcal": 357.7,
+    "carbs": 0.0,
+    "protein": 16.7,
+    "fat": 31.8,
+    "portions": []
+  },
+  {
+    "id": "taco-349",
+    "name": "Carne, bovina, coxão duro, sem gordura, cozido",
+    "emoji": "🥩",
+    "kcal": 216.6,
+    "carbs": 0.0,
+    "protein": 31.9,
+    "fat": 8.9,
+    "portions": []
+  },
+  {
+    "id": "taco-350",
+    "name": "Carne, bovina, coxão duro, sem gordura, cru",
+    "emoji": "🥩",
+    "kcal": 148.0,
+    "carbs": 0.0,
+    "protein": 21.5,
+    "fat": 6.2,
+    "portions": []
+  },
+  {
+    "id": "taco-351",
+    "name": "Carne, bovina, coxão mole, sem gordura, cozido",
+    "emoji": "🥩",
+    "kcal": 218.7,
+    "carbs": 0.0,
+    "protein": 32.4,
+    "fat": 8.9,
+    "portions": []
+  },
+  {
+    "id": "taco-352",
+    "name": "Carne, bovina, coxão mole, sem gordura, cru",
+    "emoji": "🥩",
+    "kcal": 169.1,
+    "carbs": 0.0,
+    "protein": 21.2,
+    "fat": 8.7,
+    "portions": []
+  },
+  {
+    "id": "taco-353",
+    "name": "Carne, bovina, cupim, assado",
+    "emoji": "🥩",
+    "kcal": 330.1,
+    "carbs": 0.0,
+    "protein": 28.6,
+    "fat": 23.0,
+    "portions": []
+  },
+  {
+    "id": "taco-354",
+    "name": "Carne, bovina, cupim, cru",
+    "emoji": "🥩",
+    "kcal": 221.4,
+    "carbs": 0.0,
+    "protein": 19.5,
+    "fat": 15.3,
+    "portions": []
+  },
+  {
+    "id": "taco-355",
+    "name": "Carne, bovina, fígado, cru",
+    "emoji": "🥩",
+    "kcal": 141.0,
+    "carbs": 1.1,
+    "protein": 20.7,
+    "fat": 5.4,
+    "portions": []
+  },
+  {
+    "id": "taco-356",
+    "name": "Carne, bovina, fígado, grelhado",
+    "emoji": "🥩",
+    "kcal": 225.0,
+    "carbs": 4.2,
+    "protein": 29.9,
+    "fat": 9.0,
+    "portions": []
+  },
+  {
+    "id": "taco-357",
+    "name": "Carne, bovina, filé mingnon, sem gordura, cru",
+    "emoji": "🥩",
+    "kcal": 142.9,
+    "carbs": 0.0,
+    "protein": 21.6,
+    "fat": 5.6,
+    "portions": []
+  },
+  {
+    "id": "taco-358",
+    "name": "Carne, bovina, filé mingnon, sem gordura, grelhado",
+    "emoji": "🥩",
+    "kcal": 219.7,
+    "carbs": 0.0,
+    "protein": 32.8,
+    "fat": 8.8,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 100
+      }
+    ]
+  },
+  {
+    "id": "taco-359",
+    "name": "Carne, bovina, flanco, sem gordura, cozido",
+    "emoji": "🥩",
+    "kcal": 195.6,
+    "carbs": 0.0,
+    "protein": 29.4,
+    "fat": 7.8,
+    "portions": []
+  },
+  {
+    "id": "taco-360",
+    "name": "Carne, bovina, flanco, sem gordura, cru",
+    "emoji": "🥩",
+    "kcal": 141.5,
+    "carbs": 0.0,
+    "protein": 20.0,
+    "fat": 6.2,
+    "portions": []
+  },
+  {
+    "id": "taco-361",
+    "name": "Carne, bovina, fraldinha, com gordura, cozida",
+    "emoji": "🥩",
+    "kcal": 338.4,
+    "carbs": 0.0,
+    "protein": 24.2,
+    "fat": 26.0,
+    "portions": []
+  },
+  {
+    "id": "taco-362",
+    "name": "Carne, bovina, fraldinha, com gordura, crua",
+    "emoji": "🥩",
+    "kcal": 220.7,
+    "carbs": 0.0,
+    "protein": 17.6,
+    "fat": 16.1,
+    "portions": []
+  },
+  {
+    "id": "taco-363",
+    "name": "Carne, bovina, lagarto, cozido",
+    "emoji": "🥩",
+    "kcal": 222.5,
+    "carbs": 0.0,
+    "protein": 32.9,
+    "fat": 9.1,
+    "portions": []
+  },
+  {
+    "id": "taco-364",
+    "name": "Carne, bovina, lagarto, cru",
+    "emoji": "🥩",
+    "kcal": 134.9,
+    "carbs": 0.0,
+    "protein": 20.5,
+    "fat": 5.2,
+    "portions": []
+  },
+  {
+    "id": "taco-365",
+    "name": "Carne, bovina, língua, cozida",
+    "emoji": "🥩",
+    "kcal": 314.9,
+    "carbs": 0.0,
+    "protein": 21.4,
+    "fat": 24.8,
+    "portions": []
+  },
+  {
+    "id": "taco-366",
+    "name": "Carne, bovina, língua, crua",
+    "emoji": "🥩",
+    "kcal": 215.2,
+    "carbs": 0.0,
+    "protein": 17.1,
+    "fat": 15.8,
+    "portions": []
+  },
+  {
+    "id": "taco-367",
+    "name": "Carne, bovina, maminha, crua",
+    "emoji": "🥩",
+    "kcal": 152.8,
+    "carbs": 0.0,
+    "protein": 20.9,
+    "fat": 7.0,
+    "portions": []
+  },
+  {
+    "id": "taco-368",
+    "name": "Carne, bovina, maminha, grelhada",
+    "emoji": "🥩",
+    "kcal": 153.1,
+    "carbs": 0.0,
+    "protein": 30.7,
+    "fat": 2.4,
+    "portions": []
+  },
+  {
+    "id": "taco-369",
+    "name": "Carne, bovina, miolo de alcatra, sem gordura, cru",
+    "emoji": "🥩",
+    "kcal": 162.9,
+    "carbs": 0.0,
+    "protein": 21.6,
+    "fat": 7.8,
+    "portions": []
+  },
+  {
+    "id": "taco-370",
+    "name": "Carne, bovina, miolo de alcatra, sem gordura, grelhado",
+    "emoji": "🥩",
+    "kcal": 241.4,
+    "carbs": 0.0,
+    "protein": 31.9,
+    "fat": 11.6,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 100
+      }
+    ]
+  },
+  {
+    "id": "taco-371",
+    "name": "Carne, bovina, músculo, sem gordura, cozido",
+    "emoji": "🥩",
+    "kcal": 193.8,
+    "carbs": 0.0,
+    "protein": 31.2,
+    "fat": 6.7,
+    "portions": []
+  },
+  {
+    "id": "taco-372",
+    "name": "Carne, bovina, músculo, sem gordura, cru",
+    "emoji": "🥩",
+    "kcal": 141.6,
+    "carbs": 0.0,
+    "protein": 21.6,
+    "fat": 5.5,
+    "portions": []
+  },
+  {
+    "id": "taco-373",
+    "name": "Carne, bovina, paleta, com gordura, crua",
+    "emoji": "🥩",
+    "kcal": 158.7,
+    "carbs": 0.0,
+    "protein": 21.4,
+    "fat": 7.5,
+    "portions": []
+  },
+  {
+    "id": "taco-374",
+    "name": "Carne, bovina, paleta, sem gordura, cozida",
+    "emoji": "🥩",
+    "kcal": 193.7,
+    "carbs": 0.0,
+    "protein": 29.7,
+    "fat": 7.4,
+    "portions": []
+  },
+  {
+    "id": "taco-375",
+    "name": "Carne, bovina, paleta, sem gordura, crua",
+    "emoji": "🥩",
+    "kcal": 140.9,
+    "carbs": 0.0,
+    "protein": 21.0,
+    "fat": 5.7,
+    "portions": []
+  },
+  {
+    "id": "taco-376",
+    "name": "Carne, bovina, patinho, sem gordura, cru",
+    "emoji": "🥩",
+    "kcal": 133.5,
+    "carbs": 0.0,
+    "protein": 21.7,
+    "fat": 4.5,
+    "portions": []
+  },
+  {
+    "id": "taco-377",
+    "name": "Carne, bovina, patinho, sem gordura, grelhado",
+    "emoji": "🥩",
+    "kcal": 219.3,
+    "carbs": 0.0,
+    "protein": 35.9,
+    "fat": 7.3,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 100
+      }
+    ]
+  },
+  {
+    "id": "taco-378",
+    "name": "Carne, bovina, peito, sem gordura, cozido",
+    "emoji": "🥩",
+    "kcal": 338.5,
+    "carbs": 0.0,
+    "protein": 22.2,
+    "fat": 27.0,
+    "portions": []
+  },
+  {
+    "id": "taco-379",
+    "name": "Carne, bovina, peito, sem gordura, cru",
+    "emoji": "🥩",
+    "kcal": 259.3,
+    "carbs": 0.0,
+    "protein": 17.6,
+    "fat": 20.4,
+    "portions": []
+  },
+  {
+    "id": "taco-380",
+    "name": "Carne, bovina, picanha, com gordura, crua",
+    "emoji": "🥩",
+    "kcal": 212.9,
+    "carbs": 0.0,
+    "protein": 18.8,
+    "fat": 14.7,
+    "portions": []
+  },
+  {
+    "id": "taco-381",
+    "name": "Carne, bovina, picanha, com gordura, grelhada",
+    "emoji": "🥩",
+    "kcal": 288.8,
+    "carbs": 0.0,
+    "protein": 26.4,
+    "fat": 19.5,
+    "portions": []
+  },
+  {
+    "id": "taco-382",
+    "name": "Carne, bovina, picanha, sem gordura, crua",
+    "emoji": "🥩",
+    "kcal": 133.5,
+    "carbs": 0.0,
+    "protein": 21.2,
+    "fat": 4.7,
+    "portions": []
+  },
+  {
+    "id": "taco-383",
+    "name": "Carne, bovina, picanha, sem gordura, grelhada",
+    "emoji": "🥩",
+    "kcal": 238.5,
+    "carbs": 0.0,
+    "protein": 31.9,
+    "fat": 11.3,
+    "portions": []
+  },
+  {
+    "id": "taco-384",
+    "name": "Carne, bovina, seca, cozida",
+    "emoji": "🥩",
+    "kcal": 312.8,
+    "carbs": 0.0,
+    "protein": 26.9,
+    "fat": 21.9,
+    "portions": []
+  },
+  {
+    "id": "taco-385",
+    "name": "Carne, bovina, seca, crua",
+    "emoji": "🥩",
+    "kcal": 312.7,
+    "carbs": 0.0,
+    "protein": 19.7,
+    "fat": 25.4,
+    "portions": []
+  },
+  {
+    "id": "taco-386",
+    "name": "Coxinha de frango, frita",
+    "emoji": "🍗",
+    "kcal": 283.0,
+    "carbs": 34.5,
+    "protein": 9.6,
+    "fat": 11.8,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 50
+      }
+    ]
+  },
+  {
+    "id": "taco-387",
+    "name": "Croquete, de carne, cru",
+    "emoji": "🥩",
+    "kcal": 245.8,
+    "carbs": 13.9,
+    "protein": 12.0,
+    "fat": 15.6,
+    "portions": []
+  },
+  {
+    "id": "taco-388",
+    "name": "Croquete, de carne, frito",
+    "emoji": "🥩",
+    "kcal": 346.7,
+    "carbs": 18.1,
+    "protein": 16.9,
+    "fat": 22.7,
+    "portions": []
+  },
+  {
+    "id": "taco-389",
+    "name": "Empada de frango, pré-cozida, assada",
+    "emoji": "🥩",
+    "kcal": 358.2,
+    "carbs": 47.5,
+    "protein": 6.9,
+    "fat": 15.6,
+    "portions": []
+  },
+  {
+    "id": "taco-390",
+    "name": "Empada, de frango, pré-cozida",
+    "emoji": "🥩",
+    "kcal": 377.5,
+    "carbs": 35.5,
+    "protein": 7.3,
+    "fat": 22.9,
+    "portions": []
+  },
+  {
+    "id": "taco-391",
+    "name": "Frango, asa, com pele, crua",
+    "emoji": "🍗",
+    "kcal": 213.2,
+    "carbs": 0.0,
+    "protein": 18.1,
+    "fat": 15.1,
+    "portions": []
+  },
+  {
+    "id": "taco-392",
+    "name": "Frango, caipira, inteiro, com pele, cozido",
+    "emoji": "🍗",
+    "kcal": 242.9,
+    "carbs": 0.0,
+    "protein": 23.9,
+    "fat": 15.6,
+    "portions": []
+  },
+  {
+    "id": "taco-393",
+    "name": "Frango, caipira, inteiro, sem pele, cozido",
+    "emoji": "🍗",
+    "kcal": 195.8,
+    "carbs": 0.0,
+    "protein": 29.6,
+    "fat": 7.7,
+    "portions": []
+  },
+  {
+    "id": "taco-394",
+    "name": "Frango, coração, cru",
+    "emoji": "🍗",
+    "kcal": 221.5,
+    "carbs": 0.0,
+    "protein": 12.6,
+    "fat": 18.6,
+    "portions": []
+  },
+  {
+    "id": "taco-395",
+    "name": "Frango, coração, grelhado",
+    "emoji": "🍗",
+    "kcal": 207.3,
+    "carbs": 0.6,
+    "protein": 22.4,
+    "fat": 12.1,
+    "portions": []
+  },
+  {
+    "id": "taco-396",
+    "name": "Frango, coxa, com pele, assada",
+    "emoji": "🍗",
+    "kcal": 215.1,
+    "carbs": 0.1,
+    "protein": 28.5,
+    "fat": 10.4,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 40
+      }
+    ]
+  },
+  {
+    "id": "taco-397",
+    "name": "Frango, coxa, com pele, crua",
+    "emoji": "🍗",
+    "kcal": 161.5,
+    "carbs": 0.0,
+    "protein": 17.1,
+    "fat": 9.8,
+    "portions": []
+  },
+  {
+    "id": "taco-398",
+    "name": "Frango, coxa, sem pele, cozida",
+    "emoji": "🍗",
+    "kcal": 167.4,
+    "carbs": 0.0,
+    "protein": 26.9,
+    "fat": 5.8,
+    "portions": []
+  },
+  {
+    "id": "taco-399",
+    "name": "Frango, coxa, sem pele, crua",
+    "emoji": "🍗",
+    "kcal": 119.9,
+    "carbs": 0.0,
+    "protein": 17.8,
+    "fat": 4.9,
+    "portions": []
+  },
+  {
+    "id": "taco-400",
+    "name": "Frango, fígado, cru",
+    "emoji": "🍗",
+    "kcal": 106.5,
+    "carbs": -0.0,
+    "protein": 17.6,
+    "fat": 3.5,
+    "portions": []
+  },
+  {
+    "id": "taco-401",
+    "name": "Frango, filé, à milanesa",
+    "emoji": "🍗",
+    "kcal": 220.9,
+    "carbs": 7.5,
+    "protein": 28.5,
+    "fat": 7.8,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 140
+      }
+    ]
+  },
+  {
+    "id": "taco-402",
+    "name": "Frango, inteiro, com pele, cru",
+    "emoji": "🍗",
+    "kcal": 226.3,
+    "carbs": 0.0,
+    "protein": 16.4,
+    "fat": 17.3,
+    "portions": []
+  },
+  {
+    "id": "taco-403",
+    "name": "Frango, inteiro, sem pele, assado",
+    "emoji": "🍗",
+    "kcal": 187.3,
+    "carbs": 0.0,
+    "protein": 28.0,
+    "fat": 7.5,
+    "portions": []
+  },
+  {
+    "id": "taco-404",
+    "name": "Frango, inteiro, sem pele, cozido",
+    "emoji": "🍗",
+    "kcal": 170.4,
+    "carbs": 0.0,
+    "protein": 25.0,
+    "fat": 7.1,
+    "portions": []
+  },
+  {
+    "id": "taco-405",
+    "name": "Frango, inteiro, sem pele, cru",
+    "emoji": "🍗",
+    "kcal": 129.1,
+    "carbs": 0.0,
+    "protein": 20.6,
+    "fat": 4.6,
+    "portions": []
+  },
+  {
+    "id": "taco-406",
+    "name": "Frango, peito, com pele, assado",
+    "emoji": "🍗",
+    "kcal": 211.7,
+    "carbs": 0.0,
+    "protein": 33.4,
+    "fat": 7.6,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 180
+      }
+    ]
+  },
+  {
+    "id": "taco-407",
+    "name": "Frango, peito, com pele, cru",
+    "emoji": "🍗",
+    "kcal": 149.5,
+    "carbs": 0.0,
+    "protein": 20.8,
+    "fat": 6.7,
+    "portions": []
+  },
+  {
+    "id": "taco-408",
+    "name": "Frango, peito, sem pele, cozido",
+    "emoji": "🍗",
+    "kcal": 162.9,
+    "carbs": 0.0,
+    "protein": 31.5,
+    "fat": 3.2,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 20
+      }
+    ]
+  },
+  {
+    "id": "taco-409",
+    "name": "Frango, peito, sem pele, cru",
+    "emoji": "🍗",
+    "kcal": 119.2,
+    "carbs": 0.0,
+    "protein": 21.5,
+    "fat": 3.0,
+    "portions": []
+  },
+  {
+    "id": "taco-410",
+    "name": "Frango, peito, sem pele, grelhado",
+    "emoji": "🍗",
+    "kcal": 159.2,
+    "carbs": 0.0,
+    "protein": 32.0,
+    "fat": 2.5,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 100
+      }
+    ]
+  },
+  {
+    "id": "taco-411",
+    "name": "Frango, sobrecoxa, com pele, assada",
+    "emoji": "🍗",
+    "kcal": 259.6,
+    "carbs": 0.0,
+    "protein": 28.7,
+    "fat": 15.2,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 65
+      }
+    ]
+  },
+  {
+    "id": "taco-412",
+    "name": "Frango, sobrecoxa, com pele, crua",
+    "emoji": "🍗",
+    "kcal": 254.5,
+    "carbs": 0.0,
+    "protein": 15.5,
+    "fat": 20.9,
+    "portions": []
+  },
+  {
+    "id": "taco-413",
+    "name": "Frango, sobrecoxa, sem pele, assada",
+    "emoji": "🍗",
+    "kcal": 232.9,
+    "carbs": 0.0,
+    "protein": 29.2,
+    "fat": 12.0,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 65
+      }
+    ]
+  },
+  {
+    "id": "taco-414",
+    "name": "Frango, sobrecoxa, sem pele, crua",
+    "emoji": "🍗",
+    "kcal": 161.8,
+    "carbs": 0.0,
+    "protein": 17.6,
+    "fat": 9.6,
+    "portions": []
+  },
+  {
+    "id": "taco-415",
+    "name": "Hambúrguer, bovino, cru",
+    "emoji": "🍔",
+    "kcal": 214.8,
+    "carbs": 4.2,
+    "protein": 13.2,
+    "fat": 16.2,
+    "portions": []
+  },
+  {
+    "id": "taco-416",
+    "name": "Hambúrguer, bovino, frito",
+    "emoji": "🍔",
+    "kcal": 258.3,
+    "carbs": 6.3,
+    "protein": 20.0,
+    "fat": 17.0,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 56
+      }
+    ]
+  },
+  {
+    "id": "taco-417",
+    "name": "Hambúrguer, bovino, grelhado",
+    "emoji": "🍔",
+    "kcal": 209.8,
+    "carbs": 11.3,
+    "protein": 13.2,
+    "fat": 12.4,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 56
+      }
+    ]
+  },
+  {
+    "id": "taco-418",
+    "name": "Lingüiça, frango, crua",
+    "emoji": "🌭",
+    "kcal": 218.1,
+    "carbs": 0.0,
+    "protein": 14.2,
+    "fat": 17.4,
+    "portions": []
+  },
+  {
+    "id": "taco-419",
+    "name": "Lingüiça, frango, frita",
+    "emoji": "🌭",
+    "kcal": 245.5,
+    "carbs": 0.0,
+    "protein": 18.3,
+    "fat": 18.5,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 60
+      },
+      {
+        "unit": "slice",
+        "grams": 10
+      }
+    ]
+  },
+  {
+    "id": "taco-420",
+    "name": "Lingüiça, frango, grelhada",
+    "emoji": "🌭",
+    "kcal": 243.7,
+    "carbs": 0.0,
+    "protein": 18.2,
+    "fat": 18.4,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 60
+      },
+      {
+        "unit": "slice",
+        "grams": 10
+      }
+    ]
+  },
+  {
+    "id": "taco-421",
+    "name": "Lingüiça, porco, crua",
+    "emoji": "🌭",
+    "kcal": 227.2,
+    "carbs": 0.0,
+    "protein": 16.1,
+    "fat": 17.6,
+    "portions": []
+  },
+  {
+    "id": "taco-422",
+    "name": "Lingüiça, porco, frita",
+    "emoji": "🌭",
+    "kcal": 279.5,
+    "carbs": 0.0,
+    "protein": 20.5,
+    "fat": 21.3,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 60
+      },
+      {
+        "unit": "slice",
+        "grams": 10
+      }
+    ]
+  },
+  {
+    "id": "taco-423",
+    "name": "Lingüiça, porco, grelhada",
+    "emoji": "🌭",
+    "kcal": 296.5,
+    "carbs": 0.0,
+    "protein": 23.2,
+    "fat": 21.9,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 60
+      },
+      {
+        "unit": "slice",
+        "grams": 10
+      }
+    ]
+  },
+  {
+    "id": "taco-424",
+    "name": "Mortadela",
+    "emoji": "🥩",
+    "kcal": 268.8,
+    "carbs": 5.8,
+    "protein": 12.0,
+    "fat": 21.6,
+    "portions": []
+  },
+  {
+    "id": "taco-425",
+    "name": "Peru, congelado, assado",
+    "emoji": "🍗",
+    "kcal": 163.1,
+    "carbs": 0.0,
+    "protein": 26.2,
+    "fat": 5.7,
+    "portions": []
+  },
+  {
+    "id": "taco-426",
+    "name": "Peru, congelado, cru",
+    "emoji": "🍗",
+    "kcal": 93.7,
+    "carbs": 0.0,
+    "protein": 18.1,
+    "fat": 1.8,
+    "portions": []
+  },
+  {
+    "id": "taco-427",
+    "name": "Porco, bisteca, crua",
+    "emoji": "🥓",
+    "kcal": 164.1,
+    "carbs": 0.0,
+    "protein": 21.5,
+    "fat": 8.0,
+    "portions": []
+  },
+  {
+    "id": "taco-428",
+    "name": "Porco, bisteca, frita",
+    "emoji": "🥓",
+    "kcal": 311.2,
+    "carbs": 0.0,
+    "protein": 33.7,
+    "fat": 18.5,
+    "portions": []
+  },
+  {
+    "id": "taco-429",
+    "name": "Porco, bisteca, grelhada",
+    "emoji": "🥓",
+    "kcal": 280.1,
+    "carbs": 0.0,
+    "protein": 28.9,
+    "fat": 17.4,
+    "portions": []
+  },
+  {
+    "id": "taco-430",
+    "name": "Porco, costela, assada",
+    "emoji": "🥓",
+    "kcal": 402.2,
+    "carbs": 0.0,
+    "protein": 30.2,
+    "fat": 30.3,
+    "portions": []
+  },
+  {
+    "id": "taco-431",
+    "name": "Porco, costela, crua",
+    "emoji": "🥓",
+    "kcal": 255.6,
+    "carbs": 0.0,
+    "protein": 18.0,
+    "fat": 19.8,
+    "portions": []
+  },
+  {
+    "id": "taco-432",
+    "name": "Porco, lombo, assado",
+    "emoji": "🥓",
+    "kcal": 210.2,
+    "carbs": 0.0,
+    "protein": 35.7,
+    "fat": 6.4,
+    "portions": []
+  },
+  {
+    "id": "taco-433",
+    "name": "Porco, lombo, cru",
+    "emoji": "🥓",
+    "kcal": 175.6,
+    "carbs": 0.0,
+    "protein": 22.6,
+    "fat": 8.8,
+    "portions": []
+  },
+  {
+    "id": "taco-434",
+    "name": "Porco, orelha, salgada, crua",
+    "emoji": "🥓",
+    "kcal": 258.5,
+    "carbs": 0.0,
+    "protein": 18.5,
+    "fat": 19.9,
+    "portions": []
+  },
+  {
+    "id": "taco-435",
+    "name": "Porco, pernil, assado",
+    "emoji": "🥓",
+    "kcal": 262.3,
+    "carbs": 0.0,
+    "protein": 32.1,
+    "fat": 13.9,
+    "portions": []
+  },
+  {
+    "id": "taco-436",
+    "name": "Porco, pernil, cru",
+    "emoji": "🥓",
+    "kcal": 186.1,
+    "carbs": 0.0,
+    "protein": 20.1,
+    "fat": 11.1,
+    "portions": []
+  },
+  {
+    "id": "taco-437",
+    "name": "Porco, rabo, salgado, cru",
+    "emoji": "🥓",
+    "kcal": 377.4,
+    "carbs": 0.0,
+    "protein": 15.6,
+    "fat": 34.5,
+    "portions": []
+  },
+  {
+    "id": "taco-438",
+    "name": "Presunto, com capa de gordura",
+    "emoji": "🥓",
+    "kcal": 127.8,
+    "carbs": 1.4,
+    "protein": 14.4,
+    "fat": 6.8,
+    "portions": [
+      {
+        "unit": "slice",
+        "grams": 15
+      }
+    ]
+  },
+  {
+    "id": "taco-439",
+    "name": "Presunto, sem capa de gordura",
+    "emoji": "🥓",
+    "kcal": 93.7,
+    "carbs": 2.1,
+    "protein": 14.3,
+    "fat": 2.7,
+    "portions": [
+      {
+        "unit": "slice",
+        "grams": 15
+      }
+    ]
+  },
+  {
+    "id": "taco-440",
+    "name": "Quibe, assado",
+    "emoji": "🥩",
+    "kcal": 136.2,
+    "carbs": 12.9,
+    "protein": 14.6,
+    "fat": 2.7,
+    "portions": []
+  },
+  {
+    "id": "taco-441",
+    "name": "Quibe, cru",
+    "emoji": "🥩",
+    "kcal": 109.5,
+    "carbs": 10.8,
+    "protein": 12.4,
+    "fat": 1.7,
+    "portions": []
+  },
+  {
+    "id": "taco-442",
+    "name": "Quibe, frito",
+    "emoji": "🥩",
+    "kcal": 253.8,
+    "carbs": 12.3,
+    "protein": 14.9,
+    "fat": 15.8,
+    "portions": []
+  },
+  {
+    "id": "taco-443",
+    "name": "Salame",
+    "emoji": "🧂",
+    "kcal": 397.8,
+    "carbs": 2.9,
+    "protein": 25.8,
+    "fat": 30.6,
+    "portions": []
+  },
+  {
+    "id": "taco-444",
+    "name": "Toucinho, cru",
+    "emoji": "🥓",
+    "kcal": 592.5,
+    "carbs": 0.0,
+    "protein": 11.5,
+    "fat": 60.3,
+    "portions": []
+  },
+  {
+    "id": "taco-445",
+    "name": "Toucinho, frito",
+    "emoji": "🥓",
+    "kcal": 696.6,
+    "carbs": 0.0,
+    "protein": 27.3,
+    "fat": 64.3,
+    "portions": []
+  },
+  {
+    "id": "taco-446",
+    "name": "Bebida láctea, pêssego",
+    "emoji": "🥛",
+    "kcal": 55.2,
+    "carbs": 7.6,
+    "protein": 2.1,
+    "fat": 1.9,
+    "portions": []
+  },
+  {
+    "id": "taco-447",
+    "name": "Creme de Leite",
+    "emoji": "🥛",
+    "kcal": 221.5,
+    "carbs": 4.5,
+    "protein": 1.5,
+    "fat": 22.5,
+    "portions": []
+  },
+  {
+    "id": "taco-448",
+    "name": "Iogurte, natural",
+    "emoji": "🥣",
+    "kcal": 51.5,
+    "carbs": 1.9,
+    "protein": 4.1,
+    "fat": 3.0,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 200
+      }
+    ]
+  },
+  {
+    "id": "taco-449",
+    "name": "Iogurte, natural, desnatado",
+    "emoji": "🥣",
+    "kcal": 41.5,
+    "carbs": 5.8,
+    "protein": 3.8,
+    "fat": 0.3,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 200
+      }
+    ]
+  },
+  {
+    "id": "taco-451",
+    "name": "Iogurte, sabor morango",
+    "emoji": "🥣",
+    "kcal": 69.6,
+    "carbs": 9.7,
+    "protein": 2.7,
+    "fat": 2.3,
+    "portions": []
+  },
+  {
+    "id": "taco-452",
+    "name": "Iogurte, sabor pêssego",
+    "emoji": "🥣",
+    "kcal": 67.8,
+    "carbs": 9.4,
+    "protein": 2.5,
+    "fat": 2.3,
+    "portions": []
+  },
+  {
+    "id": "taco-453",
+    "name": "Leite, condensado",
+    "emoji": "🥛",
+    "kcal": 312.6,
+    "carbs": 57.0,
+    "protein": 7.7,
+    "fat": 6.7,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 15
+      }
+    ]
+  },
+  {
+    "id": "taco-454",
+    "name": "Leite, de cabra",
+    "emoji": "🥛",
+    "kcal": 66.4,
+    "carbs": 5.2,
+    "protein": 3.1,
+    "fat": 3.8,
+    "portions": []
+  },
+  {
+    "id": "taco-455",
+    "name": "Leite, de vaca, achocolatado",
+    "emoji": "🥛",
+    "kcal": 82.8,
+    "carbs": 14.2,
+    "protein": 2.1,
+    "fat": 2.2,
+    "portions": []
+  },
+  {
+    "id": "taco-456",
+    "name": "Leite, de vaca, desnatado, pó",
+    "emoji": "🥛",
+    "kcal": 361.6,
+    "carbs": 53.0,
+    "protein": 34.7,
+    "fat": 0.9,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 10
+      }
+    ]
+  },
+  {
+    "id": "taco-459",
+    "name": "Leite, de vaca, integral, pó",
+    "emoji": "🥛",
+    "kcal": 496.7,
+    "carbs": 39.2,
+    "protein": 25.4,
+    "fat": 26.9,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 16
+      }
+    ]
+  },
+  {
+    "id": "taco-460",
+    "name": "Leite, fermentado",
+    "emoji": "🥛",
+    "kcal": 69.6,
+    "carbs": 15.7,
+    "protein": 1.9,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-461",
+    "name": "Queijo, minas, frescal",
+    "emoji": "🧀",
+    "kcal": 264.3,
+    "carbs": 3.2,
+    "protein": 17.4,
+    "fat": 20.2,
+    "portions": [
+      {
+        "unit": "slice",
+        "grams": 30
+      }
+    ]
+  },
+  {
+    "id": "taco-462",
+    "name": "Queijo, minas, meia cura",
+    "emoji": "🧀",
+    "kcal": 320.7,
+    "carbs": 3.6,
+    "protein": 21.2,
+    "fat": 24.6,
+    "portions": [
+      {
+        "unit": "slice",
+        "grams": 45
+      }
+    ]
+  },
+  {
+    "id": "taco-463",
+    "name": "Queijo, mozarela",
+    "emoji": "🧀",
+    "kcal": 329.9,
+    "carbs": 3.0,
+    "protein": 22.6,
+    "fat": 25.2,
+    "portions": [
+      {
+        "unit": "slice",
+        "grams": 20
+      }
+    ]
+  },
+  {
+    "id": "taco-464",
+    "name": "Queijo, parmesão",
+    "emoji": "🧀",
+    "kcal": 453.0,
+    "carbs": 1.7,
+    "protein": 35.6,
+    "fat": 33.5,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 15
+      },
+      {
+        "unit": "teaspoon",
+        "grams": 4
+      }
+    ]
+  },
+  {
+    "id": "taco-465",
+    "name": "Queijo, pasteurizado",
+    "emoji": "🧀",
+    "kcal": 303.1,
+    "carbs": 5.7,
+    "protein": 9.4,
+    "fat": 27.4,
+    "portions": []
+  },
+  {
+    "id": "taco-466",
+    "name": "Queijo, petit suisse, morango",
+    "emoji": "🧀",
+    "kcal": 121.1,
+    "carbs": 18.5,
+    "protein": 5.8,
+    "fat": 2.8,
+    "portions": []
+  },
+  {
+    "id": "taco-467",
+    "name": "Queijo, prato",
+    "emoji": "🧀",
+    "kcal": 359.9,
+    "carbs": 1.9,
+    "protein": 22.7,
+    "fat": 29.1,
+    "portions": [
+      {
+        "unit": "slice",
+        "grams": 15
+      }
+    ]
+  },
+  {
+    "id": "taco-468",
+    "name": "Queijo, requeijão, cremoso",
+    "emoji": "🧀",
+    "kcal": 256.6,
+    "carbs": 2.4,
+    "protein": 9.6,
+    "fat": 23.4,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 30
+      }
+    ]
+  },
+  {
+    "id": "taco-469",
+    "name": "Queijo, ricota",
+    "emoji": "🧀",
+    "kcal": 139.7,
+    "carbs": 3.8,
+    "protein": 12.6,
+    "fat": 8.1,
+    "portions": []
+  },
+  {
+    "id": "taco-470",
+    "name": "Bebida isotônica, sabores variados",
+    "emoji": "🥤",
+    "kcal": 25.6,
+    "carbs": 6.4,
+    "protein": 0.0,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-471",
+    "name": "Café, infusão 10%",
+    "emoji": "☕",
+    "kcal": 9.1,
+    "carbs": 1.5,
+    "protein": 0.7,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-472",
+    "name": "Cana, aguardente",
+    "emoji": "🥤",
+    "kcal": 215.7,
+    "carbs": 0.0,
+    "protein": 0.0,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-473",
+    "name": "Cana, caldo de",
+    "emoji": "🥤",
+    "kcal": 65.3,
+    "carbs": 18.2,
+    "protein": 0.0,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-474",
+    "name": "Cerveja, pilsen",
+    "emoji": "🍺",
+    "kcal": 40.7,
+    "carbs": 3.3,
+    "protein": 0.6,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-475",
+    "name": "Chá, erva-doce, infusão 5%",
+    "emoji": "🍵",
+    "kcal": 1.4,
+    "carbs": 0.4,
+    "protein": 0.0,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-476",
+    "name": "Chá, mate, infusão 5%",
+    "emoji": "🍵",
+    "kcal": 2.7,
+    "carbs": 0.6,
+    "protein": 0.0,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-477",
+    "name": "Chá, preto, infusão 5%",
+    "emoji": "🍵",
+    "kcal": 2.2,
+    "carbs": 0.6,
+    "protein": 0.0,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-478",
+    "name": "Coco, água de",
+    "emoji": "🥥",
+    "kcal": 21.5,
+    "carbs": 5.3,
+    "protein": 0.0,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-479",
+    "name": "Refrigerante, tipo água tônica",
+    "emoji": "🥤",
+    "kcal": 30.8,
+    "carbs": 8.0,
+    "protein": 0.0,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-480",
+    "name": "Refrigerante, tipo cola",
+    "emoji": "🥤",
+    "kcal": 33.5,
+    "carbs": 8.7,
+    "protein": 0.0,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-481",
+    "name": "Refrigerante, tipo guaraná",
+    "emoji": "🥤",
+    "kcal": 38.7,
+    "carbs": 10.0,
+    "protein": 0.0,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-482",
+    "name": "Refrigerante, tipo laranja",
+    "emoji": "🥤",
+    "kcal": 45.6,
+    "carbs": 11.8,
+    "protein": 0.0,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-483",
+    "name": "Refrigerante, tipo limão",
+    "emoji": "🥤",
+    "kcal": 39.7,
+    "carbs": 10.3,
+    "protein": 0.0,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-484",
+    "name": "Omelete, de queijo",
+    "emoji": "🍳",
+    "kcal": 268.0,
+    "carbs": 0.4,
+    "protein": 15.6,
+    "fat": 22.0,
+    "portions": []
+  },
+  {
+    "id": "taco-485",
+    "name": "Ovo, de codorna, inteiro, cru",
+    "emoji": "🥚",
+    "kcal": 176.9,
+    "carbs": 0.8,
+    "protein": 13.7,
+    "fat": 12.7,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 10
+      }
+    ]
+  },
+  {
+    "id": "taco-486",
+    "name": "Ovo, de galinha, clara, cozida/10minutos",
+    "emoji": "🥚",
+    "kcal": 59.4,
+    "carbs": 0.0,
+    "protein": 13.4,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-487",
+    "name": "Ovo, de galinha, gema, cozida/10minutos",
+    "emoji": "🥚",
+    "kcal": 352.7,
+    "carbs": 1.6,
+    "protein": 15.9,
+    "fat": 30.8,
+    "portions": []
+  },
+  {
+    "id": "taco-488",
+    "name": "Ovo, de galinha, inteiro, cozido/10minutos",
+    "emoji": "🥚",
+    "kcal": 145.7,
+    "carbs": 0.6,
+    "protein": 13.3,
+    "fat": 9.5,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 45
+      }
+    ]
+  },
+  {
+    "id": "taco-489",
+    "name": "Ovo, de galinha, inteiro, cru",
+    "emoji": "🥚",
+    "kcal": 143.1,
+    "carbs": 1.6,
+    "protein": 13.0,
+    "fat": 8.9,
+    "portions": []
+  },
+  {
+    "id": "taco-490",
+    "name": "Ovo, de galinha, inteiro, frito",
+    "emoji": "🥚",
+    "kcal": 240.2,
+    "carbs": 1.2,
+    "protein": 15.6,
+    "fat": 18.6,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 50
+      }
+    ]
+  },
+  {
+    "id": "taco-491",
+    "name": "Achocolatado, pó",
+    "emoji": "🍫",
+    "kcal": 401.0,
+    "carbs": 91.2,
+    "protein": 4.2,
+    "fat": 2.2,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 16
+      },
+      {
+        "unit": "teaspoon",
+        "grams": 4
+      }
+    ]
+  },
+  {
+    "id": "taco-492",
+    "name": "Açúcar, cristal",
+    "emoji": "🍬",
+    "kcal": 386.8,
+    "carbs": 99.6,
+    "protein": 0.3,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-493",
+    "name": "Açúcar, mascavo",
+    "emoji": "🍬",
+    "kcal": 368.6,
+    "carbs": 94.5,
+    "protein": 0.8,
+    "fat": 0.1,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 19
+      }
+    ]
+  },
+  {
+    "id": "taco-494",
+    "name": "Açúcar, refinado",
+    "emoji": "🍬",
+    "kcal": 386.6,
+    "carbs": 99.5,
+    "protein": 0.3,
+    "fat": 0.0,
+    "portions": [
+      {
+        "unit": "teaspoon",
+        "grams": 5
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 24
+      }
+    ]
+  },
+  {
+    "id": "taco-495",
+    "name": "Chocolate, ao leite",
+    "emoji": "🍫",
+    "kcal": 539.6,
+    "carbs": 59.6,
+    "protein": 7.2,
+    "fat": 30.3,
+    "portions": []
+  },
+  {
+    "id": "taco-496",
+    "name": "Chocolate, ao leite, com castanha do Pará",
+    "emoji": "🍫",
+    "kcal": 558.9,
+    "carbs": 55.4,
+    "protein": 7.4,
+    "fat": 34.2,
+    "portions": []
+  },
+  {
+    "id": "taco-497",
+    "name": "Chocolate, ao leite, dietético",
+    "emoji": "🍫",
+    "kcal": 556.8,
+    "carbs": 56.3,
+    "protein": 6.9,
+    "fat": 33.8,
+    "portions": []
+  },
+  {
+    "id": "taco-498",
+    "name": "Chocolate, meio amargo",
+    "emoji": "🍫",
+    "kcal": 474.9,
+    "carbs": 62.4,
+    "protein": 4.9,
+    "fat": 29.9,
+    "portions": []
+  },
+  {
+    "id": "taco-499",
+    "name": "Cocada branca",
+    "emoji": "🍬",
+    "kcal": 448.8,
+    "carbs": 81.4,
+    "protein": 1.1,
+    "fat": 13.6,
+    "portions": []
+  },
+  {
+    "id": "taco-500",
+    "name": "Doce, de abóbora, cremoso",
+    "emoji": "🍬",
+    "kcal": 198.9,
+    "carbs": 54.6,
+    "protein": 0.9,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-501",
+    "name": "Doce, de leite, cremoso",
+    "emoji": "🍬",
+    "kcal": 306.3,
+    "carbs": 59.5,
+    "protein": 5.5,
+    "fat": 6.0,
+    "portions": []
+  },
+  {
+    "id": "taco-502",
+    "name": "Geléia, mocotó, natural",
+    "emoji": "🍬",
+    "kcal": 106.1,
+    "carbs": 24.2,
+    "protein": 2.1,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-503",
+    "name": "Glicose de milho",
+    "emoji": "🍬",
+    "kcal": 292.1,
+    "carbs": 79.4,
+    "protein": 0.0,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-504",
+    "name": "Maria mole",
+    "emoji": "🍬",
+    "kcal": 301.2,
+    "carbs": 73.6,
+    "protein": 3.8,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-505",
+    "name": "Maria mole, coco queimado",
+    "emoji": "🍬",
+    "kcal": 306.6,
+    "carbs": 75.1,
+    "protein": 3.9,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-506",
+    "name": "Marmelada",
+    "emoji": "🍬",
+    "kcal": 257.2,
+    "carbs": 70.8,
+    "protein": 0.4,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-507",
+    "name": "Mel, de abelha",
+    "emoji": "🍯",
+    "kcal": 309.2,
+    "carbs": 84.0,
+    "protein": 0.0,
+    "fat": 0.0,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 15
+      },
+      {
+        "unit": "teaspoon",
+        "grams": 3
+      }
+    ]
+  },
+  {
+    "id": "taco-508",
+    "name": "Melado",
+    "emoji": "🍯",
+    "kcal": 296.5,
+    "carbs": 76.6,
+    "protein": 0.0,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-509",
+    "name": "Quindim",
+    "emoji": "🍬",
+    "kcal": 411.3,
+    "carbs": 46.3,
+    "protein": 4.7,
+    "fat": 24.4,
+    "portions": []
+  },
+  {
+    "id": "taco-510",
+    "name": "Rapadura",
+    "emoji": "🍬",
+    "kcal": 352.0,
+    "carbs": 90.8,
+    "protein": 1.0,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-511",
+    "name": "Café, pó, torrado",
+    "emoji": "☕",
+    "kcal": 418.6,
+    "carbs": 65.8,
+    "protein": 14.7,
+    "fat": 11.9,
+    "portions": []
+  },
+  {
+    "id": "taco-512",
+    "name": "Capuccino, pó",
+    "emoji": "🧂",
+    "kcal": 417.4,
+    "carbs": 73.6,
+    "protein": 11.3,
+    "fat": 8.6,
+    "portions": []
+  },
+  {
+    "id": "taco-513",
+    "name": "Fermento em pó, químico",
+    "emoji": "🧂",
+    "kcal": 89.7,
+    "carbs": 43.9,
+    "protein": 0.5,
+    "fat": 0.1,
+    "portions": []
+  },
+  {
+    "id": "taco-514",
+    "name": "Fermento, biológico, levedura, tablete",
+    "emoji": "🧂",
+    "kcal": 89.8,
+    "carbs": 7.7,
+    "protein": 17.0,
+    "fat": 1.5,
+    "portions": []
+  },
+  {
+    "id": "taco-515",
+    "name": "Gelatina, sabores variados, pó",
+    "emoji": "🧂",
+    "kcal": 380.2,
+    "carbs": 89.2,
+    "protein": 8.9,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-516",
+    "name": "Sal, dietético",
+    "emoji": "🧂",
+    "kcal": 0.0,
+    "carbs": 0.0,
+    "protein": 0.0,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-517",
+    "name": "Sal, grosso",
+    "emoji": "🧂",
+    "kcal": 0.0,
+    "carbs": 0.0,
+    "protein": 0.0,
+    "fat": 0.0,
+    "portions": []
+  },
+  {
+    "id": "taco-518",
+    "name": "Shoyu",
+    "emoji": "🧂",
+    "kcal": 60.9,
+    "carbs": 11.6,
+    "protein": 3.3,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-519",
+    "name": "Tempero a base de sal",
+    "emoji": "🧂",
+    "kcal": 21.3,
+    "carbs": 2.1,
+    "protein": 2.7,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-520",
+    "name": "Azeitona, preta, conserva",
+    "emoji": "🥫",
+    "kcal": 194.2,
+    "carbs": 5.5,
+    "protein": 1.2,
+    "fat": 20.3,
+    "portions": []
+  },
+  {
+    "id": "taco-521",
+    "name": "Azeitona, verde, conserva",
+    "emoji": "🥫",
+    "kcal": 136.9,
+    "carbs": 4.1,
+    "protein": 0.9,
+    "fat": 14.2,
+    "portions": []
+  },
+  {
+    "id": "taco-522",
+    "name": "Chantilly, spray, com gordura vegetal",
+    "emoji": "🍵",
+    "kcal": 315.0,
+    "carbs": 16.9,
+    "protein": 0.5,
+    "fat": 27.3,
+    "portions": []
+  },
+  {
+    "id": "taco-523",
+    "name": "Leite, de coco",
+    "emoji": "🥫",
+    "kcal": 166.2,
+    "carbs": 2.2,
+    "protein": 1.0,
+    "fat": 18.4,
+    "portions": []
+  },
+  {
+    "id": "taco-524",
+    "name": "Maionese, tradicional com ovos",
+    "emoji": "🥫",
+    "kcal": 302.2,
+    "carbs": 7.9,
+    "protein": 0.6,
+    "fat": 30.5,
+    "portions": []
+  },
+  {
+    "id": "taco-525",
+    "name": "Acarajé",
+    "emoji": "🍲",
+    "kcal": 289.2,
+    "carbs": 19.1,
+    "protein": 8.3,
+    "fat": 19.9,
+    "portions": []
+  },
+  {
+    "id": "taco-526",
+    "name": "Arroz carreteiro",
+    "emoji": "🍚",
+    "kcal": 153.8,
+    "carbs": 11.6,
+    "protein": 10.8,
+    "fat": 7.1,
+    "portions": []
+  },
+  {
+    "id": "taco-527",
+    "name": "Baião de dois, arroz e feijão-de-corda",
+    "emoji": "🍲",
+    "kcal": 135.7,
+    "carbs": 20.4,
+    "protein": 6.2,
+    "fat": 3.2,
+    "portions": []
+  },
+  {
+    "id": "taco-528",
+    "name": "Barreado",
+    "emoji": "🍲",
+    "kcal": 165.0,
+    "carbs": 0.2,
+    "protein": 18.3,
+    "fat": 9.5,
+    "portions": []
+  },
+  {
+    "id": "taco-529",
+    "name": "Bife à cavalo, com contra filé",
+    "emoji": "🍲",
+    "kcal": 291.2,
+    "carbs": 0.0,
+    "protein": 23.7,
+    "fat": 21.1,
+    "portions": []
+  },
+  {
+    "id": "taco-530",
+    "name": "Bolinho de arroz",
+    "emoji": "🍲",
+    "kcal": 273.5,
+    "carbs": 41.7,
+    "protein": 8.0,
+    "fat": 8.3,
+    "portions": []
+  },
+  {
+    "id": "taco-531",
+    "name": "Camarão à baiana",
+    "emoji": "🦐",
+    "kcal": 100.8,
+    "carbs": 3.2,
+    "protein": 7.9,
+    "fat": 6.0,
+    "portions": []
+  },
+  {
+    "id": "taco-532",
+    "name": "Charuto, de repolho",
+    "emoji": "🍵",
+    "kcal": 78.2,
+    "carbs": 10.1,
+    "protein": 6.8,
+    "fat": 1.1,
+    "portions": []
+  },
+  {
+    "id": "taco-533",
+    "name": "Cuscuz, de milho, cozido com sal",
+    "emoji": "🍲",
+    "kcal": 113.5,
+    "carbs": 25.3,
+    "protein": 2.2,
+    "fat": 0.7,
+    "portions": []
+  },
+  {
+    "id": "taco-534",
+    "name": "Cuscuz, paulista",
+    "emoji": "🍲",
+    "kcal": 142.1,
+    "carbs": 22.5,
+    "protein": 2.6,
+    "fat": 4.6,
+    "portions": []
+  },
+  {
+    "id": "taco-535",
+    "name": "Cuxá, molho",
+    "emoji": "🍲",
+    "kcal": 80.1,
+    "carbs": 5.7,
+    "protein": 5.6,
+    "fat": 3.6,
+    "portions": []
+  },
+  {
+    "id": "taco-536",
+    "name": "Dobradinha",
+    "emoji": "🍲",
+    "kcal": 124.5,
+    "carbs": 0.0,
+    "protein": 19.8,
+    "fat": 4.4,
+    "portions": []
+  },
+  {
+    "id": "taco-537",
+    "name": "Estrogonofe de carne",
+    "emoji": "🍲",
+    "kcal": 173.1,
+    "carbs": 3.0,
+    "protein": 15.0,
+    "fat": 10.8,
+    "portions": []
+  },
+  {
+    "id": "taco-538",
+    "name": "Estrogonofe de frango",
+    "emoji": "🍲",
+    "kcal": 156.8,
+    "carbs": 2.6,
+    "protein": 17.6,
+    "fat": 8.0,
+    "portions": []
+  },
+  {
+    "id": "taco-539",
+    "name": "Feijão tropeiro mineiro",
+    "emoji": "🫘",
+    "kcal": 151.6,
+    "carbs": 19.6,
+    "protein": 10.2,
+    "fat": 6.8,
+    "portions": []
+  },
+  {
+    "id": "taco-541",
+    "name": "Frango, com açafrão",
+    "emoji": "🍗",
+    "kcal": 112.8,
+    "carbs": 4.1,
+    "protein": 9.7,
+    "fat": 6.2,
+    "portions": []
+  },
+  {
+    "id": "taco-542",
+    "name": "Macarrão, molho bolognesa",
+    "emoji": "🍝",
+    "kcal": 119.5,
+    "carbs": 22.5,
+    "protein": 4.9,
+    "fat": 0.9,
+    "portions": []
+  },
+  {
+    "id": "taco-543",
+    "name": "Maniçoba",
+    "emoji": "🍲",
+    "kcal": 134.2,
+    "carbs": 3.4,
+    "protein": 10.0,
+    "fat": 8.7,
+    "portions": []
+  },
+  {
+    "id": "taco-544",
+    "name": "Quibebe",
+    "emoji": "🍲",
+    "kcal": 86.3,
+    "carbs": 6.6,
+    "protein": 8.6,
+    "fat": 2.7,
+    "portions": []
+  },
+  {
+    "id": "taco-545",
+    "name": "Salada, de legumes, com maionese",
+    "emoji": "🧂",
+    "kcal": 96.1,
+    "carbs": 8.9,
+    "protein": 1.1,
+    "fat": 7.0,
+    "portions": []
+  },
+  {
+    "id": "taco-546",
+    "name": "Salada, de legumes, cozida no vapor",
+    "emoji": "🧂",
+    "kcal": 35.4,
+    "carbs": 7.1,
+    "protein": 2.0,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-547",
+    "name": "Salpicão, de frango",
+    "emoji": "🧂",
+    "kcal": 147.9,
+    "carbs": 4.6,
+    "protein": 13.9,
+    "fat": 7.8,
+    "portions": []
+  },
+  {
+    "id": "taco-548",
+    "name": "Sarapatel",
+    "emoji": "🍲",
+    "kcal": 123.0,
+    "carbs": 1.1,
+    "protein": 18.5,
+    "fat": 4.4,
+    "portions": []
+  },
+  {
+    "id": "taco-549",
+    "name": "Tabule",
+    "emoji": "🍲",
+    "kcal": 57.5,
+    "carbs": 10.6,
+    "protein": 2.0,
+    "fat": 1.2,
+    "portions": []
+  },
+  {
+    "id": "taco-550",
+    "name": "Tacacá",
+    "emoji": "🍲",
+    "kcal": 46.9,
+    "carbs": 3.4,
+    "protein": 7.0,
+    "fat": 0.4,
+    "portions": []
+  },
+  {
+    "id": "taco-551",
+    "name": "Tapioca, com manteiga",
+    "emoji": "🍲",
+    "kcal": 347.8,
+    "carbs": 63.6,
+    "protein": 0.1,
+    "fat": 10.9,
+    "portions": []
+  },
+  {
+    "id": "taco-552",
+    "name": "Tucupi, com pimenta-de-cheiro",
+    "emoji": "🍲",
+    "kcal": 27.2,
+    "carbs": 4.7,
+    "protein": 2.1,
+    "fat": 0.3,
+    "portions": []
+  },
+  {
+    "id": "taco-553",
+    "name": "Vaca atolada",
+    "emoji": "🍲",
+    "kcal": 144.9,
+    "carbs": 10.1,
+    "protein": 5.1,
+    "fat": 9.3,
+    "portions": []
+  },
+  {
+    "id": "taco-554",
+    "name": "Vatapá",
+    "emoji": "🍲",
+    "kcal": 254.9,
+    "carbs": 9.7,
+    "protein": 6.0,
+    "fat": 23.2,
+    "portions": []
+  },
+  {
+    "id": "taco-555",
+    "name": "Virado à paulista",
+    "emoji": "🍲",
+    "kcal": 306.9,
+    "carbs": 14.1,
+    "protein": 10.2,
+    "fat": 25.6,
+    "portions": []
+  },
+  {
+    "id": "taco-556",
+    "name": "Yakisoba",
+    "emoji": "🍲",
+    "kcal": 112.8,
+    "carbs": 18.3,
+    "protein": 7.5,
+    "fat": 2.6,
+    "portions": []
+  },
+  {
+    "id": "taco-557",
+    "name": "Amendoim, grão, cru",
+    "emoji": "🥜",
+    "kcal": 544.1,
+    "carbs": 20.3,
+    "protein": 27.2,
+    "fat": 43.9,
+    "portions": []
+  },
+  {
+    "id": "taco-558",
+    "name": "Amendoim, torrado, salgado",
+    "emoji": "🥜",
+    "kcal": 605.8,
+    "carbs": 18.7,
+    "protein": 22.5,
+    "fat": 54.0,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 17
+      }
+    ]
+  },
+  {
+    "id": "taco-559",
+    "name": "Ervilha, em vagem",
+    "emoji": "🫘",
+    "kcal": 88.1,
+    "carbs": 14.2,
+    "protein": 7.5,
+    "fat": 0.5,
+    "portions": []
+  },
+  {
+    "id": "taco-560",
+    "name": "Ervilha, enlatada, drenada",
+    "emoji": "🫘",
+    "kcal": 73.8,
+    "carbs": 13.4,
+    "protein": 4.6,
+    "fat": 0.4,
+    "portions": []
+  },
+  {
+    "id": "taco-561",
+    "name": "Feijão, carioca, cozido",
+    "emoji": "🫘",
+    "kcal": 76.4,
+    "carbs": 13.6,
+    "protein": 4.8,
+    "fat": 0.5,
+    "portions": [
+      {
+        "unit": "ladle",
+        "grams": 140
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 17
+      },
+      {
+        "unit": "servingSpoon",
+        "grams": 35
+      }
+    ]
+  },
+  {
+    "id": "taco-562",
+    "name": "Feijão, carioca, cru",
+    "emoji": "🫘",
+    "kcal": 329.0,
+    "carbs": 61.2,
+    "protein": 20.0,
+    "fat": 1.3,
+    "portions": []
+  },
+  {
+    "id": "taco-563",
+    "name": "Feijão, fradinho, cozido",
+    "emoji": "🫘",
+    "kcal": 78.0,
+    "carbs": 13.5,
+    "protein": 5.1,
+    "fat": 0.6,
+    "portions": [
+      {
+        "unit": "ladle",
+        "grams": 140
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 17
+      },
+      {
+        "unit": "servingSpoon",
+        "grams": 35
+      }
+    ]
+  },
+  {
+    "id": "taco-564",
+    "name": "Feijão, fradinho, cru",
+    "emoji": "🫘",
+    "kcal": 339.2,
+    "carbs": 61.2,
+    "protein": 20.2,
+    "fat": 2.4,
+    "portions": []
+  },
+  {
+    "id": "taco-565",
+    "name": "Feijão, jalo, cozido",
+    "emoji": "🫘",
+    "kcal": 92.7,
+    "carbs": 16.5,
+    "protein": 6.1,
+    "fat": 0.5,
+    "portions": [
+      {
+        "unit": "ladle",
+        "grams": 140
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 17
+      },
+      {
+        "unit": "servingSpoon",
+        "grams": 35
+      }
+    ]
+  },
+  {
+    "id": "taco-566",
+    "name": "Feijão, jalo, cru",
+    "emoji": "🫘",
+    "kcal": 327.9,
+    "carbs": 61.5,
+    "protein": 20.1,
+    "fat": 0.9,
+    "portions": []
+  },
+  {
+    "id": "taco-567",
+    "name": "Feijão, preto, cozido",
+    "emoji": "🫘",
+    "kcal": 77.0,
+    "carbs": 14.0,
+    "protein": 4.5,
+    "fat": 0.5,
+    "portions": [
+      {
+        "unit": "ladle",
+        "grams": 140
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 17
+      },
+      {
+        "unit": "servingSpoon",
+        "grams": 35
+      }
+    ]
+  },
+  {
+    "id": "taco-568",
+    "name": "Feijão, preto, cru",
+    "emoji": "🫘",
+    "kcal": 323.6,
+    "carbs": 58.8,
+    "protein": 21.3,
+    "fat": 1.2,
+    "portions": []
+  },
+  {
+    "id": "taco-569",
+    "name": "Feijão, rajado, cozido",
+    "emoji": "🫘",
+    "kcal": 84.7,
+    "carbs": 15.3,
+    "protein": 5.5,
+    "fat": 0.4,
+    "portions": [
+      {
+        "unit": "ladle",
+        "grams": 140
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 17
+      },
+      {
+        "unit": "servingSpoon",
+        "grams": 35
+      }
+    ]
+  },
+  {
+    "id": "taco-570",
+    "name": "Feijão, rajado, cru",
+    "emoji": "🫘",
+    "kcal": 325.8,
+    "carbs": 62.9,
+    "protein": 17.3,
+    "fat": 1.2,
+    "portions": []
+  },
+  {
+    "id": "taco-571",
+    "name": "Feijão, rosinha, cozido",
+    "emoji": "🫘",
+    "kcal": 67.9,
+    "carbs": 11.8,
+    "protein": 4.5,
+    "fat": 0.5,
+    "portions": [
+      {
+        "unit": "ladle",
+        "grams": 140
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 17
+      },
+      {
+        "unit": "servingSpoon",
+        "grams": 35
+      }
+    ]
+  },
+  {
+    "id": "taco-572",
+    "name": "Feijão, rosinha, cru",
+    "emoji": "🫘",
+    "kcal": 337.0,
+    "carbs": 62.2,
+    "protein": 20.9,
+    "fat": 1.3,
+    "portions": []
+  },
+  {
+    "id": "taco-573",
+    "name": "Feijão, roxo, cozido",
+    "emoji": "🫘",
+    "kcal": 76.9,
+    "carbs": 12.9,
+    "protein": 5.7,
+    "fat": 0.5,
+    "portions": [
+      {
+        "unit": "ladle",
+        "grams": 140
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 17
+      },
+      {
+        "unit": "servingSpoon",
+        "grams": 35
+      }
+    ]
+  },
+  {
+    "id": "taco-574",
+    "name": "Feijão, roxo, cru",
+    "emoji": "🫘",
+    "kcal": 331.4,
+    "carbs": 60.0,
+    "protein": 22.2,
+    "fat": 1.2,
+    "portions": []
+  },
+  {
+    "id": "taco-575",
+    "name": "Grão-de-bico, cru",
+    "emoji": "🫘",
+    "kcal": 354.7,
+    "carbs": 57.9,
+    "protein": 21.2,
+    "fat": 5.4,
+    "portions": []
+  },
+  {
+    "id": "taco-576",
+    "name": "Guandu, cru",
+    "emoji": "🫘",
+    "kcal": 344.1,
+    "carbs": 64.0,
+    "protein": 19.0,
+    "fat": 2.1,
+    "portions": []
+  },
+  {
+    "id": "taco-577",
+    "name": "Lentilha, cozida",
+    "emoji": "🫘",
+    "kcal": 92.6,
+    "carbs": 16.3,
+    "protein": 6.3,
+    "fat": 0.5,
+    "portions": [
+      {
+        "unit": "ladle",
+        "grams": 160
+      },
+      {
+        "unit": "tablespoon",
+        "grams": 18
+      }
+    ]
+  },
+  {
+    "id": "taco-578",
+    "name": "Lentilha, crua",
+    "emoji": "🫘",
+    "kcal": 339.1,
+    "carbs": 62.0,
+    "protein": 23.2,
+    "fat": 0.8,
+    "portions": []
+  },
+  {
+    "id": "taco-579",
+    "name": "Paçoca, amendoim",
+    "emoji": "🫘",
+    "kcal": 486.9,
+    "carbs": 52.4,
+    "protein": 16.0,
+    "fat": 26.1,
+    "portions": []
+  },
+  {
+    "id": "taco-580",
+    "name": "Pé-de-moleque, amendoim",
+    "emoji": "🫘",
+    "kcal": 503.2,
+    "carbs": 54.7,
+    "protein": 13.2,
+    "fat": 28.0,
+    "portions": []
+  },
+  {
+    "id": "taco-581",
+    "name": "Soja, farinha",
+    "emoji": "🫘",
+    "kcal": 404.0,
+    "carbs": 38.4,
+    "protein": 36.0,
+    "fat": 14.6,
+    "portions": []
+  },
+  {
+    "id": "taco-582",
+    "name": "Soja, extrato solúvel, natural, fluido",
+    "emoji": "🫘",
+    "kcal": 39.1,
+    "carbs": 4.3,
+    "protein": 2.4,
+    "fat": 1.6,
+    "portions": []
+  },
+  {
+    "id": "taco-583",
+    "name": "Soja, extrato solúvel, pó",
+    "emoji": "🫘",
+    "kcal": 458.9,
+    "carbs": 28.5,
+    "protein": 35.7,
+    "fat": 26.2,
+    "portions": []
+  },
+  {
+    "id": "taco-584",
+    "name": "Soja, queijo (tofu)",
+    "emoji": "🫘",
+    "kcal": 64.5,
+    "carbs": 2.1,
+    "protein": 6.6,
+    "fat": 4.0,
+    "portions": []
+  },
+  {
+    "id": "taco-585",
+    "name": "Tremoço, cru",
+    "emoji": "🫘",
+    "kcal": 381.3,
+    "carbs": 43.8,
+    "protein": 33.6,
+    "fat": 10.3,
+    "portions": []
+  },
+  {
+    "id": "taco-586",
+    "name": "Tremoço, em conserva",
+    "emoji": "🫘",
+    "kcal": 120.6,
+    "carbs": 12.4,
+    "protein": 11.1,
+    "fat": 3.8,
+    "portions": []
+  },
+  {
+    "id": "taco-587",
+    "name": "Amêndoa, torrada, salgada",
+    "emoji": "🥜",
+    "kcal": 580.7,
+    "carbs": 29.5,
+    "protein": 18.6,
+    "fat": 47.3,
+    "portions": []
+  },
+  {
+    "id": "taco-588",
+    "name": "Castanha-de-caju, torrada, salgada",
+    "emoji": "🌰",
+    "kcal": 570.2,
+    "carbs": 29.1,
+    "protein": 18.5,
+    "fat": 46.3,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 2.5
+      }
+    ]
+  },
+  {
+    "id": "taco-589",
+    "name": "Castanha-do-Brasil, crua",
+    "emoji": "🌰",
+    "kcal": 643.0,
+    "carbs": 15.1,
+    "protein": 14.5,
+    "fat": 63.5,
+    "portions": [
+      {
+        "unit": "unit",
+        "grams": 4
+      }
+    ]
+  },
+  {
+    "id": "taco-590",
+    "name": "Coco, cru",
+    "emoji": "🥥",
+    "kcal": 406.5,
+    "carbs": 10.4,
+    "protein": 3.7,
+    "fat": 42.0,
+    "portions": []
+  },
+  {
+    "id": "taco-592",
+    "name": "Farinha, de mesocarpo de babaçu, crua",
+    "emoji": "🥜",
+    "kcal": 328.8,
+    "carbs": 79.2,
+    "protein": 1.4,
+    "fat": 0.2,
+    "portions": []
+  },
+  {
+    "id": "taco-593",
+    "name": "Gergelim, semente",
+    "emoji": "🥜",
+    "kcal": 583.5,
+    "carbs": 21.6,
+    "protein": 21.2,
+    "fat": 50.4,
+    "portions": []
+  },
+  {
+    "id": "taco-594",
+    "name": "Linhaça, semente",
+    "emoji": "🥜",
+    "kcal": 495.1,
+    "carbs": 43.3,
+    "protein": 14.1,
+    "fat": 32.3,
+    "portions": [
+      {
+        "unit": "tablespoon",
+        "grams": 13
+      }
+    ]
+  },
+  {
+    "id": "taco-595",
+    "name": "Pinhão, cozido",
+    "emoji": "🥜",
+    "kcal": 174.4,
+    "carbs": 43.9,
+    "protein": 3.0,
+    "fat": 0.7,
+    "portions": []
+  },
+  {
+    "id": "taco-596",
+    "name": "Pupunha, cozida",
+    "emoji": "🥜",
+    "kcal": 218.5,
+    "carbs": 29.6,
+    "protein": 2.5,
+    "fat": 12.8,
+    "portions": []
+  },
+  {
+    "id": "taco-597",
+    "name": "Noz, crua",
+    "emoji": "🌰",
+    "kcal": 620.1,
+    "carbs": 18.4,
+    "protein": 14.0,
+    "fat": 59.4,
+    "portions": []
   }
 ]

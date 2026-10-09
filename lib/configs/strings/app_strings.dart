@@ -142,6 +142,9 @@ abstract final class AppStrings {
   static String foodSearchNoResults(String query) =>
       'Nenhum alimento encontrado para "$query"';
   static const foodSearchError = 'Não foi possível carregar os alimentos';
+  static const foodSourceCredit =
+      'Fontes: Tabela Brasileira de Composição de Alimentos (TACO), 4ª ed., '
+      'NEPA/UNICAMP, 2011; medidas caseiras: IBGE, POF 2008-2009.';
   static String foodPer100g(String kcal) => '$kcal kcal a cada 100 g';
   static const foodQuantityLabel = 'Quantidade';
   static const foodPortionLabel = 'Medida';
@@ -157,6 +160,8 @@ abstract final class AppStrings {
       count == 1 ? 'colher de chá' : 'colheres de chá';
   static String portionCup(num count) => count == 1 ? 'xícara' : 'xícaras';
   static String portionLadle(num count) => count == 1 ? 'concha' : 'conchas';
+  static String portionServingSpoon(num count) =>
+      count == 1 ? 'colher de servir' : 'colheres de servir';
 
   static const mealDeleteTitle = 'Excluir refeição?';
   static const mealDeleteMessage = 'Essa ação não pode ser desfeita.';

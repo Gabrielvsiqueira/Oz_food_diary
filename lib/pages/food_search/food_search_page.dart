@@ -73,8 +73,11 @@ class _FoodSearchView extends StatelessWidget {
               FoodSearchStatus.success when controller.results.isEmpty =>
                 _Message(text: AppStrings.foodSearchNoResults(controller.query)),
               FoodSearchStatus.success => ListView.builder(
-                itemCount: controller.results.length,
+                itemCount: controller.results.length + 1,
                 itemBuilder: (context, index) {
+                  if (index == controller.results.length) {
+                    return const _SourceCredit();
+                  }
                   final food = controller.results[index];
                   return _FoodTile(
                     food: food,
@@ -110,6 +113,25 @@ class _FoodTile extends StatelessWidget {
         style: const TextStyle(color: AppColors.onSurfaceSecondary),
       ),
       trailing: const Icon(Icons.add_rounded, color: AppColors.primary),
+    );
+  }
+}
+
+/// A TACO e o IBGE permitem reproduzir os dados desde que citada a fonte.
+class _SourceCredit extends StatelessWidget {
+  const _SourceCredit();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(AppConstants.spacingLg),
+      child: Text(
+        AppStrings.foodSourceCredit,
+        textAlign: TextAlign.center,
+        style: Theme.of(
+          context,
+        ).textTheme.bodySmall?.copyWith(color: AppColors.onSurfaceSecondary),
+      ),
     );
   }
 }
