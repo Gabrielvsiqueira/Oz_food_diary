@@ -8,13 +8,11 @@ import '../models/user_profile.dart';
 class NutritionCalculator {
   const NutritionCalculator();
 
-  /// Taxa metabólica basal (Mifflin-St Jeor).
   double basalMetabolicRate(UserProfile profile) {
     final base = 10 * profile.weight + 6.25 * profile.height - 5 * profile.age;
     return profile.gender == Gender.male ? base + 5 : base - 161;
   }
 
-  /// Gasto energético total = TMB × fator de atividade.
   double totalDailyEnergyExpenditure(UserProfile profile) {
     final factor = NutritionConstants.activityFactors[profile.activityLevel]!;
     return basalMetabolicRate(profile) * factor;

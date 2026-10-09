@@ -5,8 +5,6 @@ import '../models/daily_log.dart';
 import '../models/meal.dart';
 import '../services/date_utils.dart';
 
-/// Dia selecionado na Home e refeições agrupadas por dia.
-/// Nunca permite selecionar uma data depois de hoje.
 class DailyLogController extends ChangeNotifier {
   DailyLogController() {
     _seed();

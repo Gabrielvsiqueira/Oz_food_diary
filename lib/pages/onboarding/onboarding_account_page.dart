@@ -10,8 +10,6 @@ import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/inputs/app_text_field.dart';
 import '../../widgets/layout/onboarding_scaffold.dart';
 
-/// "Crie sua conta". Nesta fase só o nome é guardado; e-mail e senha são
-/// validados e descartados.
 class OnboardingAccountPage extends StatefulWidget {
   const OnboardingAccountPage({super.key});
 
@@ -58,9 +56,8 @@ class _OnboardingAccountPageState extends State<OnboardingAccountPage> {
     if (!_formKey.currentState!.validate()) return;
     FocusScope.of(context).unfocus();
     context.read<OnboardingController>().setName(_name.text);
-    Navigator.of(
-      context,
-    ).pushNamedAndRemoveUntil(AppRoutes.onboardingLoading, (_) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(AppRoutes.onboardingLoading, (_) => false);
   }
 
   @override
@@ -111,7 +108,8 @@ class _OnboardingAccountPageState extends State<OnboardingAccountPage> {
               controller: _confirmPassword,
               obscureText: true,
               textInputAction: TextInputAction.done,
-              validator: fieldValidator((value) =>
+              validator: fieldValidator(
+                (value) =>
                     Validators.passwordConfirmation(value, _password.text),
               ),
             ),

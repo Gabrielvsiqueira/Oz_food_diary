@@ -29,7 +29,6 @@ class ProfileController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Mudanças de peso ou altura exigem confirmação e recálculo das metas.
   bool requiresRecalculation(UserProfile updated) =>
       updated.weight != _profile.weight || updated.height != _profile.height;
 

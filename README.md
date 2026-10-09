@@ -97,16 +97,6 @@ flutter doctor
    flutter test
    ```
 
-### Build de release (opcional)
-
-```bash
-# Android (APK)
-flutter build apk --release
-
-# iOS (requer macOS + Xcode e conta de desenvolvedor configurada)
-flutter build ios --release
-```
-
 ### Configurações relevantes
 
 | Item                   | Onde fica                                        | Observação                                                                       |
@@ -118,8 +108,6 @@ flutter build ios --release
 | Constantes de UI       | `lib/configs/constants/app_constants.dart`       | Espaçamentos, raios, durações de splash/loading                                  |
 | Dados de exemplo       | `lib/mocks/`                                     | Perfil, refeições e base de alimentos (valores aproximados da TACO)              |
 | Idioma                 | `lib/app.dart`                                   | Fixo em pt-BR; `flutter_localizations` traduz os widgets do Flutter (calendário) |
-
-Não há variáveis de ambiente, chaves de API ou backend a configurar nesta fase.
 
 ---
 

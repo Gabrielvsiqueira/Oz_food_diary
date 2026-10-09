@@ -6,8 +6,6 @@ import '../goals/goals_page.dart';
 import '../home/home_page.dart';
 import '../profile/profile_page.dart';
 
-/// Abas principais. `IndexedStack` mantém o estado de cada aba
-/// (ex.: edições em andamento em Metas) ao trocar de aba.
 class MainShellPage extends StatefulWidget {
   const MainShellPage({super.key});
 

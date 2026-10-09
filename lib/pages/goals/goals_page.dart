@@ -9,7 +9,6 @@ import '../../services/validators.dart';
 import '../../widgets/buttons/form_actions_bar.dart';
 import '../../widgets/inputs/unit_text_field.dart';
 
-/// Aba "Metas". Cancelar descarta as edições e volta aos valores atuais.
 class GoalsPage extends StatefulWidget {
   const GoalsPage({super.key});
 
@@ -85,8 +84,7 @@ class _GoalsPageState extends State<GoalsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final nonNegative = fieldValidator(Validators.nonNegativeNumber,
-    );
+    final nonNegative = fieldValidator(Validators.nonNegativeNumber);
 
     return Scaffold(
       appBar: AppBar(title: Text(AppStrings.goalsTitle)),

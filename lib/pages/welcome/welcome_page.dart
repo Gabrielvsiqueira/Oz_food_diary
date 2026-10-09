@@ -8,8 +8,6 @@ import '../../widgets/branding/oz_background.dart';
 import '../../widgets/branding/oz_logo.dart';
 import '../../widgets/buttons/primary_button.dart';
 
-/// Tela de boas-vindas (Figma "Launch / 2"): criar conta, entrar com Google
-/// (em breve) ou acessar uma conta existente.
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
 
@@ -39,9 +37,9 @@ class WelcomePage extends StatelessWidget {
                   const SizedBox(height: AppConstants.spacingXl),
                   PrimaryButton(
                     label: AppStrings.welcomeCreateAccount,
-                    onPressed: () => Navigator.of(
-                      context,
-                    ).pushNamed(AppRoutes.onboardingGoal),
+                    onPressed: () =>
+                        Navigator.of(context)
+                            .pushNamed(AppRoutes.onboardingGoal),
                   ),
                   const SizedBox(height: AppConstants.spacingMd),
                   const _GoogleButton(),
@@ -50,7 +48,10 @@ class WelcomePage extends StatelessWidget {
                     alignment: WrapAlignment.center,
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      Text(AppStrings.welcomeHaveAccount, style: textTheme.bodyLarge),
+                      Text(
+                        AppStrings.welcomeHaveAccount,
+                        style: textTheme.bodyLarge,
+                      ),
                       TextButton(
                         onPressed: () =>
                             Navigator.of(context).pushNamed(AppRoutes.login),

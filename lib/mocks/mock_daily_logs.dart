@@ -14,7 +14,6 @@ List<DailyLog> buildMockDailyLogs({DateTime? now}) {
   DateTime at(DateTime day, int hour, int minute) =>
       DateTime(day.year, day.month, day.day, hour, minute);
 
-  /// Item na medida caseira padrão do alimento.
   MealItem portions(Food food, double quantity) =>
       MealItem(food: food, portion: food.defaultPortion, quantity: quantity);
 
