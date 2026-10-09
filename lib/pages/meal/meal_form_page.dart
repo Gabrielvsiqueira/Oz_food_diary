@@ -71,7 +71,7 @@ class _MealFormPageState extends State<MealFormPage> {
   void _removeItem(int index) =>
       setState(() => _items = [..._items]..removeAt(index));
 
-  void _save() {
+  Future<void> _save() async {
     final controller = context.read<MealController>();
     final error = controller.validateItems(_items);
     if (error != null) {
@@ -80,10 +80,13 @@ class _MealFormPageState extends State<MealFormPage> {
     }
 
     if (_isEditing) {
-      controller.updateMeal(widget.meal!.copyWith(type: _type, items: _items));
+      await controller.updateMeal(
+        widget.meal!.copyWith(type: _type, items: _items),
+      );
     } else {
-      controller.addMeal(type: _type, items: _items);
+      await controller.addMeal(type: _type, items: _items);
     }
+    if (!mounted) return;
     _closeWithMessage(AppStrings.mealSaved);
   }
 
@@ -96,7 +99,8 @@ class _MealFormPageState extends State<MealFormPage> {
       destructive: true,
     );
     if (!confirmed || !mounted) return;
-    context.read<MealController>().deleteMeal(widget.meal!);
+    await context.read<MealController>().deleteMeal(widget.meal!);
+    if (!mounted) return;
     _closeWithMessage(AppStrings.mealDeleted);
   }
 

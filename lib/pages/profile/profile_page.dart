@@ -114,7 +114,8 @@ class _ProfilePageState extends State<ProfilePage> {
       if (!confirmed || !mounted) return;
     }
 
-    controller.updateProfile(updated, recalculateGoal: recalculate);
+    await controller.updateProfile(updated, recalculateGoal: recalculate);
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -134,9 +135,8 @@ class _ProfilePageState extends State<ProfilePage> {
       destructive: true,
     );
     if (!confirmed || !mounted) return;
-    // Só encerra a sessão: perfil, metas e refeições ficam em memória
-    // para o próximo login.
-    context.read<SessionController>().logout();
+    await context.read<SessionController>().logout();
+    if (!mounted) return;
     Navigator.of(context)
         .pushNamedAndRemoveUntil(AppRoutes.welcome, (_) => false);
   }

@@ -63,10 +63,10 @@ class _GoalsPageState extends State<GoalsPage> {
     _fill(_profileController.goal);
   }
 
-  void _save() {
+  Future<void> _save() async {
     FocusScope.of(context).unfocus();
     if (!_formKey.currentState!.validate()) return;
-    _profileController.updateGoal(
+    await _profileController.updateGoal(
       NutritionGoal(
         caloriesTarget: Validators.parseDecimal(_calories.text)!.round(),
         carbsTargetG: Validators.parseDecimal(_carbs.text)!,
@@ -74,6 +74,7 @@ class _GoalsPageState extends State<GoalsPage> {
         fatTargetG: Validators.parseDecimal(_fat.text)!,
       ),
     );
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(AppStrings.goalsSaved),

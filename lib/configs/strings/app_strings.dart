@@ -176,7 +176,7 @@ abstract final class AppStrings {
   static const profileLogout = 'Sair';
   static const profileLogoutTitle = 'Sair do app?';
   static const profileLogoutMessage =
-      'Você voltará para a tela inicial. Seus dados continuam salvos enquanto o app estiver aberto.';
+      'Você voltará para a tela inicial e os dados salvos neste aparelho serão apagados.';
 
   static const welcomeTitle = 'Controle sua dieta de forma simples';
   static const welcomeCreateAccount = 'Criar conta';

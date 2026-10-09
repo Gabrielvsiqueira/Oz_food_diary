@@ -1,43 +1,47 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 
-import '../mocks/mock_daily_logs.dart';
 import '../models/daily_log.dart';
-import '../models/meal.dart';
+import '../repositories/meal_repository.dart';
 import '../services/date_utils.dart';
 
 class DailyLogController extends ChangeNotifier {
-  DailyLogController() {
-    _seed();
+  DailyLogController(this._repository) {
+    _watch(today());
   }
 
-  final Map<DateTime, DailyLog> _logs = {};
+  final MealRepository _repository;
+  StreamSubscription<void>? _subscription;
+
   late DateTime _selectedDate;
+  late DailyLog _selectedLog;
 
   DateTime get selectedDate => _selectedDate;
 
-  DailyLog get selectedLog => logFor(_selectedDate);
+  DailyLog get selectedLog => _selectedLog;
 
   bool get isTodaySelected => isSameDay(_selectedDate, today());
 
   bool get canGoToNextDay => _selectedDate.isBefore(today());
 
-  DailyLog logFor(DateTime date) {
-    final day = dateOnly(date);
-    return _logs[day] ?? DailyLog(date: day);
-  }
-
-  void _seed() {
-    _logs.clear();
-    for (final log in buildMockDailyLogs()) {
-      _logs[log.date] = log;
-    }
-    _selectedDate = today();
+  /// Passa a acompanhar as refeições do dia: qualquer gravação no banco
+  /// (formulário ou, no futuro, sincronização) atualiza a Home.
+  void _watch(DateTime day) {
+    _subscription?.cancel();
+    _selectedDate = day;
+    _selectedLog = DailyLog(date: day);
+    _subscription = _repository.watchMealsOn(day).listen((meals) {
+      _selectedLog = DailyLog(date: day, meals: meals);
+      notifyListeners();
+    });
   }
 
   void selectDate(DateTime date) {
     final day = dateOnly(date);
     final now = today();
-    _selectedDate = day.isAfter(now) ? now : day;
+    final target = day.isAfter(now) ? now : day;
+    if (!isSameDay(target, _selectedDate)) _watch(target);
     notifyListeners();
   }
 
@@ -49,30 +53,9 @@ class DailyLogController extends ChangeNotifier {
     selectDate(_selectedDate.add(const Duration(days: 1)));
   }
 
-  void appendMealToDay(DateTime date, Meal meal) {
-    final log = logFor(date);
-    _logs[log.date] = log.copyWith(meals: [...log.meals, meal]);
-    notifyListeners();
-  }
-
-  void replaceMeal(Meal meal) {
-    final log = logFor(meal.createdAt);
-    _logs[log.date] = log.copyWith(
-      meals: [for (final m in log.meals) m.id == meal.id ? meal : m],
-    );
-    notifyListeners();
-  }
-
-  void removeMeal(Meal meal) {
-    final log = logFor(meal.createdAt);
-    _logs[log.date] = log.copyWith(
-      meals: log.meals.where((m) => m.id != meal.id).toList(),
-    );
-    notifyListeners();
-  }
-
-  void reset() {
-    _seed();
-    notifyListeners();
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
   }
 }
