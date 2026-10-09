@@ -85,7 +85,7 @@ controllers não sabem se o dado veio do disco ou da rede.
 | IDs                             | **UUID gerado no app**                       | Registro criado offline já tem ID definitivo; reenvios caem na mesma linha                                       |
 | Idempotência                    | **PK + constraints únicas + upsert**         | Reenvio da fila nunca duplica; `UNIQUE` em chaves naturais cobre duplicatas com IDs diferentes                   |
 | Exclusão                        | **Soft delete** (`deleted_at`)               | A exclusão precisa chegar aos outros aparelhos                                                                   |
-| Catálogo TACO                   | **Embarcado no app**                         | ~600 alimentos, algumas centenas de KB; busca funciona offline                                                   |
+| Catálogo de alimentos           | **TACO + medidas do IBGE, embarcado no app** | 592 alimentos, ~180 KB; busca funciona offline. Ver [Catálogo de alimentos](#catálogo-de-alimentos)              |
 | Enums no Postgres               | **`text` + `CHECK`**                         | Mais fácil acrescentar valores que `CREATE TYPE ... AS ENUM`                                                     |
 | Leitura nas regras de acesso    | **Função `can_read_user(target)`**           | Hoje só compara com `auth.uid()`; na [plataforma para nutricionistas](#plataforma-para-nutricionistas) basta trocar a função, sem reescrever as policies |
 
@@ -250,6 +250,30 @@ As mesmas tabelas (`lib/database/tables.dart`), com as diferenças:
 > normalizada é rápido e mantém o comportamento atual (encontra "rroz" em
 > "Arroz"). FTS5 só busca por início de palavra; fica como opção se o
 > catálogo crescer muito.
+
+### Catálogo de alimentos
+
+| Fonte | Uso | Licença |
+| --- | --- | --- |
+| **TACO**, 4ª ed. rev. e ampl., NEPA/UNICAMP, 2011 | Nutrientes dos 597 alimentos (kcal, carboidratos, proteínas, gorduras por 100 g) | "É permitida a reprodução total ou parcial do material, desde que seja citada a fonte" (ficha catalográfica) |
+| **IBGE**, POF 2008-2009: *Tabela de Medidas Referidas para os Alimentos Consumidos no Brasil*, 2011 | Medidas caseiras (concha, colher de servir, fatia, unidade…) de 119 alimentos comuns | Publicação pública do IBGE, citando a fonte |
+| ~~TBCA~~ (USP/FoRC) | **Não usada** | O site proíbe reprodução e alteração do material, e uso comercial exige autorização dos coordenadores |
+
+- O crédito das fontes aparece no fim da lista da busca de alimentos.
+- `tool/food_catalog/build_catalog.py` gera `assets/data/foods.json` a partir
+  da planilha oficial da TACO (`taco_4ed_2011.xlsx`) e das medidas curadas em
+  `household_portions.json`. Cada medida guarda a descrição de referência do
+  IBGE usada.
+- **Fora do catálogo:** os 4 alimentos marcados pela TACO como "em
+  reavaliação" (`*`), incluindo leite de vaca integral e desnatado UHT, e o
+  item 540, cujo nome está truncado na planilha oficial. Leite em caixa entra
+  pela leitura de código de barras (Open Food Facts) ou como alimento
+  personalizado.
+- `Tr` (traço) e `NA` (não se aplica) viram zero.
+- As medidas caseiras não foram importadas em lote: no PDF do IBGE os gramas
+  aparecem grudados no código da fonte (ex.: `1401` = 140 g, fonte 1), e
+  muitos alimentos do IBGE não batem 1:1 com a TACO. Por isso a curadoria é
+  manual e conferida item a item.
 
 ---
 

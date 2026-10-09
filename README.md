@@ -105,7 +105,7 @@ flutter doctor
 | ---------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------- |
 | Dependências           | `pubspec.yaml`                                   | `provider`, `intl`, `uuid`, `flutter_localizations`, `drift`, `drift_flutter`    |
 | Banco local            | `lib/database/`                                  | Tabelas do drift; após alterá-las, rode `dart run build_runner build`            |
-| Catálogo de alimentos  | `assets/data/foods.json`                         | Inserido no banco na primeira execução                                           |
+| Catálogo de alimentos  | `assets/data/foods.json`                         | TACO 4ª ed. + medidas caseiras do IBGE; gerado por `tool/food_catalog/build_catalog.py` |
 | Textos                 | `lib/configs/strings/app_strings.dart`           | Todos os textos da interface, em português                                       |
 | Tema e cores           | `lib/configs/theme/`                             | Apenas tema escuro                                                               |
 | Constantes de nutrição | `lib/configs/constants/nutrition_constants.dart` | Fatores de atividade, kcal por grama de cada macro, limites de altura/peso/idade |
