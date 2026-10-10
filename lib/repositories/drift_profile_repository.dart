@@ -39,29 +39,31 @@ class DriftProfileRepository implements ProfileRepository {
   }
 
   @override
-  Future<void> create(UserProfile profile, NutritionGoal goal) =>
-      _db.transaction(() async {
-        await _db.clearUserData();
-        final now = DateTime.now().toUtc();
-        final userId = newId();
-        await _db
-            .into(_db.profiles)
-            .insert(
-              ProfilesCompanion.insert(
-                id: userId,
-                name: profile.name,
-                goal: profile.goal,
-                gender: profile.gender,
-                birthDate: profile.birthDate,
-                activityLevel: profile.activityLevel,
-                heightCm: profile.height,
-                createdAt: now,
-                updatedAt: now,
-              ),
-            );
-        await _saveWeight(userId, profile.weight);
-        await _saveGoal(userId, goal);
-      });
+  Future<void> create(
+    UserProfile profile,
+    NutritionGoal goal, {
+    required String userId,
+  }) => _db.transaction(() async {
+    await _db.clearUserData();
+    final now = DateTime.now().toUtc();
+    await _db
+        .into(_db.profiles)
+        .insert(
+          ProfilesCompanion.insert(
+            id: userId,
+            name: profile.name,
+            goal: profile.goal,
+            gender: profile.gender,
+            birthDate: profile.birthDate,
+            activityLevel: profile.activityLevel,
+            heightCm: profile.height,
+            createdAt: now,
+            updatedAt: now,
+          ),
+        );
+    await _saveWeight(userId, profile.weight);
+    await _saveGoal(userId, goal);
+  });
 
   @override
   Future<void> updateProfile(UserProfile profile) => _db.transaction(() async {

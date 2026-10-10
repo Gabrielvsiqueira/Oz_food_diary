@@ -31,9 +31,12 @@ class ProfileController extends ChangeNotifier {
     return true;
   }
 
-  Future<void> completeOnboarding(UserProfile profile) async {
+  Future<void> completeOnboarding(
+    UserProfile profile, {
+    required String userId,
+  }) async {
     final goal = _calculator.calculateGoal(profile);
-    await _repository.create(profile, goal);
+    await _repository.create(profile, goal, userId: userId);
     _profile = profile;
     _goal = goal;
     notifyListeners();

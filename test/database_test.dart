@@ -17,6 +17,7 @@ import 'package:oz_contador_de_calorias/repositories/local_session_repository.da
 import 'package:oz_contador_de_calorias/services/date_utils.dart';
 
 void main() {
+  const userId = '11111111-1111-1111-1111-111111111111';
   late AppDatabase db;
 
   setUp(() {
@@ -58,8 +59,12 @@ void main() {
     late DriftMealRepository repository;
     final lunchTime = DateTime.now().copyWith(hour: 12, minute: 30);
 
-    Meal lunch(List<MealItem> items) =>
-        Meal(id: 'meal-1', type: MealType.lunch, items: items, createdAt: lunchTime);
+    Meal lunch(List<MealItem> items) => Meal(
+      id: 'meal-1',
+      type: MealType.lunch,
+      items: items,
+      createdAt: lunchTime,
+    );
 
     const rice = MealItem(
       food: MockFoods.whiteRice,
@@ -104,22 +109,25 @@ void main() {
       expect(await db.select(db.mealItems).get(), hasLength(2));
     });
 
-    test('editar com menos itens marca os que sobraram como excluídos', () async {
-      await repository.save(lunch(const [rice, beans]));
-      await repository.save(lunch(const [beans]));
+    test(
+      'editar com menos itens marca os que sobraram como excluídos',
+      () async {
+        await repository.save(lunch(const [rice, beans]));
+        await repository.save(lunch(const [beans]));
 
-      final [meal] = await mealsToday();
-      expect(meal.items.single.food.name, 'Feijão carioca cozido');
-      final rows = await db.select(db.mealItems).get();
-      expect(rows, hasLength(2));
-      expect(rows.where((r) => r.deletedAt != null), hasLength(1));
-    });
+        final [meal] = await mealsToday();
+        expect(meal.items.single.food.name, 'Feijão carioca cozido');
+        final rows = await db.select(db.mealItems).get();
+        expect(rows, hasLength(2));
+        expect(rows.where((r) => r.deletedAt != null), hasLength(1));
+      },
+    );
 
     test('excluir é lógico e marca para sincronizar', () async {
       await repository.save(lunch(const [rice]));
-      await (db.update(db.meals)).write(
-        const MealsCompanion(isDirty: Value(false)),
-      );
+      await (db.update(
+        db.meals,
+      )).write(const MealsCompanion(isDirty: Value(false)));
       await repository.delete(lunch(const [rice]));
 
       expect(await mealsToday(), isEmpty);
@@ -156,7 +164,7 @@ void main() {
     });
 
     test('create guarda perfil, peso e meta', () async {
-      await repository.create(mockUserProfile, goal);
+      await repository.create(mockUserProfile, goal, userId: userId);
 
       final data = (await repository.load())!;
       expect(data.profile.name, mockUserProfile.name);
@@ -166,7 +174,7 @@ void main() {
     });
 
     test('mudar o peso no mesmo dia atualiza a medição de hoje', () async {
-      await repository.create(mockUserProfile, goal);
+      await repository.create(mockUserProfile, goal, userId: userId);
       await repository.updateProfile(mockUserProfile.copyWith(weightKg: 93));
       await repository.updateProfile(mockUserProfile.copyWith(weightKg: 92));
 
@@ -175,7 +183,7 @@ void main() {
     });
 
     test('salvar a meta no mesmo dia não cria histórico duplicado', () async {
-      await repository.create(mockUserProfile, goal);
+      await repository.create(mockUserProfile, goal, userId: userId);
       await repository.saveGoal(goal.copyWith(caloriesTarget: 1800));
 
       expect((await repository.load())!.goal.caloriesTarget, 1800);
@@ -183,7 +191,7 @@ void main() {
     });
 
     test('a meta vigente é a mais recente até hoje', () async {
-      await repository.create(mockUserProfile, goal);
+      await repository.create(mockUserProfile, goal, userId: userId);
       final [current] = await db.select(db.nutritionGoals).get();
       await db
           .into(db.nutritionGoals)
@@ -199,7 +207,7 @@ void main() {
     });
 
     test('create substitui os dados de uma conta anterior', () async {
-      await repository.create(mockUserProfile, goal);
+      await repository.create(mockUserProfile, goal, userId: userId);
       await DriftMealRepository(db).save(
         Meal(
           id: 'old',
@@ -214,7 +222,11 @@ void main() {
           createdAt: DateTime.now(),
         ),
       );
-      await repository.create(mockUserProfile.copyWith(name: 'Nova'), goal);
+      await repository.create(
+        mockUserProfile.copyWith(name: 'Nova'),
+        goal,
+        userId: userId,
+      );
 
       expect((await repository.load())!.profile.name, 'Nova');
       expect(await db.select(db.profiles).get(), hasLength(1));
@@ -234,10 +246,10 @@ void main() {
     });
 
     test('login sem conta salva entra na conta de demonstração', () async {
-      expect(await session.hasSession(), isFalse);
+      expect(await session.currentUser(), isNull);
       await session.signIn(email: 'a@b.com', password: '12345678');
 
-      expect(await session.hasSession(), isTrue);
+      expect(await session.currentUser(), isNotNull);
       expect(await db.select(db.meals).get(), isNotEmpty);
     });
 
@@ -245,7 +257,7 @@ void main() {
       await session.signIn(email: 'a@b.com', password: '12345678');
       await session.signOut();
 
-      expect(await session.hasSession(), isFalse);
+      expect(await session.currentUser(), isNull);
       expect(await db.select(db.meals).get(), isEmpty);
       expect(await db.select(db.mealItems).get(), isEmpty);
       expect(await db.select(db.foods).get(), hasLength(MockFoods.all.length));

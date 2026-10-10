@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../configs/constants/app_constants.dart';
+import '../../configs/env.dart';
 import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
 import '../../configs/theme/app_colors.dart';
+import '../../controllers/session_controller.dart';
+import '../../models/auth_failure.dart';
 import '../../widgets/branding/oz_background.dart';
 import '../../widgets/branding/oz_logo.dart';
 import '../../widgets/buttons/primary_button.dart';
+import '../login/sign_in_flow.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -74,19 +79,41 @@ class WelcomePage extends StatelessWidget {
   }
 }
 
-/// Login com Google ainda não existe: botão desabilitado com selo "Em breve".
-class _GoogleButton extends StatelessWidget {
+/// Entrar com Google. Sem client ID configurado no build, fica desabilitado
+/// com o selo "Em breve".
+class _GoogleButton extends StatefulWidget {
   const _GoogleButton();
+
+  @override
+  State<_GoogleButton> createState() => _GoogleButtonState();
+}
+
+class _GoogleButtonState extends State<_GoogleButton> {
+  bool _loading = false;
+
+  Future<void> _signIn() async {
+    setState(() => _loading = true);
+    try {
+      await context.read<SessionController>().loginWithGoogle();
+      if (mounted) await enterAfterSignIn(context);
+    } on AuthFailure catch (failure) {
+      if (!mounted) return;
+      setState(() => _loading = false);
+      showAuthFailure(context, failure);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final available = Env.hasGoogle;
 
     return SizedBox(
       height: AppConstants.buttonHeight,
       child: OutlinedButton(
-        onPressed: null,
+        onPressed: available && !_loading ? _signIn : null,
         style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.onSurface,
           disabledForegroundColor: AppColors.onSurfaceMuted,
           side: const BorderSide(color: AppColors.border),
           backgroundColor: AppColors.surface.withValues(alpha: 0.6),
@@ -97,7 +124,13 @@ class _GoogleButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.g_mobiledata_rounded, size: 28),
+            if (_loading)
+              const SizedBox.square(
+                dimension: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            else
+              const Icon(Icons.g_mobiledata_rounded, size: 28),
             const SizedBox(width: AppConstants.spacingXs),
             Flexible(
               child: Text(
@@ -106,21 +139,25 @@ class _GoogleButton extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            const SizedBox(width: AppConstants.spacingSm),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppConstants.spacingSm,
-                vertical: 2,
+            if (!available) ...[
+              const SizedBox(width: AppConstants.spacingSm),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppConstants.spacingSm,
+                  vertical: 2,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusXxl),
+                ),
+                child: Text(
+                  AppStrings.commonComingSoon,
+                  style: textTheme.labelSmall?.copyWith(
+                    color: AppColors.primary,
+                  ),
+                ),
               ),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(AppConstants.radiusXxl),
-              ),
-              child: Text(
-                AppStrings.commonComingSoon,
-                style: textTheme.labelSmall?.copyWith(color: AppColors.primary),
-              ),
-            ),
+            ],
           ],
         ),
       ),

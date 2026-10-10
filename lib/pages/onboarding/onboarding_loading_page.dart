@@ -29,12 +29,14 @@ class _OnboardingLoadingPageState extends State<OnboardingLoadingPage> {
   Future<void> _personalize() async {
     final onboarding = context.read<OnboardingController>();
     final profile = onboarding.buildProfile();
-    final session = context.read<SessionController>();
+    final userId = context.read<SessionController>().user!.id;
     await (
-      context.read<ProfileController>().completeOnboarding(profile),
+      context.read<ProfileController>().completeOnboarding(
+        profile,
+        userId: userId,
+      ),
       Future<void>.delayed(AppConstants.onboardingLoadingDuration),
     ).wait;
-    session.startSession();
     onboarding.reset();
     if (!mounted) return;
     Navigator.of(context).pushReplacementNamed(AppRoutes.onboardingResult);

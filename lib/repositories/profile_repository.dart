@@ -6,9 +6,13 @@ typedef ProfileData = ({UserProfile profile, NutritionGoal goal});
 abstract interface class ProfileRepository {
   Future<ProfileData?> load();
 
-  /// Cria a conta local a partir do onboarding, substituindo qualquer dado
-  /// anterior do aparelho.
-  Future<void> create(UserProfile profile, NutritionGoal goal);
+  /// Cria o perfil a partir do onboarding, substituindo qualquer dado
+  /// anterior do aparelho. [userId] é o id do usuário autenticado.
+  Future<void> create(
+    UserProfile profile,
+    NutritionGoal goal, {
+    required String userId,
+  });
 
   /// Salva o perfil; um peso diferente vira a medição de hoje.
   Future<void> updateProfile(UserProfile profile);

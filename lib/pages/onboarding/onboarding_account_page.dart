@@ -5,10 +5,13 @@ import '../../configs/constants/app_constants.dart';
 import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
 import '../../controllers/onboarding_controller.dart';
+import '../../controllers/session_controller.dart';
+import '../../models/auth_failure.dart';
 import '../../services/validators.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/inputs/app_text_field.dart';
 import '../../widgets/layout/onboarding_scaffold.dart';
+import '../login/sign_in_flow.dart';
 
 class OnboardingAccountPage extends StatefulWidget {
   const OnboardingAccountPage({super.key});
@@ -23,6 +26,7 @@ class _OnboardingAccountPageState extends State<OnboardingAccountPage> {
   final _email = TextEditingController();
   final _password = TextEditingController();
   final _confirmPassword = TextEditingController();
+  bool _submitting = false;
 
   @override
   void initState() {
@@ -52,9 +56,23 @@ class _OnboardingAccountPageState extends State<OnboardingAccountPage> {
       Validators.passwordConfirmation(_confirmPassword.text, _password.text) ==
           null;
 
-  void _submit() {
+  Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     FocusScope.of(context).unfocus();
+    setState(() => _submitting = true);
+    try {
+      await context.read<SessionController>().signUp(
+        email: _email.text.trim(),
+        password: _password.text,
+        name: _name.text.trim(),
+      );
+    } on AuthFailure catch (failure) {
+      if (!mounted) return;
+      setState(() => _submitting = false);
+      showAuthFailure(context, failure);
+      return;
+    }
+    if (!mounted) return;
     context.read<OnboardingController>().setName(_name.text);
     Navigator.of(context)
         .pushNamedAndRemoveUntil(AppRoutes.onboardingLoading, (_) => false);
@@ -68,7 +86,7 @@ class _OnboardingAccountPageState extends State<OnboardingAccountPage> {
       subtitle: AppStrings.onboardingAccountSubtitle,
       footer: PrimaryButton(
         label: AppStrings.onboardingCreateAccount,
-        onPressed: _isValid ? _submit : null,
+        onPressed: _isValid && !_submitting ? _submit : null,
       ),
       body: Form(
         key: _formKey,

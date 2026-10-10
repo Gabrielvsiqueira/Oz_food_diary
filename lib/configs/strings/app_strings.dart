@@ -183,6 +183,25 @@ abstract final class AppStrings {
   static const profileLogoutMessage =
       'Você voltará para a tela inicial e os dados salvos neste aparelho serão apagados.';
 
+  static const profileDeleteAccount = 'Excluir conta';
+  static const profileDeleteAccountTitle = 'Excluir sua conta?';
+  static const profileDeleteAccountMessage =
+      'Sua conta e todos os seus dados serão apagados para sempre. Essa ação não pode ser desfeita.';
+  static const profileAccountDeleted = 'Conta excluída';
+
+  static const authErrorInvalidCredentials = 'E-mail ou senha incorretos';
+  static const authErrorEmailAlreadyRegistered =
+      'Já existe uma conta com este e-mail';
+  static const authErrorWeakPassword =
+      'Senha fraca. Use uma combinação mais forte';
+  static const authErrorOffline =
+      'Sem conexão. Verifique sua internet e tente novamente';
+  static const authErrorProviderUnavailable =
+      'Login com Google indisponível nesta versão';
+  static const authErrorUnknown = 'Não foi possível concluir. Tente novamente';
+  static const defaultUserName = 'Você';
+  static const authSessionRevoked = 'Sua sessão expirou. Entre novamente.';
+
   static const welcomeTitle = 'Controle sua dieta de forma simples';
   static const welcomeCreateAccount = 'Criar conta';
   static const welcomeGoogle = 'Continuar com Google';
