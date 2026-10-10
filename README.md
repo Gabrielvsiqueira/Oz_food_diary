@@ -5,9 +5,9 @@ macronutrientes (carboidratos, proteínas e gorduras). A partir de um
 onboarding curto, o app calcula a meta calórica do usuário e permite
 registrar, editar e excluir refeições, acompanhando o progresso do dia.
 
-> **Entrega 2 em andamento.** Os dados já ficam salvos no aparelho (SQLite
-> com drift) e o app funciona offline. Autenticação real e sincronização com
-> o servidor (Supabase) vêm nas próximas etapas. As decisões de arquitetura
+> **Entrega 2 em andamento.** Os dados ficam salvos no aparelho (SQLite com
+> drift) e o app funciona offline. O login usa Supabase Auth (e-mail/senha e
+> Google). A sincronização dos dados com o servidor vem na próxima etapa. As decisões de arquitetura
 > estão em [`docs/arquitetura.md`](docs/arquitetura.md).
 
 ---
@@ -90,8 +90,13 @@ flutter doctor
 4. **Execute o app**
 
    ```bash
-   flutter run
+   flutter run --dart-define-from-file=config/dev.json
    ```
+
+   O arquivo `config/dev.json` liga o app ao Supabase e ao login com Google;
+   veja [`docs/configuracao-supabase.md`](docs/configuracao-supabase.md).
+   Sem ele (`flutter run`), o app roda com uma sessão local e a conta de
+   demonstração.
 
 5. **Rode os testes (opcional)**
 
@@ -103,7 +108,8 @@ flutter doctor
 
 | Item                   | Onde fica                                        | Observação                                                                       |
 | ---------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------- |
-| Dependências           | `pubspec.yaml`                                   | `provider`, `intl`, `uuid`, `flutter_localizations`, `drift`, `drift_flutter`    |
+| Dependências           | `pubspec.yaml`                                   | `provider`, `intl`, `uuid`, `drift`, `supabase_flutter`, `google_sign_in`, `flutter_secure_storage` |
+| Backend                | `supabase/migrations/`, `config/dev.json`        | Schema, RLS e exclusão de conta; chaves fora do git (modelo em `config/dev.example.json`) |
 | Banco local            | `lib/database/`                                  | Tabelas do drift; após alterá-las, rode `dart run build_runner build`            |
 | Catálogo de alimentos  | `assets/data/foods.json`                         | TACO 4ª ed. + medidas caseiras do IBGE; gerado por `tool/food_catalog/build_catalog.py` |
 | Textos                 | `lib/configs/strings/app_strings.dart`           | Todos os textos da interface, em português                                       |
@@ -170,7 +176,7 @@ Os controllers dependem só de interfaces, injetadas via `Provider` em
 | `FoodRepository`    | `DriftFoodRepository`   | Busca no catálogo local, sem acentos e maiúsculas                      |
 | `MealRepository`    | `DriftMealRepository`   | Refeições do dia como stream: toda gravação atualiza a Home sozinha    |
 | `ProfileRepository` | `DriftProfileRepository`| Perfil, histórico de peso e histórico de metas                         |
-| `SessionRepository` | `LocalSessionRepository`| Sessão local até a autenticação real; o logout apaga os dados do aparelho |
+| `SessionRepository` | `SupabaseSessionRepository` (ou `LocalSessionRepository` sem backend) | Login, cadastro, Google, logout e exclusão de conta; o logout apaga os dados do aparelho |
 
 Os testes usam `MockFoodRepository` e `MockMealRepository` (em memória), e os
 repositórios do drift são testados com um banco SQLite em memória.

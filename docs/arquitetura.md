@@ -160,7 +160,7 @@ meals (
 
 meal_items (
   meal_id         uuid NOT NULL REFERENCES meals ON DELETE CASCADE,
-  food_id         text NULL REFERENCES foods,  -- referência, pode sumir
+  food_id         text NULL,   -- sem FK: o catálogo TACO vive no app
   position        int  NOT NULL,
   -- cópia do alimento: correções na base não alteram o histórico
   food_name       text    NOT NULL,
@@ -337,7 +337,9 @@ sequenceDiagram
 flowchart TD
     Open[App abre] --> Has{Sessão salva?}
     Has -->|Não| Welcome[Boas-vindas / Login]
-    Has -->|Sim| Main[Main — funciona offline]
+    Has -->|Sim| Profile{Perfil neste aparelho?}
+    Profile -->|Não| Onboarding[Onboarding sem 'Crie sua conta']
+    Profile -->|Sim| Main[Main — funciona offline]
     Main --> Online{Online?}
     Online -->|Sim| Refresh[Renova token]
     Refresh -->|ok| Sync[Sync]
@@ -352,11 +354,27 @@ flowchart TD
 - **O primeiro login exige internet.**
 - **Armazenamento da sessão:** `flutter_secure_storage` (Keychain no iOS,
   Keystore no Android), no lugar do SharedPreferences padrão do Supabase.
-- **Provedores:** e-mail/senha e Google (o botão já existe na tela de
-  boas-vindas como "em breve").
-- **Onboarding:** a tela "Crie sua conta" passa a criar a conta de verdade; as
-  respostas do onboarding viram o primeiro `profiles`, `nutrition_goals` e
-  `weight_entries`.
+- **Provedores:** e-mail/senha e Google. O Google usa o login nativo
+  (`google_sign_in`) e entrega o ID token ao Supabase
+  (`signInWithIdToken`), sem abrir navegador.
+- **Confirmação de e-mail desligada** no Supabase por enquanto: o cadastro já
+  entra no app. Ligar antes de publicar exige uma tela "confirme seu e-mail".
+- **Onboarding:** a tela "Crie sua conta" cria a conta de verdade; as
+  respostas viram o primeiro `profiles`, `nutrition_goals` e `weight_entries`,
+  com o id do usuário do Auth.
+- **Entrar sem perfil no aparelho** (conta nova pelo Google, ou login num
+  aparelho novo antes da sincronização): o app pede o onboarding, pulando
+  "Crie sua conta"; o nome vem da conta.
+- **Sessão encerrada pelo servidor** (senha trocada, conta excluída em outro
+  aparelho): o app apaga os dados locais e volta para as boas-vindas com um
+  aviso.
+- **Excluir conta** (exigência da App Store): botão no Perfil chama a função
+  `delete_account()`, que apaga o usuário do Auth; os dados vão junto em
+  cascata. Exige internet.
+- **Sem Supabase configurado no build**, o app usa a sessão local
+  (`LocalSessionRepository`) com a conta de demonstração: útil para
+  desenvolver e para os testes.
+- Configuração passo a passo: [`docs/configuracao-supabase.md`](configuracao-supabase.md).
 
 ### Logout
 
