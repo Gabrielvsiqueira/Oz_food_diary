@@ -8,6 +8,7 @@ import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
 import '../../controllers/profile_controller.dart';
 import '../../controllers/session_controller.dart';
+import '../../models/auth_failure.dart';
 import '../../models/enums/gender.dart';
 import '../../services/validators.dart';
 import '../../widgets/avatar/initials_avatar.dart';
@@ -16,6 +17,7 @@ import '../../widgets/cards/gender_option_card.dart';
 import '../../widgets/dialogs/confirm_dialog.dart';
 import '../../widgets/inputs/app_text_field.dart';
 import '../../widgets/inputs/unit_text_field.dart';
+import '../login/sign_in_flow.dart';
 
 /// Aba "Perfil". Mudar peso ou altura pede confirmação e recalcula as metas.
 class ProfilePage extends StatefulWidget {
@@ -114,7 +116,8 @@ class _ProfilePageState extends State<ProfilePage> {
       if (!confirmed || !mounted) return;
     }
 
-    controller.updateProfile(updated, recalculateGoal: recalculate);
+    await controller.updateProfile(updated, recalculateGoal: recalculate);
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -134,11 +137,37 @@ class _ProfilePageState extends State<ProfilePage> {
       destructive: true,
     );
     if (!confirmed || !mounted) return;
-    // Só encerra a sessão: perfil, metas e refeições ficam em memória
-    // para o próximo login.
-    context.read<SessionController>().logout();
+    await context.read<SessionController>().logout();
+    if (!mounted) return;
     Navigator.of(context)
         .pushNamedAndRemoveUntil(AppRoutes.welcome, (_) => false);
+  }
+
+  Future<void> _deleteAccount() async {
+    final confirmed = await showConfirmDialog(
+      context,
+      title: AppStrings.profileDeleteAccountTitle,
+      message: AppStrings.profileDeleteAccountMessage,
+      confirmLabel: AppStrings.profileDeleteAccount,
+      destructive: true,
+    );
+    if (!confirmed || !mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      await context.read<SessionController>().deleteAccount();
+    } on AuthFailure catch (failure) {
+      if (mounted) showAuthFailure(context, failure);
+      return;
+    }
+    if (!mounted) return;
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(AppRoutes.welcome, (_) => false);
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(AppStrings.profileAccountDeleted),
+        duration: AppConstants.snackBarDuration,
+      ),
+    );
   }
 
   @override
@@ -211,6 +240,16 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ],
               ],
+            ),
+            const SizedBox(height: AppConstants.spacingXl),
+            Center(
+              child: TextButton(
+                onPressed: _deleteAccount,
+                style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(context).colorScheme.error,
+                ),
+                child: Text(AppStrings.profileDeleteAccount),
+              ),
             ),
           ],
         ),

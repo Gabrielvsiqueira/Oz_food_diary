@@ -3,18 +3,17 @@ import 'package:provider/provider.dart';
 
 import '../../configs/constants/app_constants.dart';
 import '../../configs/strings/string_extensions.dart';
-import '../../configs/routes/app_routes.dart';
 import '../../configs/theme/app_colors.dart';
-import '../../controllers/daily_log_controller.dart';
 import '../../controllers/session_controller.dart';
+import '../../models/auth_failure.dart';
 import '../../services/validators.dart';
 import '../../widgets/branding/oz_background.dart';
 import '../../widgets/branding/oz_logo.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/inputs/app_text_field.dart';
+import 'sign_in_flow.dart';
 
 /// Login (Figma "Login"): fundo da marca com um painel inferior.
-/// Na Fase 1 qualquer e-mail/senha válidos entram com o perfil em memória.
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -52,13 +51,17 @@ class _LoginPageState extends State<LoginPage> {
     FocusScope.of(context).unfocus();
     if (!_formKey.currentState!.validate()) return;
     setState(() => _submitting = true);
-    await context.read<SessionController>().login(
-      email: _email.text.trim(),
-      password: _password.text,
-    );
-    if (!mounted) return;
-    context.read<DailyLogController>().selectDate(DateTime.now());
-    Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.main, (_) => false);
+    try {
+      await context.read<SessionController>().login(
+        email: _email.text.trim(),
+        password: _password.text,
+      );
+      if (mounted) await enterAfterSignIn(context);
+    } on AuthFailure catch (failure) {
+      if (!mounted) return;
+      setState(() => _submitting = false);
+      showAuthFailure(context, failure);
+    }
   }
 
   @override

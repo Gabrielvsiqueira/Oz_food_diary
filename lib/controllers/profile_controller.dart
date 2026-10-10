@@ -1,16 +1,18 @@
 import 'package:flutter/foundation.dart';
 
-import '../mocks/mock_user_profile.dart';
 import '../models/nutrition_goal.dart';
 import '../models/user_profile.dart';
+import '../repositories/profile_repository.dart';
 import '../services/nutrition_calculator.dart';
 
 /// Dono do perfil do usuário e das metas globais.
 class ProfileController extends ChangeNotifier {
-  ProfileController({this._calculator = const NutritionCalculator()}) {
-    _load(mockUserProfile);
-  }
+  ProfileController(
+    this._repository, {
+    this._calculator = const NutritionCalculator(),
+  });
 
+  final ProfileRepository _repository;
   final NutritionCalculator _calculator;
 
   late UserProfile _profile;
@@ -19,29 +21,45 @@ class ProfileController extends ChangeNotifier {
   UserProfile get profile => _profile;
   NutritionGoal get goal => _goal;
 
-  void _load(UserProfile profile) {
-    _profile = profile;
-    _goal = _calculator.calculateGoal(profile);
+  /// Carrega o perfil salvo; `false` se não houver nenhum.
+  Future<bool> load() async {
+    final data = await _repository.load();
+    if (data == null) return false;
+    _profile = data.profile;
+    _goal = data.goal;
+    notifyListeners();
+    return true;
   }
 
-  void completeOnboarding(UserProfile profile) {
-    _load(profile);
+  Future<void> completeOnboarding(
+    UserProfile profile, {
+    required String userId,
+  }) async {
+    final goal = _calculator.calculateGoal(profile);
+    await _repository.create(profile, goal, userId: userId);
+    _profile = profile;
+    _goal = goal;
     notifyListeners();
   }
 
-  /// Mudanças de peso ou altura exigem confirmação e recálculo das metas.
   bool requiresRecalculation(UserProfile updated) =>
       updated.weight != _profile.weight || updated.height != _profile.height;
 
-  void updateProfile(UserProfile updated, {bool recalculateGoal = false}) {
+  Future<void> updateProfile(
+    UserProfile updated, {
+    bool recalculateGoal = false,
+  }) async {
+    await _repository.updateProfile(updated);
     _profile = updated;
     if (recalculateGoal) {
       _goal = _calculator.calculateGoal(updated);
+      await _repository.saveGoal(_goal);
     }
     notifyListeners();
   }
 
-  void updateGoal(NutritionGoal goal) {
+  Future<void> updateGoal(NutritionGoal goal) async {
+    await _repository.saveGoal(goal);
     _goal = goal;
     notifyListeners();
   }

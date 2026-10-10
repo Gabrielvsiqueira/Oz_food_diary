@@ -9,7 +9,6 @@ import '../../services/validators.dart';
 import '../../widgets/buttons/form_actions_bar.dart';
 import '../../widgets/inputs/unit_text_field.dart';
 
-/// Aba "Metas". Cancelar descarta as edições e volta aos valores atuais.
 class GoalsPage extends StatefulWidget {
   const GoalsPage({super.key});
 
@@ -64,10 +63,10 @@ class _GoalsPageState extends State<GoalsPage> {
     _fill(_profileController.goal);
   }
 
-  void _save() {
+  Future<void> _save() async {
     FocusScope.of(context).unfocus();
     if (!_formKey.currentState!.validate()) return;
-    _profileController.updateGoal(
+    await _profileController.updateGoal(
       NutritionGoal(
         caloriesTarget: Validators.parseDecimal(_calories.text)!.round(),
         carbsTargetG: Validators.parseDecimal(_carbs.text)!,
@@ -75,6 +74,7 @@ class _GoalsPageState extends State<GoalsPage> {
         fatTargetG: Validators.parseDecimal(_fat.text)!,
       ),
     );
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(AppStrings.goalsSaved),
@@ -85,8 +85,7 @@ class _GoalsPageState extends State<GoalsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final nonNegative = fieldValidator(Validators.nonNegativeNumber,
-    );
+    final nonNegative = fieldValidator(Validators.nonNegativeNumber);
 
     return Scaffold(
       appBar: AppBar(title: Text(AppStrings.goalsTitle)),

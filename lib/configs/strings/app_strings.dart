@@ -142,6 +142,9 @@ abstract final class AppStrings {
   static String foodSearchNoResults(String query) =>
       'Nenhum alimento encontrado para "$query"';
   static const foodSearchError = 'Não foi possível carregar os alimentos';
+  static const foodSourceCredit =
+      'Fontes: Tabela Brasileira de Composição de Alimentos (TACO), 4ª ed., '
+      'NEPA/UNICAMP, 2011; medidas caseiras: IBGE, POF 2008-2009.';
   static String foodPer100g(String kcal) => '$kcal kcal a cada 100 g';
   static const foodQuantityLabel = 'Quantidade';
   static const foodPortionLabel = 'Medida';
@@ -157,6 +160,8 @@ abstract final class AppStrings {
       count == 1 ? 'colher de chá' : 'colheres de chá';
   static String portionCup(num count) => count == 1 ? 'xícara' : 'xícaras';
   static String portionLadle(num count) => count == 1 ? 'concha' : 'conchas';
+  static String portionServingSpoon(num count) =>
+      count == 1 ? 'colher de servir' : 'colheres de servir';
 
   static const mealDeleteTitle = 'Excluir refeição?';
   static const mealDeleteMessage = 'Essa ação não pode ser desfeita.';
@@ -176,7 +181,26 @@ abstract final class AppStrings {
   static const profileLogout = 'Sair';
   static const profileLogoutTitle = 'Sair do app?';
   static const profileLogoutMessage =
-      'Você voltará para a tela inicial. Seus dados continuam salvos enquanto o app estiver aberto.';
+      'Você voltará para a tela inicial e os dados salvos neste aparelho serão apagados.';
+
+  static const profileDeleteAccount = 'Excluir conta';
+  static const profileDeleteAccountTitle = 'Excluir sua conta?';
+  static const profileDeleteAccountMessage =
+      'Sua conta e todos os seus dados serão apagados para sempre. Essa ação não pode ser desfeita.';
+  static const profileAccountDeleted = 'Conta excluída';
+
+  static const authErrorInvalidCredentials = 'E-mail ou senha incorretos';
+  static const authErrorEmailAlreadyRegistered =
+      'Já existe uma conta com este e-mail';
+  static const authErrorWeakPassword =
+      'Senha fraca. Use uma combinação mais forte';
+  static const authErrorOffline =
+      'Sem conexão. Verifique sua internet e tente novamente';
+  static const authErrorProviderUnavailable =
+      'Login com Google indisponível nesta versão';
+  static const authErrorUnknown = 'Não foi possível concluir. Tente novamente';
+  static const defaultUserName = 'Você';
+  static const authSessionRevoked = 'Sua sessão expirou. Entre novamente.';
 
   static const welcomeTitle = 'Controle sua dieta de forma simples';
   static const welcomeCreateAccount = 'Criar conta';
