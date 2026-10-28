@@ -38,11 +38,16 @@ class _ProfilePageState extends State<ProfilePage> {
   final _birthDateText = TextEditingController();
   late DateTime _birthDate;
   late Gender _gender;
+  late final ProfileController _profileController;
+  late double _shownWeight;
 
   @override
   void initState() {
     super.initState();
-    final profile = context.read<ProfileController>().profile;
+    _profileController = context.read<ProfileController>()
+      ..addListener(_syncWeight);
+    final profile = _profileController.profile;
+    _shownWeight = profile.weight;
     _name = TextEditingController(text: profile.name)..addListener(_refresh);
     _height = TextEditingController(text: formatEditableNumber(profile.height));
     _weight = TextEditingController(text: formatEditableNumber(profile.weight));
@@ -56,8 +61,18 @@ class _ProfilePageState extends State<ProfilePage> {
     _birthDateText.text = _formatDate(_birthDate);
   }
 
+  /// Peso registrado na aba Evolução (ou baixado pela sincronização)
+  /// aparece aqui; sem isso, salvar o Perfil voltaria ao peso antigo.
+  void _syncWeight() {
+    final weight = _profileController.profile.weight;
+    if (weight == _shownWeight) return;
+    _shownWeight = weight;
+    _weight.text = formatEditableNumber(weight);
+  }
+
   @override
   void dispose() {
+    _profileController.removeListener(_syncWeight);
     for (final c in [_name, _height, _weight, _birthDateText]) {
       c.dispose();
     }

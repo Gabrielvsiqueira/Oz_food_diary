@@ -116,6 +116,7 @@ abstract final class AppStrings {
 
   static const tabHome = 'Início';
   static const tabGoals = 'Metas';
+  static const tabEvolution = 'Evolução';
   static const tabProfile = 'Perfil';
 
   static const homeGreeting = 'Olá, 👋';
@@ -226,6 +227,25 @@ abstract final class AppStrings {
   static const goalsSaved = 'Metas atualizadas';
 
   static const profileTitle = 'Perfil';
+
+  static const evolutionTitle = 'Evolução do peso';
+  static const weightPeriod30 = '30 dias';
+  static const weightPeriod90 = '90 dias';
+  static const weightPeriodAll = 'Tudo';
+  static const weightCurrent = 'Atual';
+  static const weightPeriodStart = 'Início';
+  static const weightChangeLabel = 'Variação';
+  static const weightHistoryEmptyPeriod = 'Nenhuma medição neste período.';
+  static const weightHistoryOnePoint =
+      'Registre seu peso em outros dias para ver a evolução aqui.';
+  static const weightEntriesTitle = 'Medições';
+  static const weightLogButton = 'Registrar peso';
+  static const weightLogTitle = 'Registrar peso';
+  static const weightLogHint =
+      'Uma medição por dia: registrar de novo no mesmo dia substitui a anterior.';
+  static const weightLogDate = 'Data';
+  static const weightLogSave = 'Registrar';
+  static const weightLogged = 'Peso registrado';
   static const profileSaved = 'Perfil atualizado';
   static const profileRecalculateTitle = 'Tem certeza?';
   static const profileRecalculateMessage =

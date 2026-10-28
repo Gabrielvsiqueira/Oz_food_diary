@@ -96,7 +96,7 @@ class HomePage extends StatelessWidget {
                             horizontal: AppConstants.spacingSm,
                           ),
                           child: DaySelector(
-                            label: _dayTitle(dailyLog.selectedDate),
+                            label: formatDayTitle(dailyLog.selectedDate),
                             onPrevious: dailyLog.goToPreviousDay,
                             onNext: dailyLog.canGoToNextDay
                                 ? dailyLog.goToNextDay
@@ -139,26 +139,6 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-}
-
-/// "Hoje, 12 de julho" / "Ontem, 11 de julho" / "10 de julho".
-String _dayTitle(DateTime date) {
-  final now = today();
-  final format = date.year == now.year
-      ? DateFormat.MMMMd(appLocale)
-      : DateFormat.yMMMMd(appLocale);
-  final formatted = format.format(date);
-  final relative = _relativeDay(date);
-  return relative == null ? formatted : '$relative, $formatted';
-}
-
-String? _relativeDay(DateTime date) {
-  final now = today();
-  if (isSameDay(date, now)) return AppStrings.homeToday;
-  if (isSameDay(date, now.subtract(const Duration(days: 1)))) {
-    return AppStrings.homeYesterday;
-  }
-  return null;
 }
 
 class _Header extends StatelessWidget {
@@ -328,7 +308,7 @@ class _MealEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     final time = DateFormat.Hm(appLocale).format(meal.createdAt);
     final day =
-        _relativeDay(meal.createdAt) ??
+        relativeDayLabel(meal.createdAt) ??
         DateFormat.MMMd(appLocale).format(meal.createdAt);
 
     return Padding(

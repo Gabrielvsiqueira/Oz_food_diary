@@ -58,6 +58,23 @@ class ProfileController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Registra o peso de [day]. O peso atual passa a ser o da medição mais
+  /// recente; com [recalculateGoal], as metas acompanham esse peso.
+  Future<void> logWeight(
+    DateTime day,
+    double weightKg, {
+    bool recalculateGoal = false,
+  }) async {
+    await _repository.saveWeight(day, weightKg);
+    final data = await _repository.load();
+    if (data != null) _profile = data.profile;
+    if (recalculateGoal) {
+      _goal = _calculator.calculateGoal(_profile);
+      await _repository.saveGoal(_goal);
+    }
+    notifyListeners();
+  }
+
   Future<void> updateGoal(NutritionGoal goal) async {
     await _repository.saveGoal(goal);
     _goal = goal;
