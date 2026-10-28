@@ -34,7 +34,7 @@ ainda; serve de referência para a implementação e para o relatório.
 | **2**   | Integração com banco de dados (online ou offline)                         | SQLite local (drift) + Postgres no Supabase, sincronizados                |
 | **2**   | Autenticação protegendo o acesso às funcionalidades                       | Supabase Auth (e-mail/senha e Google) com regras de acesso por usuário    |
 | **3**   | API externa via HTTP **ou** Cloud/Lambda Functions                        | API HTTP da Open Food Facts, consultada pelo app pelo código de barras    |
-| **3**   | Recursos nativos que façam sentido para o app                             | Câmera (leitura de código de barras) e notificações locais (lembretes)    |
+| **3**   | Recursos nativos que façam sentido para o app                             | Câmera (código de barras e foto da refeição), galeria e notificações locais (lembretes) |
 
 ---
 
@@ -240,6 +240,7 @@ As mesmas tabelas (`lib/database/tables.dart`), com as diferenças:
 | Timestamps           | Texto ISO-8601 (`store_date_time_values_as_text`), com milissegundos                        |
 | `foods.search_name`  | Nome minúsculo e sem acentos; a busca usa `LIKE '%termo%'` para cada palavra                |
 | `sync_state`         | Tabela de uma linha com o último `server_updated_at` recebido (etapa 3)                     |
+| `meal_photos`        | Foto de cada refeição (nome do arquivo); **só local**, não sincroniza                      |
 | `reminder_settings`  | Horários dos lembretes; **só local**, não sincroniza (etapa 5)                              |
 | Seed                 | Catálogo em `assets/data/foods.json`, inserido quando o banco é criado                      |
 
@@ -494,6 +495,32 @@ flowchart TD
 - **Crédito:** os dados da Open Food Facts são ODbL; a fonte aparece no fim
   da lista da busca de alimentos, junto com TACO e IBGE.
 
+### Foto da refeição
+
+- **Para quê:** registro visual opcional do que foi comido; a miniatura
+  aparece no card da refeição na Home.
+- **Como:** no formulário da refeição, "Adicionar foto" abre "Tirar foto"
+  (câmera nativa) ou "Escolher da galeria", pelo `image_picker`. A foto é
+  reduzida no próprio seletor (lado maior de 1600 px, qualidade 80) e só é
+  guardada ao salvar a refeição; cancelar descarta a troca.
+- **Onde fica:** o arquivo é copiado para `Documentos do app/meal_photos/`
+  (`MealPhotoStorage`) com o nome `{meal_id}-{horário}.jpg`, e a tabela local
+  `meal_photos` guarda só o nome do arquivo, porque a pasta do app muda entre
+  instalações no iOS.
+- **Só no aparelho:** a foto não sincroniza. A tabela fica fora das
+  `userTables`, então não conta como pendência e não vai no `push_changes`.
+  Mandar para o Supabase Storage fica como evolução.
+- **Limpeza:** trocar ou remover a foto apaga o arquivo anterior; excluir a
+  refeição apaga a foto; o logout apaga a pasta inteira
+  (`AppDatabase.clearUserFiles`). Ao abrir o app, `prunePhotos` apaga fotos de
+  refeições excluídas em outro aparelho e arquivos que sobraram de uma
+  gravação interrompida.
+- **Permissões:** no iOS, textos de uso da câmera e da galeria no
+  `Info.plist`. No Android, a galeria usa o seletor de fotos do sistema (sem
+  permissão) e a câmera pede permissão na hora, porque o app já declara
+  `CAMERA` por causa do leitor. Negado o acesso, o app avisa num `SnackBar`
+  (`PhotoPickerFailure`).
+
 ---
 
 ## 8. Lembretes de refeição
@@ -635,6 +662,7 @@ duas funcionalidades seguras:
 | 4 | Registro de peso + gráfico de evolução + histórico de metas           | 3       |
 | 5 | Lembretes de refeição                                                 | 3       |
 | 6 | Leitura de código de barras + API da Open Food Facts ✅                | 3       |
+| 7 | Foto da refeição (câmera e galeria) ✅                                 | 3       |
 
 ---
 
@@ -651,3 +679,5 @@ duas funcionalidades seguras:
 | `fl_chart`                    | Gráfico de evolução do peso                      |
 | `flutter_local_notifications`, `timezone` | Lembretes agendados                  |
 | `mobile_scanner`              | Leitura de código de barras pela câmera          |
+| `image_picker`                | Foto da refeição pela câmera ou galeria          |
+| `path_provider`               | Pasta de documentos do app, onde ficam as fotos  |

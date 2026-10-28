@@ -12,7 +12,8 @@ registrar, editar e excluir refeições, acompanhando o progresso do dia.
 > estão em [`docs/arquitetura.md`](docs/arquitetura.md).
 >
 > **Entrega 3 (em andamento).** Leitura de código de barras pela câmera, com
-> os dados do produto buscados na API HTTP da Open Food Facts.
+> os dados do produto buscados na API HTTP da Open Food Facts, e foto da
+> refeição pela câmera ou galeria.
 
 ---
 
@@ -50,6 +51,8 @@ registrar, editar e excluir refeições, acompanhando o progresso do dia.
   Facts e fica salvo no aparelho; se faltar algum dado, o app abre um
   formulário já preenchido com o que veio, e um produto desconhecido pode ser
   cadastrado com a tabela nutricional da embalagem.
+- **Foto da refeição**: opcional, tirada na câmera ou escolhida na galeria;
+  aparece em miniatura no card da Home e fica salva só no aparelho.
 - **Metas**: edição manual da meta de calorias e de macros.
 - **Perfil**: edição de nome, altura e peso, com recálculo das metas quando
   peso ou altura mudam, estado da sincronização, logout e exclusão de conta.
@@ -164,7 +167,7 @@ lib/
 ├── models/                   # Entidades e enums
 ├── pages/                    # Uma pasta por tela/fluxo
 ├── repositories/             # Interfaces de acesso a dados e implementações
-├── services/                 # SyncService, BarcodeLookupService, NutritionCalculator, Validators, DateUtils, TextUtils
+├── services/                 # SyncService, BarcodeLookupService, MealPhotoStorage, PhotoPicker, NutritionCalculator, Validators, …
 └── widgets/                  # Botões, inputs, cards, gráficos, navbar, etc.
 ```
 
