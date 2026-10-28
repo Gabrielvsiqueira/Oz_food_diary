@@ -33,15 +33,40 @@ void main() {
     test('carrega o catálogo inicial na criação do banco', () async {
       final results = await DriftFoodRepository(db).search('');
       expect(results, hasLength(MockFoods.all.length));
-      expect(results.first.name, 'Alface crespa');
+      // Nome mais curto primeiro: costuma ser o alimento mais genérico.
+      expect(results.first.name, 'Tomate');
     });
 
     test('ignora acentos, maiúsculas e ordem das palavras', () async {
       final results = await DriftFoodRepository(db).search('  COZIDO feijao ');
       expect(results.map((f) => f.name), [
-        'Feijão carioca cozido',
         'Feijão preto cozido',
+        'Feijão carioca cozido',
       ]);
+    });
+
+    test('os alimentos mais registrados vêm primeiro', () async {
+      final foods = DriftFoodRepository(db);
+      Future<List<String>> rice() async => [
+        for (final food in await foods.search('arroz')) food.name,
+      ];
+      expect(await rice(), ['Arroz branco cozido', 'Arroz integral cozido']);
+
+      await DriftMealRepository(db).save(
+        Meal(
+          id: 'meal-1',
+          type: MealType.lunch,
+          items: const [
+            MealItem(
+              food: MockFoods.brownRice,
+              portion: FoodPortion.gram,
+              quantity: 100,
+            ),
+          ],
+          createdAt: DateTime.now(),
+        ),
+      );
+      expect(await rice(), ['Arroz integral cozido', 'Arroz branco cozido']);
     });
 
     test('traz as medidas caseiras na ordem do catálogo', () async {

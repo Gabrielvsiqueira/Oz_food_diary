@@ -88,6 +88,18 @@ void main() {
       expect(await search(repository, 'pao frances'), ['Pão de sal']);
       expect(await search(repository, 'macaxeira'), contains('Aipim'));
     });
+
+    test('nomes que começam pela palavra buscada vêm primeiro', () async {
+      final results = await search(repository, 'ovo');
+      expect(
+        results.take(3),
+        containsAll(['Ovo de codorna', 'Ovo de galinha']),
+      );
+      expect(
+        results.indexOf('Ovomaltine'),
+        lessThan(results.indexOf('Arroz com ovo')),
+      );
+    });
   });
 
   test('a versão 5 troca o catálogo da TACO pelo do IBGE', () async {

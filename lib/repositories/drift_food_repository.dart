@@ -13,11 +13,19 @@ class DriftFoodRepository implements FoodRepository {
   final AppDatabase _db;
   final int limit;
 
+  /// Ordem: os alimentos que o usuário mais registrou, depois os que
+  /// começam pela palavra buscada ("ovo de galinha" antes de "ovomaltine" e
+  /// de "arroz com ovo") e os de nome mais curto, que costumam ser os mais
+  /// genéricos.
   @override
   Future<List<Food>> search(String query) async {
     final terms = normalizeForSearch(
       query,
-    ).split(' ').where((t) => t.isNotEmpty).map(_escapeLike);
+    ).split(' ').where((t) => t.isNotEmpty).map(_escapeLike).toList();
+    final timesLogged = const CustomExpression<int>(
+      '(SELECT count(*) FROM meal_items i '
+      'WHERE i.food_id = foods.id AND i.deleted_at IS NULL)',
+    );
     final rows =
         await (_db.select(_db.foods)
               ..where(
@@ -26,7 +34,20 @@ class DriftFoodRepository implements FoodRepository {
                     f.searchName.like('%$term%', escapeChar: r'\'),
                 ]),
               )
-              ..orderBy([(f) => OrderingTerm.asc(f.searchName)])
+              ..orderBy([
+                (_) => OrderingTerm.desc(timesLogged),
+                if (terms.isNotEmpty) ...[
+                  (f) => OrderingTerm.desc(
+                    f.searchName.like('${terms.first} %', escapeChar: r'\') |
+                        f.searchName.equals(terms.first),
+                  ),
+                  (f) => OrderingTerm.desc(
+                    f.searchName.like('${terms.first}%', escapeChar: r'\'),
+                  ),
+                ],
+                (f) => OrderingTerm.asc(f.name.length),
+                (f) => OrderingTerm.asc(f.searchName),
+              ])
               ..limit(limit))
             .get();
     return _toFoods(rows);
