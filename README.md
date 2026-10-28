@@ -10,6 +10,9 @@ registrar, editar e excluir refeições, acompanhando o progresso do dia.
 > dados sincronizam com o Postgres do Supabase em segundo plano: entrando com
 > a mesma conta em outro aparelho, tudo volta. As decisões de arquitetura
 > estão em [`docs/arquitetura.md`](docs/arquitetura.md).
+>
+> **Entrega 3 (em andamento).** Leitura de código de barras pela câmera, com
+> os dados do produto buscados na API HTTP da Open Food Facts.
 
 ---
 
@@ -42,6 +45,11 @@ registrar, editar e excluir refeições, acompanhando o progresso do dia.
   O usuário busca cada alimento e informa só a quantidade (em gramas ou em
   medida caseira, como fatia ou colher); calorias e macros vêm da base de
   alimentos e são somados automaticamente.
+- **Código de barras**: na busca de alimentos, o botão de leitura abre a
+  câmera (ou permite digitar o código). O produto vem da API da Open Food
+  Facts e fica salvo no aparelho; se faltar algum dado, o app abre um
+  formulário já preenchido com o que veio, e um produto desconhecido pode ser
+  cadastrado com a tabela nutricional da embalagem.
 - **Metas**: edição manual da meta de calorias e de macros.
 - **Perfil**: edição de nome, altura e peso, com recálculo das metas quando
   peso ou altura mudam, estado da sincronização, logout e exclusão de conta.
@@ -156,7 +164,7 @@ lib/
 ├── models/                   # Entidades e enums
 ├── pages/                    # Uma pasta por tela/fluxo
 ├── repositories/             # Interfaces de acesso a dados e implementações
-├── services/                 # SyncService, NutritionCalculator, Validators, DateUtils, TextUtils
+├── services/                 # SyncService, BarcodeLookupService, NutritionCalculator, Validators, DateUtils, TextUtils
 └── widgets/                  # Botões, inputs, cards, gráficos, navbar, etc.
 ```
 
@@ -179,7 +187,8 @@ Os controllers dependem só de interfaces, injetadas via `Provider` em
 
 | Interface           | Implementação no app    | Responsabilidade                                                       |
 | ------------------- | ----------------------- | ---------------------------------------------------------------------- |
-| `FoodRepository`    | `DriftFoodRepository`   | Busca no catálogo local, sem acentos e maiúsculas                      |
+| `FoodRepository`    | `DriftFoodRepository`   | Busca no catálogo local, sem acentos e maiúsculas; produtos lidos pelo código de barras |
+| `ProductRepository` | `OpenFoodFactsRepository` | Produto pelo código de barras na API HTTP da Open Food Facts         |
 | `MealRepository`    | `DriftMealRepository`   | Refeições do dia como stream: toda gravação atualiza a Home sozinha    |
 | `ProfileRepository` | `DriftProfileRepository`| Perfil, histórico de peso e histórico de metas                         |
 | `SessionRepository` | `SupabaseSessionRepository` (ou `LocalSessionRepository` sem backend) | Login, cadastro, Google, logout e exclusão de conta; o logout apaga os dados do aparelho |
@@ -188,7 +197,8 @@ Os controllers dependem só de interfaces, injetadas via `Provider` em
 Os testes usam `MockFoodRepository` e `MockMealRepository` (em memória), e os
 repositórios do drift são testados com um banco SQLite em memória. A
 sincronização é testada com dois "aparelhos" (dois bancos em memória) e um
-servidor falso com as mesmas regras do `push_changes`.
+servidor falso com as mesmas regras do `push_changes`. O cliente da Open
+Food Facts é testado com respostas HTTP simuladas (`MockClient`), sem rede.
 
 Cada `MealItem` guarda uma cópia do alimento, com seus nutrientes. Assim,
 correções futuras na base não alteram o histórico de refeições do usuário.
@@ -219,6 +229,10 @@ flowchart TD
     Home -->|Nova / editar refeição| MealForm[Formulário de refeição]
     MealForm -->|Adicionar alimento| FoodSearch[Busca de alimentos]
     FoodSearch -->|Quantidade e medida| MealForm
+    FoodSearch -->|Escanear| Scanner[Leitor de código de barras]
+    Scanner -->|Produto incompleto ou desconhecido| ProductForm[Formulário do produto]
+    Scanner -->|Produto encontrado| FoodSearch
+    ProductForm --> FoodSearch
     Perfil -->|Logout| Welcome
 ```
 
@@ -232,6 +246,8 @@ flowchart TD
 | `/main`                                     | Shell com abas Home, Metas e Perfil (`IndexedStack` preserva o estado de cada aba) |
 | `/meal/form`                                | Cadastro de refeição; recebe um `Meal` opcional como argumento para edição         |
 | `/meal/food-search`                         | Busca de alimentos; fecha retornando o `MealItem` escolhido                        |
+| `/meal/barcode-scanner`                     | Leitor de código de barras (câmera ou digitado); fecha retornando o código         |
+| `/meal/product-form`                        | Completa ou cadastra um produto; recebe e retorna um `ProductInfo`                 |
 
 Após login, conclusão do onboarding e logout, a pilha de navegação é limpa
 (`pushNamedAndRemoveUntil`) para impedir que o botão "voltar" retorne a
@@ -261,6 +277,8 @@ mantendo as regras de validação separadas dos textos da interface.
 | Macros (meta)          | Número maior ou igual a zero                                                | Não pode ser negativo                   |
 | Quantidade do alimento | Número maior que zero e até 5 kg por alimento, em qualquer medida           | Máximo de 5000 g por alimento           |
 | Refeição               | Ao menos um alimento                                                        | Adicione ao menos um alimento           |
+| Código de barras       | Só dígitos, de 8 a 14 (EAN-8, UPC-A, EAN-13, GTIN-14)                       | Digite os números do código de barras   |
+| Porção da embalagem    | Opcional; se preenchida, maior que zero e até 5 kg                          | Máximo de 5000 g por alimento           |
 
 ### Tratamento de variáveis e entrada de dados
 
@@ -280,6 +298,9 @@ mantendo as regras de validação separadas dos textos da interface.
 - **Busca de alimentos** ignora acentos e maiúsculas, espera o usuário parar
   de digitar antes de buscar e mostra estados de carregando, erro (com
   "Tentar novamente") e nenhum resultado.
+- **Dados da Open Food Facts**: números em texto (`"450,5"`) são aceitos,
+  negativos são tratados como ausentes, energia só em kJ é convertida para
+  kcal e a marca é somada ao nome quando não aparece nele.
 - **Ações destrutivas** (excluir refeição, logout, alterar peso/altura que
   recalcula metas) pedem confirmação em diálogo.
 - **Feedback** de sucesso (refeição salva, metas atualizadas, perfil

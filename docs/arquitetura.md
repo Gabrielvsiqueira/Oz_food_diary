@@ -33,7 +33,7 @@ ainda; serve de referência para a implementação e para o relatório.
 | ------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
 | **2**   | Integração com banco de dados (online ou offline)                         | SQLite local (drift) + Postgres no Supabase, sincronizados                |
 | **2**   | Autenticação protegendo o acesso às funcionalidades                       | Supabase Auth (e-mail/senha e Google) com regras de acesso por usuário    |
-| **3**   | API externa via HTTP **ou** Cloud/Lambda Functions                        | Edge Function `food-lookup` que consulta a Open Food Facts via HTTP       |
+| **3**   | API externa via HTTP **ou** Cloud/Lambda Functions                        | API HTTP da Open Food Facts, consultada pelo app pelo código de barras    |
 | **3**   | Recursos nativos que façam sentido para o app                             | Câmera (leitura de código de barras) e notificações locais (lembretes)    |
 
 ---
@@ -54,16 +54,13 @@ flowchart TB
     subgraph Supabase
         AUTH[Auth]
         PG[(Postgres<br/>+ RLS)]
-        EF[Edge Function<br/>food-lookup]
     end
 
     OFF[Open Food Facts]
 
     S <-->|HTTPS + JWT| PG
     R -->|login / refresh| AUTH
-    R -->|barcode| EF
-    EF --> PG
-    EF -->|HTTP| OFF
+    R -->|HTTPS: código de barras| OFF
 ```
 
 **A UI só lê e grava no SQLite local.** Toda gravação é instantânea e
@@ -228,7 +225,7 @@ create function can_read_user(target uuid) returns boolean
 | ----------------------------------------------------------------------------- | ------------------------------------- | ---------------------------------------- |
 | `profiles`                                                                    | `can_read_user(id)`                   | `id = auth.uid()`                        |
 | `nutrition_goals`, `weight_entries`, `meals`, `meal_items`                    | `can_read_user(user_id)`              | `user_id = auth.uid()`                   |
-| `foods`, `food_portions`                                                      | `owner_id IS NULL OR owner_id = auth.uid()` | Só alimentos `custom` do próprio dono; `taco` e `off` só pela Edge Function (service role) |
+| `foods`, `food_portions`                                                      | Não existem no servidor por enquanto: o catálogo e os produtos lidos ficam só no aparelho (ver seção 7) | — |
 
 ### Banco local (drift)
 
@@ -441,31 +438,61 @@ aparelho, e os dados de usuários diferentes não podem se misturar.
 
 ```mermaid
 flowchart TD
-    Scan[Câmera lê o código] --> Local{Existe no SQLite?}
-    Local -->|Sim| Show[Mostra o alimento — funciona offline]
-    Local -->|Não| Net{Online?}
-    Net -->|Não| Manual[Sem conexão: tentar depois<br/>ou cadastrar manualmente]
-    Net -->|Sim| EF[Edge Function food-lookup]
-    EF --> Cache{Existe em foods<br/>no Postgres?}
-    Cache -->|Sim| Return[Devolve]
-    Cache -->|Não| OFF[GET Open Food Facts]
-    OFF -->|achou| Norm[Normaliza, grava em foods] --> Return
-    OFF -->|não achou| Manual
-    Return --> Save[Salva no SQLite] --> Show
+    Scan[Câmera lê o código<br/>ou o usuário digita] --> Local{Existe no SQLite?}
+    Local -->|Sim| Show[Escolhe a quantidade — funciona offline]
+    Local -->|Não| OFF[GET Open Food Facts]
+    OFF -->|sem conexão / erro| Msg[Avisa e mantém a busca da TACO]
+    OFF -->|completo| Save[Salva em foods no SQLite] --> Show
+    OFF -->|faltam dados| Form[Formulário já preenchido]
+    OFF -->|não achou| Ask{Cadastrar?}
+    Ask -->|Sim| Blank[Formulário em branco]
+    Form --> Save
+    Blank --> Save
 ```
 
 - A TACO não tem código de barras; a leitura serve para **produtos
   industrializados**.
-- **Dados incompletos:** se a Open Food Facts não tiver todos os macros, abre o
-  cadastro manual já preenchido com o que veio.
-- **Porção da embalagem:** o campo de porção da OFF (ex.: "1 barra = 25 g") vira
-  uma `food_portions` com `unit = 'serving'`.
-- **Por que passar pela Edge Function:** a OFF pede um User-Agent identificando
-  o app e limita requisições; a tabela `foods` funciona como cache
-  compartilhado — o produto escaneado por um usuário fica disponível para
-  todos.
-- **Pacote:** `mobile_scanner`. Permissão de câmera pedida só ao tocar em
-  "Escanear".
+- **API:** `GET https://world.openfoodfacts.org/api/v2/product/{código}`,
+  pública e sem chave, pedindo só os campos usados (`fields=`). Produto
+  inexistente volta como HTTP 404; código inválido, como 200 com
+  `status: 0`. Os dois viram "não encontrado".
+- **User-Agent:** a Open Food Facts pede que o app se identifique; o Oz manda
+  `Oz/1.0.0 (URL do repositório)`, sem dados do usuário.
+- **Falhas:** sem conexão ou com o servidor demorando mais de 10 s, o app
+  avisa "Sem conexão"; erros HTTP e respostas ilegíveis viram "Não foi
+  possível buscar o produto". Os dois são falhas tipadas
+  (`ProductLookupFailure`), com a mensagem na camada de View.
+- **Normalização:** nome em português quando houver, com a marca somada se
+  não aparece no nome; números em texto são aceitos e negativos descartados;
+  energia só em kJ é convertida para kcal. A Open Food Facts informa bebidas
+  a cada 100 ml, tratados como 100 g.
+- **Dados incompletos:** se faltar nome ou algum dos quatro valores, abre o
+  formulário já preenchido com o que veio. Produto desconhecido pode ser
+  cadastrado em branco (`source = 'custom'`).
+- **Porção da embalagem:** `serving_quantity` (ex.: 20 g) vira uma
+  `food_portions` com `unit = 'serving'` ("porção").
+- **Cache local:** o produto é gravado em `foods` (id `off-{código}` ou
+  `custom-{código}`, coluna `barcode` única) e passa a aparecer na busca por
+  nome. A segunda leitura do mesmo código não usa a internet. O logout não
+  apaga esses produtos, assim como o catálogo da TACO.
+- **Sincronização:** os produtos ficam só no aparelho. As refeições continuam
+  sincronizando normalmente, porque cada item guarda uma cópia do nome e dos
+  nutrientes do alimento.
+- **Por que não uma Edge Function:** o plano inicial era passar por uma
+  função `food-lookup` no Supabase, com a tabela `foods` no Postgres como
+  cache compartilhado entre usuários. Chamar a API direto tem menos peças
+  (nada para publicar no servidor) e atende o requisito de API HTTP da
+  Entrega 3; a Edge Function fica como evolução se o limite de requisições da
+  Open Food Facts virar problema.
+- **Pacote:** `mobile_scanner` (ML Kit no Android, Vision no iOS), lendo só
+  EAN-13, EAN-8, UPC-A e UPC-E. A permissão da câmera é pedida ao abrir o
+  leitor; negada, a tela explica e oferece "Digitar código" (também útil no
+  emulador). Há botão de lanterna quando o aparelho tem uma.
+- **Implementação:** `OpenFoodFactsRepository` (HTTP e conversão),
+  `BarcodeLookupService` (aparelho primeiro, depois a API, e gravação),
+  `BarcodeScannerPage`, `ProductFormPage` e o fluxo na `FoodSearchPage`.
+- **Crédito:** os dados da Open Food Facts são ODbL; a fonte aparece no fim
+  da lista da busca de alimentos, junto com TACO e IBGE.
 
 ---
 
@@ -607,7 +634,7 @@ duas funcionalidades seguras:
 | 3 | `SyncService` (push, pull, logout seguro) ✅                          | 2       |
 | 4 | Registro de peso + gráfico de evolução + histórico de metas           | 3       |
 | 5 | Lembretes de refeição                                                 | 3       |
-| 6 | Leitura de código de barras + Edge Function `food-lookup`             | 3       |
+| 6 | Leitura de código de barras + API da Open Food Facts ✅                | 3       |
 
 ---
 
@@ -617,7 +644,7 @@ duas funcionalidades seguras:
 | ----------------------------- | ------------------------------------------------ |
 | `drift`, `drift_flutter`      | SQLite tipado, migrations e streams              |
 | `drift_dev`, `build_runner`   | Geração de código do drift (dev)                 |
-| `supabase_flutter`            | Auth, Postgres (PostgREST/RPC) e Edge Functions  |
+| `supabase_flutter`            | Auth e Postgres (PostgREST/RPC)                  |
 | `flutter_secure_storage`      | Armazenamento seguro da sessão                   |
 | `connectivity_plus`           | Detectar volta da conexão para sincronizar       |
 | `uuid` (já existe)            | IDs v4 e v5 gerados no app                       |
