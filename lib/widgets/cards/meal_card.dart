@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:math';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
@@ -161,15 +163,50 @@ class _MealLeading extends StatelessWidget {
     final pixels = (_size * MediaQuery.devicePixelRatioOf(context)).round();
     return ClipRRect(
       borderRadius: BorderRadius.circular(AppConstants.radiusXl),
-      child: Image.file(
-        File(path),
+      child: Image(
+        image: _CoverFileImage(File(path), side: pixels),
         width: _size,
         height: _size,
         fit: BoxFit.cover,
-        // Decodifica no tamanho da miniatura, não no da foto inteira.
-        cacheWidth: pixels,
         errorBuilder: (_, _, _) => emoji,
       ),
     );
   }
+}
+
+/// Decodifica a foto já pequena, com o lado menor igual a [side] pixels. O
+/// `cacheWidth` sozinho deixaria uma foto deitada baixa demais para o
+/// quadrado, e o `BoxFit.cover` teria que ampliá-la (fica borrada).
+class _CoverFileImage extends FileImage {
+  const _CoverFileImage(super.file, {required this.side});
+
+  final int side;
+
+  @override
+  ImageStreamCompleter loadImage(FileImage key, ImageDecoderCallback decode) =>
+      super.loadImage(
+        key,
+        (buffer, {getTargetSize}) => decode(
+          buffer,
+          getTargetSize: (width, height) {
+            final scale = side / min(width, height);
+            // Foto já menor que a miniatura: não amplia.
+            if (scale >= 1) {
+              return ui.TargetImageSize(width: width, height: height);
+            }
+            return ui.TargetImageSize(
+              width: (width * scale).round(),
+              height: (height * scale).round(),
+            );
+          },
+        ),
+      );
+
+  // O tamanho entra no cache: a mesma foto em outro tamanho é outra imagem.
+  @override
+  bool operator ==(Object other) =>
+      other is _CoverFileImage && super == other && other.side == side;
+
+  @override
+  int get hashCode => Object.hash(super.hashCode, side);
 }
