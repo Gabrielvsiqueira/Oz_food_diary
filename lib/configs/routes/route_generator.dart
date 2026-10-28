@@ -17,6 +17,7 @@ import '../../pages/onboarding/onboarding_loading_page.dart';
 import '../../pages/onboarding/onboarding_result_page.dart';
 import '../../pages/onboarding/onboarding_weight_page.dart';
 import '../../pages/product_form/product_form_page.dart';
+import '../../pages/reminders/reminders_page.dart';
 import '../../pages/splash/splash_page.dart';
 import '../../pages/welcome/welcome_page.dart';
 import 'app_routes.dart';
@@ -42,6 +43,7 @@ class RouteGenerator {
       AppRoutes.mealForm => MealFormPage(meal: settings.arguments as Meal?),
       AppRoutes.foodSearch => const FoodSearchPage(),
       AppRoutes.barcodeScanner => const BarcodeScannerPage(),
+      AppRoutes.reminders => const RemindersPage(),
       AppRoutes.productForm => ProductFormPage(
         product: settings.arguments! as ProductInfo,
       ),

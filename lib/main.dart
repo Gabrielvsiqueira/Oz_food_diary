@@ -12,6 +12,7 @@ import 'database/app_database.dart';
 import 'database/food_seed.dart';
 import 'repositories/drift_meal_repository.dart';
 import 'repositories/secure_session_storage.dart';
+import 'services/local_notification_scheduler.dart';
 import 'services/meal_photo_storage.dart';
 
 Future<void> main() async {
@@ -42,5 +43,21 @@ Future<void> main() async {
     );
     supabase = Supabase.instance.client;
   }
-  runApp(OzApp(database: database, photos: photos, supabase: supabase));
+  final reminders = LocalNotificationScheduler();
+  // Sem lembretes, o resto do app continua funcionando.
+  try {
+    await reminders.init();
+  } on Object catch (e, stack) {
+    FlutterError.reportError(
+      FlutterErrorDetails(exception: e, stack: stack, library: 'reminders'),
+    );
+  }
+  runApp(
+    OzApp(
+      database: database,
+      photos: photos,
+      reminders: reminders,
+      supabase: supabase,
+    ),
+  );
 }

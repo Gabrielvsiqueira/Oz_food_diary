@@ -13,12 +13,14 @@ import 'controllers/daily_log_controller.dart';
 import 'controllers/meal_controller.dart';
 import 'controllers/onboarding_controller.dart';
 import 'controllers/profile_controller.dart';
+import 'controllers/reminder_controller.dart';
 import 'controllers/session_controller.dart';
 import 'controllers/sync_controller.dart';
 import 'database/app_database.dart';
 import 'repositories/drift_food_repository.dart';
 import 'repositories/drift_meal_repository.dart';
 import 'repositories/drift_profile_repository.dart';
+import 'repositories/drift_reminder_repository.dart';
 import 'repositories/food_repository.dart';
 import 'repositories/local_session_repository.dart';
 import 'repositories/meal_repository.dart';
@@ -30,6 +32,7 @@ import 'repositories/supabase_sync_remote.dart';
 import 'services/barcode_lookup_service.dart';
 import 'services/meal_photo_storage.dart';
 import 'services/photo_picker.dart';
+import 'services/reminder_scheduler.dart';
 import 'services/sync_service.dart';
 
 class OzApp extends StatefulWidget {
@@ -37,11 +40,13 @@ class OzApp extends StatefulWidget {
     super.key,
     required this.database,
     required this.photos,
+    required this.reminders,
     this.supabase,
   });
 
   final AppDatabase database;
   final MealPhotoStorage photos;
+  final ReminderScheduler reminders;
 
   /// Sem cliente (Supabase não configurado), usa a sessão local.
   final SupabaseClient? supabase;
@@ -117,6 +122,16 @@ class _OzAppState extends State<OzApp> {
             database: database,
             service: _syncService(),
             onProfileChanged: context.read<ProfileController>().load,
+          ),
+        ),
+        ChangeNotifierProvider(
+          // Não é preguiçoso: agenda os lembretes assim que a sessão abre.
+          lazy: false,
+          create: (context) => ReminderController(
+            session: context.read(),
+            repository: DriftReminderRepository(database),
+            scheduler: widget.reminders,
+            meals: context.read(),
           ),
         ),
         ChangeNotifierProvider(

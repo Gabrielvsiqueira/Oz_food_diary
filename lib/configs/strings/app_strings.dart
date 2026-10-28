@@ -224,6 +224,23 @@ abstract final class AppStrings {
 
   static const profileTitle = 'Perfil';
 
+  static const remindersTitle = 'Lembretes de refeição';
+  static const remindersSubtitle = 'Avisos para não esquecer de registrar';
+  static const remindersHint =
+      'Se você já registrou a refeição no dia, o lembrete daquele dia não '
+      'aparece. Os lembretes ficam só neste aparelho.';
+  static const remindersPermissionTitle = 'Notificações desativadas';
+  static const remindersPermissionMessage =
+      'Sem a permissão, os lembretes não aparecem.';
+  static const remindersPermissionAllow = 'Permitir';
+  static const remindersPermissionDenied =
+      'Libere as notificações do Oz nos ajustes do aparelho.';
+  static const reminderChannelName = 'Lembretes de refeição';
+  static const reminderChannelDescription =
+      'Avisos nos horários das refeições para registrar no Oz';
+  static String reminderBody(String meal) =>
+      'Não esqueça de registrar o ${meal.toLowerCase()} no Oz.';
+
   static const evolutionTitle = 'Evolução do peso';
   static const weightPeriod30 = '30 dias';
   static const weightPeriod90 = '90 dias';

@@ -25,6 +25,7 @@ part 'app_database.g.dart';
     FoodPortions,
     SyncState,
     MealPhotos,
+    ReminderSettings,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -46,13 +47,14 @@ class AppDatabase extends _$AppDatabase {
   final Future<void> Function()? clearUserFiles;
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onUpgrade: (m, from, to) async {
       if (from < 2) await m.createTable(syncState);
       if (from < 3) await m.createTable(mealPhotos);
+      if (from < 4) await m.createTable(reminderSettings);
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -124,6 +126,7 @@ class AppDatabase extends _$AppDatabase {
     await transaction(() async {
       await delete(syncState).go();
       await delete(mealPhotos).go();
+      await delete(reminderSettings).go();
       await delete(mealItems).go();
       await delete(meals).go();
       await delete(weightEntries).go();

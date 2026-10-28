@@ -4953,6 +4953,291 @@ class MealPhotosCompanion extends UpdateCompanion<MealPhotoRow> {
   }
 }
 
+class $ReminderSettingsTable extends ReminderSettings
+    with TableInfo<$ReminderSettingsTable, ReminderSettingRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ReminderSettingsTable(this.attachedDatabase, [this._alias]);
+  @override
+  late final GeneratedColumnWithTypeConverter<MealType, String> mealType =
+      GeneratedColumn<String>(
+        'meal_type',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<MealType>($ReminderSettingsTable.$convertermealType);
+  static const VerificationMeta _enabledMeta = const VerificationMeta(
+    'enabled',
+  );
+  @override
+  late final GeneratedColumn<bool> enabled = GeneratedColumn<bool>(
+    'enabled',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("enabled" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _minuteOfDayMeta = const VerificationMeta(
+    'minuteOfDay',
+  );
+  @override
+  late final GeneratedColumn<int> minuteOfDay = GeneratedColumn<int>(
+    'minute_of_day',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [mealType, enabled, minuteOfDay];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'reminder_settings';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ReminderSettingRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('enabled')) {
+      context.handle(
+        _enabledMeta,
+        enabled.isAcceptableOrUnknown(data['enabled']!, _enabledMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_enabledMeta);
+    }
+    if (data.containsKey('minute_of_day')) {
+      context.handle(
+        _minuteOfDayMeta,
+        minuteOfDay.isAcceptableOrUnknown(
+          data['minute_of_day']!,
+          _minuteOfDayMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_minuteOfDayMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {mealType};
+  @override
+  ReminderSettingRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ReminderSettingRow(
+      mealType: $ReminderSettingsTable.$convertermealType.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}meal_type'],
+        )!,
+      ),
+      enabled: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}enabled'],
+      )!,
+      minuteOfDay: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}minute_of_day'],
+      )!,
+    );
+  }
+
+  @override
+  $ReminderSettingsTable createAlias(String alias) {
+    return $ReminderSettingsTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<MealType, String, String> $convertermealType =
+      const EnumNameConverter<MealType>(MealType.values);
+}
+
+class ReminderSettingRow extends DataClass
+    implements Insertable<ReminderSettingRow> {
+  final MealType mealType;
+  final bool enabled;
+
+  /// Minutos desde a meia-noite (ex.: 12h30 = 750).
+  final int minuteOfDay;
+  const ReminderSettingRow({
+    required this.mealType,
+    required this.enabled,
+    required this.minuteOfDay,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    {
+      map['meal_type'] = Variable<String>(
+        $ReminderSettingsTable.$convertermealType.toSql(mealType),
+      );
+    }
+    map['enabled'] = Variable<bool>(enabled);
+    map['minute_of_day'] = Variable<int>(minuteOfDay);
+    return map;
+  }
+
+  ReminderSettingsCompanion toCompanion(bool nullToAbsent) {
+    return ReminderSettingsCompanion(
+      mealType: Value(mealType),
+      enabled: Value(enabled),
+      minuteOfDay: Value(minuteOfDay),
+    );
+  }
+
+  factory ReminderSettingRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ReminderSettingRow(
+      mealType: $ReminderSettingsTable.$convertermealType.fromJson(
+        serializer.fromJson<String>(json['mealType']),
+      ),
+      enabled: serializer.fromJson<bool>(json['enabled']),
+      minuteOfDay: serializer.fromJson<int>(json['minuteOfDay']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'mealType': serializer.toJson<String>(
+        $ReminderSettingsTable.$convertermealType.toJson(mealType),
+      ),
+      'enabled': serializer.toJson<bool>(enabled),
+      'minuteOfDay': serializer.toJson<int>(minuteOfDay),
+    };
+  }
+
+  ReminderSettingRow copyWith({
+    MealType? mealType,
+    bool? enabled,
+    int? minuteOfDay,
+  }) => ReminderSettingRow(
+    mealType: mealType ?? this.mealType,
+    enabled: enabled ?? this.enabled,
+    minuteOfDay: minuteOfDay ?? this.minuteOfDay,
+  );
+  ReminderSettingRow copyWithCompanion(ReminderSettingsCompanion data) {
+    return ReminderSettingRow(
+      mealType: data.mealType.present ? data.mealType.value : this.mealType,
+      enabled: data.enabled.present ? data.enabled.value : this.enabled,
+      minuteOfDay: data.minuteOfDay.present
+          ? data.minuteOfDay.value
+          : this.minuteOfDay,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ReminderSettingRow(')
+          ..write('mealType: $mealType, ')
+          ..write('enabled: $enabled, ')
+          ..write('minuteOfDay: $minuteOfDay')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(mealType, enabled, minuteOfDay);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ReminderSettingRow &&
+          other.mealType == this.mealType &&
+          other.enabled == this.enabled &&
+          other.minuteOfDay == this.minuteOfDay);
+}
+
+class ReminderSettingsCompanion extends UpdateCompanion<ReminderSettingRow> {
+  final Value<MealType> mealType;
+  final Value<bool> enabled;
+  final Value<int> minuteOfDay;
+  final Value<int> rowid;
+  const ReminderSettingsCompanion({
+    this.mealType = const Value.absent(),
+    this.enabled = const Value.absent(),
+    this.minuteOfDay = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ReminderSettingsCompanion.insert({
+    required MealType mealType,
+    required bool enabled,
+    required int minuteOfDay,
+    this.rowid = const Value.absent(),
+  }) : mealType = Value(mealType),
+       enabled = Value(enabled),
+       minuteOfDay = Value(minuteOfDay);
+  static Insertable<ReminderSettingRow> custom({
+    Expression<String>? mealType,
+    Expression<bool>? enabled,
+    Expression<int>? minuteOfDay,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (mealType != null) 'meal_type': mealType,
+      if (enabled != null) 'enabled': enabled,
+      if (minuteOfDay != null) 'minute_of_day': minuteOfDay,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ReminderSettingsCompanion copyWith({
+    Value<MealType>? mealType,
+    Value<bool>? enabled,
+    Value<int>? minuteOfDay,
+    Value<int>? rowid,
+  }) {
+    return ReminderSettingsCompanion(
+      mealType: mealType ?? this.mealType,
+      enabled: enabled ?? this.enabled,
+      minuteOfDay: minuteOfDay ?? this.minuteOfDay,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (mealType.present) {
+      map['meal_type'] = Variable<String>(
+        $ReminderSettingsTable.$convertermealType.toSql(mealType.value),
+      );
+    }
+    if (enabled.present) {
+      map['enabled'] = Variable<bool>(enabled.value);
+    }
+    if (minuteOfDay.present) {
+      map['minute_of_day'] = Variable<int>(minuteOfDay.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ReminderSettingsCompanion(')
+          ..write('mealType: $mealType, ')
+          ..write('enabled: $enabled, ')
+          ..write('minuteOfDay: $minuteOfDay, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -4965,6 +5250,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $FoodPortionsTable foodPortions = $FoodPortionsTable(this);
   late final $SyncStateTable syncState = $SyncStateTable(this);
   late final $MealPhotosTable mealPhotos = $MealPhotosTable(this);
+  late final $ReminderSettingsTable reminderSettings = $ReminderSettingsTable(
+    this,
+  );
   late final Index mealsLocalDate = Index(
     'meals_local_date',
     'CREATE INDEX meals_local_date ON meals (local_date)',
@@ -4987,6 +5275,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     foodPortions,
     syncState,
     mealPhotos,
+    reminderSettings,
     mealsLocalDate,
     mealItemsMealId,
   ];
@@ -8130,6 +8419,192 @@ typedef $$MealPhotosTableProcessedTableManager =
       MealPhotoRow,
       PrefetchHooks Function({bool mealId})
     >;
+typedef $$ReminderSettingsTableCreateCompanionBuilder =
+    ReminderSettingsCompanion Function({
+      required MealType mealType,
+      required bool enabled,
+      required int minuteOfDay,
+      Value<int> rowid,
+    });
+typedef $$ReminderSettingsTableUpdateCompanionBuilder =
+    ReminderSettingsCompanion Function({
+      Value<MealType> mealType,
+      Value<bool> enabled,
+      Value<int> minuteOfDay,
+      Value<int> rowid,
+    });
+
+class $$ReminderSettingsTableFilterComposer
+    extends Composer<_$AppDatabase, $ReminderSettingsTable> {
+  $$ReminderSettingsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnWithTypeConverterFilters<MealType, MealType, String> get mealType =>
+      $composableBuilder(
+        column: $table.mealType,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnFilters<bool> get enabled => $composableBuilder(
+    column: $table.enabled,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get minuteOfDay => $composableBuilder(
+    column: $table.minuteOfDay,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ReminderSettingsTableOrderingComposer
+    extends Composer<_$AppDatabase, $ReminderSettingsTable> {
+  $$ReminderSettingsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get mealType => $composableBuilder(
+    column: $table.mealType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get enabled => $composableBuilder(
+    column: $table.enabled,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get minuteOfDay => $composableBuilder(
+    column: $table.minuteOfDay,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ReminderSettingsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ReminderSettingsTable> {
+  $$ReminderSettingsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumnWithTypeConverter<MealType, String> get mealType =>
+      $composableBuilder(column: $table.mealType, builder: (column) => column);
+
+  GeneratedColumn<bool> get enabled =>
+      $composableBuilder(column: $table.enabled, builder: (column) => column);
+
+  GeneratedColumn<int> get minuteOfDay => $composableBuilder(
+    column: $table.minuteOfDay,
+    builder: (column) => column,
+  );
+}
+
+class $$ReminderSettingsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ReminderSettingsTable,
+          ReminderSettingRow,
+          $$ReminderSettingsTableFilterComposer,
+          $$ReminderSettingsTableOrderingComposer,
+          $$ReminderSettingsTableAnnotationComposer,
+          $$ReminderSettingsTableCreateCompanionBuilder,
+          $$ReminderSettingsTableUpdateCompanionBuilder,
+          (
+            ReminderSettingRow,
+            BaseReferences<
+              _$AppDatabase,
+              $ReminderSettingsTable,
+              ReminderSettingRow
+            >,
+          ),
+          ReminderSettingRow,
+          PrefetchHooks Function()
+        > {
+  $$ReminderSettingsTableTableManager(
+    _$AppDatabase db,
+    $ReminderSettingsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ReminderSettingsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ReminderSettingsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ReminderSettingsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<MealType> mealType = const Value.absent(),
+                Value<bool> enabled = const Value.absent(),
+                Value<int> minuteOfDay = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ReminderSettingsCompanion(
+                mealType: mealType,
+                enabled: enabled,
+                minuteOfDay: minuteOfDay,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required MealType mealType,
+                required bool enabled,
+                required int minuteOfDay,
+                Value<int> rowid = const Value.absent(),
+              }) => ReminderSettingsCompanion.insert(
+                mealType: mealType,
+                enabled: enabled,
+                minuteOfDay: minuteOfDay,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$ReminderSettingsTable, ReminderSettingRow>(
+                    table,
+                  ),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $ReminderSettingsTable,
+                    ReminderSettingRow
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ReminderSettingsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ReminderSettingsTable,
+      ReminderSettingRow,
+      $$ReminderSettingsTableFilterComposer,
+      $$ReminderSettingsTableOrderingComposer,
+      $$ReminderSettingsTableAnnotationComposer,
+      $$ReminderSettingsTableCreateCompanionBuilder,
+      $$ReminderSettingsTableUpdateCompanionBuilder,
+      (
+        ReminderSettingRow,
+        BaseReferences<
+          _$AppDatabase,
+          $ReminderSettingsTable,
+          ReminderSettingRow
+        >,
+      ),
+      ReminderSettingRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -8152,4 +8627,6 @@ class $AppDatabaseManager {
       $$SyncStateTableTableManager(_db, _db.syncState);
   $$MealPhotosTableTableManager get mealPhotos =>
       $$MealPhotosTableTableManager(_db, _db.mealPhotos);
+  $$ReminderSettingsTableTableManager get reminderSettings =>
+      $$ReminderSettingsTableTableManager(_db, _db.reminderSettings);
 }

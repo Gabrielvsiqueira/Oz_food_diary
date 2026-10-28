@@ -5,6 +5,7 @@ import '../../configs/constants/app_constants.dart';
 import '../../configs/constants/nutrition_constants.dart';
 import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
+import '../../configs/theme/app_colors.dart';
 import '../../controllers/profile_controller.dart';
 import '../../controllers/session_controller.dart';
 import '../../controllers/sync_controller.dart';
@@ -315,6 +316,8 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
             const SizedBox(height: AppConstants.spacingXl),
+            const _RemindersLink(),
+            const SizedBox(height: AppConstants.spacingMd),
             const _SyncStatus(),
             Center(
               child: TextButton(
@@ -334,6 +337,37 @@ class _ProfilePageState extends State<ProfilePage> {
           padding: const EdgeInsets.all(AppConstants.spacingLg),
           child: PrimaryButton(label: AppStrings.commonSave, onPressed: _save),
         ),
+      ),
+    );
+  }
+}
+
+/// Abre a configuração dos lembretes de refeição.
+class _RemindersLink extends StatelessWidget {
+  const _RemindersLink();
+
+  @override
+  Widget build(BuildContext context) {
+    final radius = BorderRadius.circular(AppConstants.radiusXxl);
+    return Material(
+      color: AppColors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: radius,
+        side: const BorderSide(color: AppColors.surfaceVariant),
+      ),
+      child: ListTile(
+        shape: RoundedRectangleBorder(borderRadius: radius),
+        leading: const Icon(
+          Icons.notifications_outlined,
+          color: AppColors.primary,
+        ),
+        title: Text(AppStrings.remindersTitle),
+        subtitle: Text(
+          AppStrings.remindersSubtitle,
+          style: const TextStyle(color: AppColors.onSurfaceSecondary),
+        ),
+        trailing: const Icon(Icons.chevron_right_rounded),
+        onTap: () => Navigator.of(context).pushNamed(AppRoutes.reminders),
       ),
     );
   }
