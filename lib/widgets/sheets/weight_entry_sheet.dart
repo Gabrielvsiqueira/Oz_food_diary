@@ -4,10 +4,9 @@ import '../../configs/constants/app_constants.dart';
 import '../../configs/strings/string_extensions.dart';
 import '../../configs/theme/app_colors.dart';
 import '../../services/date_utils.dart';
-import '../../services/validators.dart';
 import '../buttons/primary_button.dart';
 import '../inputs/app_text_field.dart';
-import '../inputs/unit_text_field.dart';
+import '../inputs/wheel_picker.dart';
 
 typedef WeightLog = ({DateTime date, double weightKg});
 
@@ -41,16 +40,12 @@ class _WeightEntrySheet extends StatefulWidget {
 }
 
 class _WeightEntrySheetState extends State<_WeightEntrySheet> {
-  final _formKey = GlobalKey<FormState>();
-  late final _weight = TextEditingController(
-    text: formatEditableNumber(widget.initialWeight),
-  );
+  late double _weight = widget.initialWeight;
   late final _dateText = TextEditingController(text: formatDayTitle(_date));
   DateTime _date = today();
 
   @override
   void dispose() {
-    _weight.dispose();
     _dateText.dispose();
     super.dispose();
   }
@@ -69,12 +64,8 @@ class _WeightEntrySheetState extends State<_WeightEntrySheet> {
     });
   }
 
-  void _confirm() {
-    if (!_formKey.currentState!.validate()) return;
-    Navigator.of(
-      context,
-    ).pop((date: _date, weightKg: Validators.parseDecimal(_weight.text)!));
-  }
+  void _confirm() =>
+      Navigator.of(context).pop((date: _date, weightKg: _weight));
 
   @override
   Widget build(BuildContext context) {
@@ -83,44 +74,36 @@ class _WeightEntrySheetState extends State<_WeightEntrySheet> {
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(AppConstants.spacingLg),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(AppStrings.weightLogTitle, style: textTheme.titleMedium),
-              const SizedBox(height: AppConstants.spacingXs),
-              Text(
-                AppStrings.weightLogHint,
-                style: textTheme.bodySmall?.copyWith(
-                  color: AppColors.onSurfaceSecondary,
-                ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(AppStrings.weightLogTitle, style: textTheme.titleMedium),
+            const SizedBox(height: AppConstants.spacingXs),
+            Text(
+              AppStrings.weightLogHint,
+              style: textTheme.bodySmall?.copyWith(
+                color: AppColors.onSurfaceSecondary,
               ),
-              const SizedBox(height: AppConstants.spacingLg),
-              AppTextField(
-                label: AppStrings.weightLogDate,
-                controller: _dateText,
-                readOnly: true,
-                onTap: _pickDate,
-                suffixIcon: const Icon(Icons.calendar_today_outlined, size: 20),
-              ),
-              const SizedBox(height: AppConstants.spacingLg),
-              UnitTextField(
-                label: AppStrings.weightLabel,
-                unit: AppStrings.unitKg,
-                controller: _weight,
-                textInputAction: TextInputAction.done,
-                onSubmitted: _confirm,
-                validator: fieldValidator(Validators.weight),
-              ),
-              const SizedBox(height: AppConstants.spacingXl),
-              PrimaryButton(
-                label: AppStrings.weightLogSave,
-                onPressed: _confirm,
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(height: AppConstants.spacingLg),
+            AppTextField(
+              label: AppStrings.weightLogDate,
+              controller: _dateText,
+              readOnly: true,
+              onTap: _pickDate,
+              suffixIcon: const Icon(Icons.calendar_today_outlined, size: 20),
+            ),
+            const SizedBox(height: AppConstants.spacingLg),
+            Text(AppStrings.weightLabel, style: textTheme.labelLarge),
+            const SizedBox(height: AppConstants.spacingSm),
+            WeightWheelPicker(
+              value: _weight,
+              onChanged: (weight) => setState(() => _weight = weight),
+            ),
+            const SizedBox(height: AppConstants.spacingXl),
+            PrimaryButton(label: AppStrings.weightLogSave, onPressed: _confirm),
+          ],
         ),
       ),
     );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../configs/constants/app_constants.dart';
@@ -11,6 +10,7 @@ import '../../controllers/session_controller.dart';
 import '../../controllers/sync_controller.dart';
 import '../../models/auth_failure.dart';
 import '../../models/enums/gender.dart';
+import '../../services/date_utils.dart';
 import '../../services/validators.dart';
 import '../../widgets/avatar/initials_avatar.dart';
 import '../../widgets/buttons/primary_button.dart';
@@ -19,7 +19,8 @@ import '../../widgets/cards/sync_status_card.dart';
 import '../../widgets/dialogs/confirm_dialog.dart';
 import '../../widgets/dialogs/progress_dialog.dart';
 import '../../widgets/inputs/app_text_field.dart';
-import '../../widgets/inputs/unit_text_field.dart';
+import '../../widgets/inputs/wheel_picker.dart';
+import '../../widgets/sheets/wheel_picker_sheet.dart';
 import '../login/sign_in_flow.dart';
 
 /// Aba "Perfil". Mudar peso ou altura pede confirmação e recalcula as metas.
@@ -33,10 +34,12 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _name;
-  late final TextEditingController _height;
-  late final TextEditingController _weight;
-  final _birthDateText = TextEditingController();
-  late DateTime _birthDate;
+  final _ageText = TextEditingController();
+  final _heightText = TextEditingController();
+  final _weightText = TextEditingController();
+  late int _age;
+  late int _height;
+  late double _weight;
   late Gender _gender;
   late final ProfileController _profileController;
   late double _shownWeight;
@@ -49,16 +52,25 @@ class _ProfilePageState extends State<ProfilePage> {
     final profile = _profileController.profile;
     _shownWeight = profile.weight;
     _name = TextEditingController(text: profile.name)..addListener(_refresh);
-    _height = TextEditingController(text: formatEditableNumber(profile.height));
-    _weight = TextEditingController(text: formatEditableNumber(profile.weight));
-    _birthDate = profile.birthDate;
+    _setAge(profile.age);
+    _setHeight(profile.height.round());
+    _setWeight(profile.weight);
     _gender = profile.gender;
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _birthDateText.text = _formatDate(_birthDate);
+  void _setAge(int age) {
+    _age = age;
+    _ageText.text = AppStrings.ageValue(age);
+  }
+
+  void _setHeight(int height) {
+    _height = height;
+    _heightText.text = '$height ${AppStrings.unitCm}';
+  }
+
+  void _setWeight(double weight) {
+    _weight = weight;
+    _weightText.text = '${formatEditableNumber(weight)} ${AppStrings.unitKg}';
   }
 
   /// Peso registrado na aba Evolução (ou baixado pela sincronização)
@@ -67,13 +79,13 @@ class _ProfilePageState extends State<ProfilePage> {
     final weight = _profileController.profile.weight;
     if (weight == _shownWeight) return;
     _shownWeight = weight;
-    _weight.text = formatEditableNumber(weight);
+    setState(() => _setWeight(weight));
   }
 
   @override
   void dispose() {
     _profileController.removeListener(_syncWeight);
-    for (final c in [_name, _height, _weight, _birthDateText]) {
+    for (final c in [_name, _ageText, _heightText, _weightText]) {
       c.dispose();
     }
     super.dispose();
@@ -81,40 +93,60 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _refresh() => setState(() {});
 
-  String _formatDate(DateTime date) => DateFormat.yMd(appLocale).format(date);
-
-  Future<void> _pickBirthDate() async {
-    final now = DateTime.now();
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: _birthDate,
-      firstDate: DateTime(
-        now.year - NutritionConstants.maxAge,
-        now.month,
-        now.day,
-      ),
-      lastDate: DateTime(
-        now.year - NutritionConstants.minAge,
-        now.month,
-        now.day,
+  Future<void> _pickAge() async {
+    final age = await showWheelPickerSheet(
+      context,
+      title: AppStrings.ageLabel,
+      initial: _age,
+      builder: (value, onChanged) => IntWheelPicker(
+        min: NutritionConstants.minAge,
+        max: NutritionConstants.maxAge,
+        value: value,
+        unit: AppStrings.unitYears,
+        onChanged: onChanged,
       ),
     );
-    if (picked == null) return;
-    setState(() {
-      _birthDate = picked;
-      _birthDateText.text = _formatDate(picked);
-    });
+    if (age != null && mounted) setState(() => _setAge(age));
+  }
+
+  Future<void> _pickHeight() async {
+    final height = await showWheelPickerSheet(
+      context,
+      title: AppStrings.heightLabel,
+      initial: _height,
+      builder: (value, onChanged) => IntWheelPicker(
+        min: NutritionConstants.minHeightCm.toInt(),
+        max: NutritionConstants.maxHeightCm.toInt(),
+        value: value,
+        unit: AppStrings.unitCm,
+        onChanged: onChanged,
+      ),
+    );
+    if (height != null && mounted) setState(() => _setHeight(height));
+  }
+
+  Future<void> _pickWeight() async {
+    final weight = await showWheelPickerSheet(
+      context,
+      title: AppStrings.weightLabel,
+      initial: _weight,
+      builder: (value, onChanged) =>
+          WeightWheelPicker(value: value, onChanged: onChanged),
+    );
+    if (weight != null && mounted) setState(() => _setWeight(weight));
   }
 
   Future<void> _save() async {
     FocusScope.of(context).unfocus();
     if (!_formKey.currentState!.validate()) return;
     final controller = context.read<ProfileController>();
-    final updated = controller.profile.copyWith(
+    final current = controller.profile;
+    final updated = current.copyWith(
       name: _name.text.trim(),
-      birthDate: _birthDate,
-      heightCm: Validators.parseDecimal(_height.text),
-      weightKg: Validators.parseDecimal(_weight.text),
+      // Só estima uma data nova se a idade mudou; senão, mantém a salva.
+      birthDate: _age == current.age ? null : birthDateForAge(_age),
+      heightCm: _height.toDouble(),
+      weightKg: _weight,
       gender: _gender,
     );
 
@@ -244,28 +276,22 @@ class _ProfilePageState extends State<ProfilePage> {
               validator: fieldValidator(Validators.required),
             ),
             const SizedBox(height: AppConstants.spacingLg),
-            AppTextField(
-              label: AppStrings.birthDateLabel,
-              controller: _birthDateText,
-              readOnly: true,
-              onTap: _pickBirthDate,
-              suffixIcon: const Icon(Icons.calendar_today_outlined, size: 20),
+            _WheelField(
+              label: AppStrings.ageLabel,
+              controller: _ageText,
+              onTap: _pickAge,
             ),
             const SizedBox(height: AppConstants.spacingLg),
-            UnitTextField(
+            _WheelField(
               label: AppStrings.heightLabel,
-              unit: AppStrings.unitCm,
-              controller: _height,
-              allowDecimal: false,
-              validator: fieldValidator(Validators.height),
+              controller: _heightText,
+              onTap: _pickHeight,
             ),
             const SizedBox(height: AppConstants.spacingLg),
-            UnitTextField(
+            _WheelField(
               label: AppStrings.weightLabel,
-              unit: AppStrings.unitKg,
-              controller: _weight,
-              textInputAction: TextInputAction.done,
-              validator: fieldValidator(Validators.weight),
+              controller: _weightText,
+              onTap: _pickWeight,
             ),
             const SizedBox(height: AppConstants.spacingLg),
             Text(AppStrings.sexLabel, style: textTheme.labelLarge),
@@ -327,6 +353,30 @@ class _SyncStatus extends StatelessWidget {
         lastSyncedAt: sync.lastSyncedAt,
         onTap: sync.syncNow,
       ),
+    );
+  }
+}
+
+/// Campo só de leitura que abre a roleta ao tocar.
+class _WheelField extends StatelessWidget {
+  const _WheelField({
+    required this.label,
+    required this.controller,
+    required this.onTap,
+  });
+
+  final String label;
+  final TextEditingController controller;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppTextField(
+      label: label,
+      controller: controller,
+      readOnly: true,
+      onTap: onTap,
+      suffixIcon: const Icon(Icons.unfold_more_rounded, size: 20),
     );
   }
 }

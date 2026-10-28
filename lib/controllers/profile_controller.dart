@@ -42,8 +42,11 @@ class ProfileController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Peso, altura e idade entram na fórmula das metas.
   bool requiresRecalculation(UserProfile updated) =>
-      updated.weight != _profile.weight || updated.height != _profile.height;
+      updated.weight != _profile.weight ||
+      updated.height != _profile.height ||
+      updated.age != _profile.age;
 
   Future<void> updateProfile(
     UserProfile updated, {

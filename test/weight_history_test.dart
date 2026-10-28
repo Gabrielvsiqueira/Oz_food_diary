@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -354,7 +355,12 @@ void main() {
 
       await tester.tap(find.text(AppStrings.weightLogButton));
       await tester.pumpAndSettle();
-      await tester.enterText(find.byType(TextFormField).last, '70,4');
+      // 95 kg → 95,4 kg na roleta da casa decimal.
+      await tester.drag(
+        find.byType(CupertinoPicker).last,
+        const Offset(0, -48.0 * 4),
+      );
+      await tester.pumpAndSettle();
       await tester.tap(find.text(AppStrings.weightLogSave));
       await tester.pumpAndSettle();
       expect(find.text(AppStrings.profileRecalculateTitle), findsOneWidget);
@@ -362,7 +368,7 @@ void main() {
       await tester.tap(find.text(AppStrings.commonYes));
       await tester.pumpAndSettle();
 
-      expect(profile.profile.weight, 70.4);
+      expect(profile.profile.weight, 95.4);
       expect(repository.goalsSaved, 1);
       expect(find.byType(LineChart), findsOneWidget);
       expect(find.text(AppStrings.profileGoalsRecalculated), findsOneWidget);

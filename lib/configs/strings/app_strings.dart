@@ -13,15 +13,10 @@ abstract final class AppStrings {
   static const errorInvalidNumber = 'Informe um número válido';
   static const errorMustBePositive = 'Informe um valor maior que zero';
   static const errorMustBeNonNegative = 'O valor não pode ser negativo';
-  static String errorOutOfRange(String min, String max) =>
-      'Informe um valor entre $min e $max';
   static const errorInvalidEmail = 'Informe um e-mail válido';
   static const errorPasswordTooShort =
       'A senha deve ter no mínimo 8 caracteres';
   static const errorPasswordMismatch = 'As senhas não conferem';
-  static const errorInvalidDate = 'Informe uma data válida';
-  static String errorAgeOutOfRange(int min, int max) =>
-      'A idade deve estar entre $min e $max anos';
   static const errorEmptyMeal = 'Adicione ao menos um alimento';
   static const errorInvalidBarcode =
       'Digite os números do código de barras (8 a 14 dígitos)';
@@ -75,10 +70,9 @@ abstract final class AppStrings {
   static const onboardingGenderTitle = 'Qual é seu gênero';
   static const onboardingGenderSubtitle =
       'Seu gênero influencia no tipo da dieta';
-  static const onboardingBirthdateTitle = 'Que dia você nasceu?';
-  static const onboardingBirthdateSubtitle =
+  static const onboardingAgeTitle = 'Quantos anos você tem?';
+  static const onboardingAgeSubtitle =
       'Cada faixa etária responde de forma única';
-  static const onboardingBirthdateHint = 'DD/MM/AAAA';
   static const onboardingHeightTitle = 'Qual é sua altura?';
   static const onboardingWeightTitle = 'Qual é seu peso?';
   static const onboardingEstimateSubtitle = 'Você pode inserir uma estimativa';
@@ -106,7 +100,9 @@ abstract final class AppStrings {
 
   static const confirmPasswordLabel = 'Confirmar Senha';
 
-  static const birthDateLabel = 'Data de Nascimento';
+  static const ageLabel = 'Idade';
+  static String ageValue(int years) => '$years anos';
+  static const unitYears = 'anos';
 
   static const heightLabel = 'Altura';
 
@@ -249,7 +245,7 @@ abstract final class AppStrings {
   static const profileSaved = 'Perfil atualizado';
   static const profileRecalculateTitle = 'Tem certeza?';
   static const profileRecalculateMessage =
-      'Você alterou seu peso ou sua altura. Suas metas de calorias e macros serão recalculadas.';
+      'Você alterou seu peso, sua altura ou sua idade. Suas metas de calorias e macros serão recalculadas.';
   static const profileGoalsRecalculated =
       'Perfil atualizado e metas recalculadas';
   static const profileLogout = 'Sair';

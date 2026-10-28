@@ -9,7 +9,7 @@ import '../../pages/main_shell/main_shell_page.dart';
 import '../../pages/meal/meal_form_page.dart';
 import '../../pages/onboarding/onboarding_account_page.dart';
 import '../../pages/onboarding/onboarding_activity_page.dart';
-import '../../pages/onboarding/onboarding_birthdate_page.dart';
+import '../../pages/onboarding/onboarding_age_page.dart';
 import '../../pages/onboarding/onboarding_gender_page.dart';
 import '../../pages/onboarding/onboarding_goal_page.dart';
 import '../../pages/onboarding/onboarding_height_page.dart';
@@ -31,7 +31,7 @@ class RouteGenerator {
       AppRoutes.login => const LoginPage(),
       AppRoutes.onboardingGoal => const OnboardingGoalPage(),
       AppRoutes.onboardingGender => const OnboardingGenderPage(),
-      AppRoutes.onboardingBirthdate => const OnboardingBirthdatePage(),
+      AppRoutes.onboardingAge => const OnboardingAgePage(),
       AppRoutes.onboardingHeight => const OnboardingHeightPage(),
       AppRoutes.onboardingWeight => const OnboardingWeightPage(),
       AppRoutes.onboardingActivity => const OnboardingActivityPage(),

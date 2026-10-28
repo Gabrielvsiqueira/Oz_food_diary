@@ -40,18 +40,9 @@ extension ValidationErrorLabels on ValidationError {
     InvalidNumberError() => AppStrings.errorInvalidNumber,
     MustBePositiveError() => AppStrings.errorMustBePositive,
     MustBeNonNegativeError() => AppStrings.errorMustBeNonNegative,
-    OutOfRangeError(:final min, :final max) => AppStrings.errorOutOfRange(
-      min.toString(),
-      max.toString(),
-    ),
     InvalidEmailError() => AppStrings.errorInvalidEmail,
     PasswordTooShortError() => AppStrings.errorPasswordTooShort,
     PasswordMismatchError() => AppStrings.errorPasswordMismatch,
-    InvalidDateError() => AppStrings.errorInvalidDate,
-    AgeOutOfRangeError(:final min, :final max) => AppStrings.errorAgeOutOfRange(
-      min,
-      max,
-    ),
     EmptyMealError() => AppStrings.errorEmptyMeal,
     FoodQuantityTooLargeError(:final maxGrams) =>
       AppStrings.errorFoodQuantityTooLarge(maxGrams),
