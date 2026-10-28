@@ -13,7 +13,7 @@ registrar, editar e excluir refeições, acompanhando o progresso do dia.
 >
 > **Entrega 3 (em andamento).** Leitura de código de barras pela câmera, com
 > os dados do produto buscados na API HTTP da Open Food Facts, e foto da
-> refeição pela câmera ou galeria.
+> refeição pela câmera ou galeria, e gráfico de evolução do peso.
 
 ---
 
@@ -56,6 +56,9 @@ registrar, editar e excluir refeições, acompanhando o progresso do dia.
 - **Metas**: edição manual da meta de calorias e de macros.
 - **Perfil**: edição de nome, altura e peso, com recálculo das metas quando
   peso ou altura mudam, estado da sincronização, logout e exclusão de conta.
+- **Evolução do peso**: aba própria com resumo (atual, início e variação),
+  gráfico de linha, filtros de 30 dias, 90 dias ou tudo, lista das medições e
+  botão para registrar o peso de hoje ou de um dia esquecido.
 - **Sincronização offline-first**: tudo é gravado primeiro no aparelho e
   enviado ao servidor alguns segundos depois, quando a internet volta ou ao
   puxar a Home para baixo. Ao sair, o app tenta enviar o que falta e avisa se
@@ -161,7 +164,7 @@ lib/
 │   ├── strings/              # Textos (AppStrings), rótulos e formatação de números
 │   ├── routes/               # Nomes de rotas e RouteGenerator
 │   └── theme/                # Cores, tipografia e ThemeData
-├── controllers/              # Session, Sync, Onboarding, Profile, DailyLog, Meal, FoodSearch
+├── controllers/              # Session, Sync, Onboarding, Profile, DailyLog, Meal, FoodSearch, WeightHistory
 ├── database/                 # Banco local (drift): tabelas, IDs e catálogo inicial
 ├── mocks/                    # Conta de demonstração e dados de teste
 ├── models/                   # Entidades e enums
@@ -176,6 +179,7 @@ lib/
 | Controller             | Responsabilidade                                                                                                         |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `SessionController`    | Estado de autenticação (login/logout)                                                                                    |
+| `WeightHistoryController` | Histórico de peso da aba Evolução, filtrado por período; criado pela página                             |
 | `SyncController`       | Quando sincronizar (login, gravações, volta da internet), estado mostrado no Perfil e parada no logout                   |
 | `OnboardingController` | Guarda as respostas do onboarding e monta o `UserProfile`                                                                |
 | `ProfileController`    | Perfil do usuário e metas; recalcula metas quando peso/altura mudam                                                      |
@@ -193,7 +197,7 @@ Os controllers dependem só de interfaces, injetadas via `Provider` em
 | `FoodRepository`    | `DriftFoodRepository`   | Busca no catálogo local, sem acentos e maiúsculas; produtos lidos pelo código de barras |
 | `ProductRepository` | `OpenFoodFactsRepository` | Produto pelo código de barras na API HTTP da Open Food Facts         |
 | `MealRepository`    | `DriftMealRepository`   | Refeições do dia como stream: toda gravação atualiza a Home sozinha    |
-| `ProfileRepository` | `DriftProfileRepository`| Perfil, histórico de peso e histórico de metas                         |
+| `ProfileRepository` | `DriftProfileRepository`| Perfil, histórico de peso (como stream, para o gráfico) e histórico de metas |
 | `SessionRepository` | `SupabaseSessionRepository` (ou `LocalSessionRepository` sem backend) | Login, cadastro, Google, logout e exclusão de conta; o logout apaga os dados do aparelho |
 | `SyncRemote`        | `SupabaseSyncRemote`    | Envio pela função `push_changes` e download do que mudou no servidor   |
 
@@ -227,6 +231,7 @@ flowchart TD
     subgraph Main[Shell com Bottom Navigation]
         Home
         Metas
+        Evolução
         Perfil
     end
     Home -->|Nova / editar refeição| MealForm[Formulário de refeição]
@@ -246,7 +251,7 @@ flowchart TD
 | `/login`                                    | Login                                                                              |
 | `/onboarding/goal` … `/onboarding/account`  | 7 etapas do onboarding                                                             |
 | `/onboarding/loading`, `/onboarding/result` | Cálculo e resultado da meta                                                        |
-| `/main`                                     | Shell com abas Home, Metas e Perfil (`IndexedStack` preserva o estado de cada aba) |
+| `/main`                                     | Shell com abas Home, Metas, Evolução e Perfil (`IndexedStack` preserva o estado de cada aba) |
 | `/meal/form`                                | Cadastro de refeição; recebe um `Meal` opcional como argumento para edição         |
 | `/meal/food-search`                         | Busca de alimentos; fecha retornando o `MealItem` escolhido                        |
 | `/meal/barcode-scanner`                     | Leitor de código de barras (câmera ou digitado); fecha retornando o código         |
@@ -295,7 +300,11 @@ mantendo as regras de validação separadas dos textos da interface.
 - **Botões de avançar** ficam desabilitados enquanto a etapa atual não é
   válida (ex.: nenhuma opção selecionada, altura fora do intervalo).
 - **Textos** passam por `trim()` antes de serem salvos.
-- **Seletor de dia** nunca permite escolher uma data futura.
+- **Seletor de dia** nunca permite escolher uma data futura. Uma refeição nova
+  é registrada no dia aberto na Home (com o horário atual), e o formulário
+  mostra esse dia, para registrar algo esquecido em dias anteriores.
+- **Peso** pode ser registrado em qualquer dia até hoje; um dia anterior à
+  última medição entra só no histórico e não muda o peso atual nem as metas.
 - **Troca de medida** (ex.: de "unidade" para "gramas") converte a quantidade
   para manter o mesmo peso.
 - **Busca de alimentos** ignora acentos e maiúsculas, espera o usuário parar

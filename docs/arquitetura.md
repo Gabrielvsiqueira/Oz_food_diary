@@ -545,8 +545,26 @@ flowchart TD
 - **Peso:** `weight_entries`, uma medição por dia. O perfil mostra o mais
   recente. Ao registrar um peso novo, as metas são recalculadas (com
   confirmação, como hoje no Perfil).
-- **Gráfico:** linha do peso ao longo do tempo com `fl_chart`, com filtros de
-  período (30 dias, 90 dias, tudo).
+- **Aba Evolução** (entre Metas e Perfil): resumo com peso atual, início do
+  período e variação; filtros de período (30 dias, 90 dias, tudo); gráfico;
+  lista das medições com a diferença para a anterior; e o botão "Registrar
+  peso", que abre um campo com o peso atual.
+- **Gráfico:** linha do peso ao longo do tempo com `fl_chart`. O eixo X é em dias desde a primeira
+  medição, para que semanas sem medição apareçam com o espaço certo; o toque
+  mostra peso e data.
+- **Atualização:** `ProfileRepository.watchWeightHistory()` é um stream do
+  drift, então um peso salvo no Perfil ou baixado pela sincronização aparece
+  no gráfico na hora (`WeightHistoryController`).
+- **Poucos dados:** com uma medição só (ou nenhuma no período), a aba mostra
+  um aviso em vez de um gráfico vazio.
+- **Registrar:** pela aba Evolução, escolhendo o dia (hoje por padrão, ou um
+  dia esquecido, até a data de nascimento), ou alterando o peso no Perfil
+  (sempre hoje). A medição daquele dia é criada ou substituída. O peso atual
+  é sempre o da medição mais recente: só quando o dia registrado não é
+  anterior à última medição e o peso muda é que as metas são recalculadas,
+  com confirmação; um dia antigo entra só no histórico. O Perfil acompanha o `ProfileController`, então um peso
+  registrado na Evolução (ou baixado pela sincronização) já aparece no campo
+  e salvar o Perfil não volta ao peso antigo.
 - **Metas:** `nutrition_goals` guarda o histórico (`effective_from`). Toda
   alteração — manual na aba Metas ou recálculo pelo peso — cria ou atualiza a
   linha do dia. Permite, no futuro, um gráfico de meta × consumido.
@@ -663,6 +681,7 @@ duas funcionalidades seguras:
 | 5 | Lembretes de refeição                                                 | 3       |
 | 6 | Leitura de código de barras + API da Open Food Facts ✅                | 3       |
 | 7 | Foto da refeição (câmera e galeria) ✅                                 | 3       |
+| 8 | Gráfico de evolução do peso ✅ (sem o histórico de metas na tela)     | 3       |
 
 ---
 
