@@ -33,9 +33,10 @@ registrar, editar e excluir refeições, acompanhando o progresso do dia.
 
 - **Splash e boas-vindas** com opção de criar conta ou entrar.
 - **Login** com validação de e-mail e senha.
-- **Onboarding em 7 etapas**: objetivo, sexo, data de nascimento, altura,
-  peso, nível de atividade e criação de conta, seguido de tela de
-  carregamento e resultado com a meta calculada.
+- **Onboarding em 7 etapas**: objetivo, sexo, idade, altura, peso, nível de
+  atividade e criação de conta, seguido de tela de carregamento e resultado
+  com a meta calculada. Idade, altura e peso são escolhidos em roletas
+  (*wheel pickers*), sem teclado.
 - **Cálculo de metas** pela fórmula de Mifflin-St Jeor × fator de atividade,
   com ajuste pelo objetivo (−500 kcal para perder, +300 kcal para ganhar) e
   distribuição de macros (2,2 g de proteína/kg, 25% das calorias em gordura,
@@ -223,7 +224,7 @@ flowchart TD
     Splash --> Welcome
     Welcome -->|Entrar| Login
     Welcome -->|Começar| Goal[Objetivo]
-    Goal --> Gender[Sexo] --> Birth[Nascimento] --> Height[Altura]
+    Goal --> Gender[Sexo] --> Age[Idade] --> Height[Altura]
     Height --> Weight[Peso] --> Activity[Atividade] --> Account[Criar conta]
     Account --> Loading[Carregando] --> Result[Resultado]
     Login --> Main
@@ -278,9 +279,6 @@ mantendo as regras de validação separadas dos textos da interface.
 | E-mail                 | Formato `usuario@dominio.ext`                                               | E-mail inválido                         |
 | Senha                  | Mínimo de 8 caracteres                                                      | Senha muito curta                       |
 | Confirmação de senha   | Igual à senha                                                               | As senhas não coincidem                 |
-| Data de nascimento     | Formato `DD/MM/AAAA`, data existente, não futura, idade entre 13 e 100 anos | Data inválida / Idade fora do intervalo |
-| Altura                 | Número entre 100 e 250 cm                                                   | Fora do intervalo (mín–máx)             |
-| Peso                   | Número entre 30 e 300 kg                                                    | Fora do intervalo (mín–máx)             |
 | Calorias (meta)        | Número maior que zero                                                       | Deve ser positivo                       |
 | Macros (meta)          | Número maior ou igual a zero                                                | Não pode ser negativo                   |
 | Quantidade do alimento | Número maior que zero e até 5 kg por alimento, em qualquer medida           | Máximo de 5000 g por alimento           |
@@ -292,8 +290,16 @@ mantendo as regras de validação separadas dos textos da interface.
 
 - **Números decimais** aceitam vírgula ou ponto (`Validators.parseDecimal`),
   e texto inválido vira `null` em vez de lançar exceção.
-- **Datas** são digitadas com máscara (`DateTextInputFormatter`) e datas
-  inexistentes (ex.: 31/02) são rejeitadas.
+- **Idade, altura e peso** são escolhidos em roletas (`IntWheelPicker` e
+  `WeightWheelPicker`, sobre o `CupertinoPicker`) que só oferecem valores
+  válidos: idade de 13 a 100 anos, altura de 100 a 250 cm e peso de 30 a
+  300 kg, com uma casa decimal. Por isso esses campos não têm mensagem de
+  erro. No Perfil, tocar no campo abre a roleta numa folha inferior.
+- **Idade** vira uma data de nascimento estimada (o mesmo dia de hoje, N anos
+  atrás; 29/02 vira 28/02), guardada em `birth_date`. A idade sobe sozinha a
+  cada ano, e a diferença para o aniversário real (menos de um ano) muda a
+  meta em cerca de 5 kcal. Mudar a idade no Perfil, como peso e altura, pede
+  confirmação e recalcula as metas.
 - **Campos nulos no onboarding**: o `OnboardingController` usa campos
   anuláveis e só monta o perfil quando `isComplete` é verdadeiro; caso
   contrário lança `StateError`, evitando perfis parciais.

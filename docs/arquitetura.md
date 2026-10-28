@@ -124,7 +124,7 @@ profiles (
   name            text NOT NULL,
   goal            text NOT NULL CHECK (goal IN ('lose','maintain','gain')),
   gender          text NOT NULL CHECK (gender IN ('male','female')),
-  birth_date      date NOT NULL,
+  birth_date      date NOT NULL,  -- estimada a partir da idade informada
   activity_level  text NOT NULL CHECK (activity_level IN
                     ('sedentary','light','moderate','heavy','athlete')),
   height_cm       numeric NOT NULL CHECK (height_cm BETWEEN 100 AND 250),
@@ -558,7 +558,7 @@ flowchart TD
 - **Poucos dados:** com uma medição só (ou nenhuma no período), a aba mostra
   um aviso em vez de um gráfico vazio.
 - **Registrar:** pela aba Evolução, escolhendo o dia (hoje por padrão, ou um
-  dia esquecido, até a data de nascimento), ou alterando o peso no Perfil
+  dia esquecido, até a data de nascimento estimada), ou alterando o peso no Perfil
   (sempre hoje). A medição daquele dia é criada ou substituída. O peso atual
   é sempre o da medição mais recente: só quando o dia registrado não é
   anterior à última medição e o peso muda é que as metas são recalculadas,
