@@ -8,13 +8,16 @@ import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
 import '../../controllers/profile_controller.dart';
 import '../../controllers/session_controller.dart';
+import '../../controllers/sync_controller.dart';
 import '../../models/auth_failure.dart';
 import '../../models/enums/gender.dart';
 import '../../services/validators.dart';
 import '../../widgets/avatar/initials_avatar.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/cards/gender_option_card.dart';
+import '../../widgets/cards/sync_status_card.dart';
 import '../../widgets/dialogs/confirm_dialog.dart';
+import '../../widgets/dialogs/progress_dialog.dart';
 import '../../widgets/inputs/app_text_field.dart';
 import '../../widgets/inputs/unit_text_field.dart';
 import '../login/sign_in_flow.dart';
@@ -41,12 +44,8 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     final profile = context.read<ProfileController>().profile;
     _name = TextEditingController(text: profile.name)..addListener(_refresh);
-    _height = TextEditingController(
-      text: formatEditableNumber(profile.height),
-    );
-    _weight = TextEditingController(
-      text: formatEditableNumber(profile.weight),
-    );
+    _height = TextEditingController(text: formatEditableNumber(profile.height));
+    _weight = TextEditingController(text: formatEditableNumber(profile.weight));
     _birthDate = profile.birthDate;
     _gender = profile.gender;
   }
@@ -67,8 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _refresh() => setState(() {});
 
-  String _formatDate(DateTime date) =>
-      DateFormat.yMd(appLocale).format(date);
+  String _formatDate(DateTime date) => DateFormat.yMd(appLocale).format(date);
 
   Future<void> _pickBirthDate() async {
     final now = DateTime.now();
@@ -121,26 +119,55 @@ class _ProfilePageState extends State<ProfilePage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          recalculate ? AppStrings.profileGoalsRecalculated : AppStrings.profileSaved,
+          recalculate
+              ? AppStrings.profileGoalsRecalculated
+              : AppStrings.profileSaved,
         ),
         duration: AppConstants.snackBarDuration,
       ),
     );
   }
 
+  /// Sair apaga os dados do aparelho: antes, tenta enviar o que falta e,
+  /// se algo não subir, avisa que será perdido.
   Future<void> _logout() async {
+    final sync = context.read<SyncController>();
     final confirmed = await showConfirmDialog(
       context,
       title: AppStrings.profileLogoutTitle,
-      message: AppStrings.profileLogoutMessage,
+      message: sync.isEnabled
+          ? AppStrings.profileLogoutSyncedMessage
+          : AppStrings.profileLogoutMessage,
       confirmLabel: AppStrings.profileLogout,
       destructive: true,
     );
     if (!confirmed || !mounted) return;
+
+    if (sync.isEnabled) {
+      final pending = await showProgressDialog(
+        context,
+        task: sync.flushBeforeLogout(),
+        message: AppStrings.profileLogoutSending,
+      );
+      if (!mounted) return;
+      if (pending > 0) {
+        final leave = await showConfirmDialog(
+          context,
+          title: AppStrings.profileLogoutPendingTitle,
+          message: AppStrings.profileLogoutPendingMessage(pending),
+          confirmLabel: AppStrings.profileLogoutAnyway,
+          destructive: true,
+        );
+        if (!leave || !mounted) return;
+      }
+    }
+
+    sync.stop();
     await context.read<SessionController>().logout();
     if (!mounted) return;
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil(AppRoutes.welcome, (_) => false);
+    Navigator.of(
+      context,
+    ).pushNamedAndRemoveUntil(AppRoutes.welcome, (_) => false);
   }
 
   Future<void> _deleteAccount() async {
@@ -153,15 +180,18 @@ class _ProfilePageState extends State<ProfilePage> {
     );
     if (!confirmed || !mounted) return;
     final messenger = ScaffoldMessenger.of(context);
+    final sync = context.read<SyncController>()..stop();
     try {
       await context.read<SessionController>().deleteAccount();
     } on AuthFailure catch (failure) {
+      sync.resume();
       if (mounted) showAuthFailure(context, failure);
       return;
     }
     if (!mounted) return;
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil(AppRoutes.welcome, (_) => false);
+    Navigator.of(
+      context,
+    ).pushNamedAndRemoveUntil(AppRoutes.welcome, (_) => false);
     messenger.showSnackBar(
       SnackBar(
         content: Text(AppStrings.profileAccountDeleted),
@@ -242,6 +272,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
             const SizedBox(height: AppConstants.spacingXl),
+            const _SyncStatus(),
             Center(
               child: TextButton(
                 onPressed: _deleteAccount,
@@ -260,6 +291,26 @@ class _ProfilePageState extends State<ProfilePage> {
           padding: const EdgeInsets.all(AppConstants.spacingLg),
           child: PrimaryButton(label: AppStrings.commonSave, onPressed: _save),
         ),
+      ),
+    );
+  }
+}
+
+/// Só aparece com a sincronização ligada (Supabase configurado).
+class _SyncStatus extends StatelessWidget {
+  const _SyncStatus();
+
+  @override
+  Widget build(BuildContext context) {
+    final sync = context.watch<SyncController>();
+    if (!sync.isEnabled) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppConstants.spacingXl),
+      child: SyncStatusCard(
+        status: sync.status,
+        pendingCount: sync.pendingCount,
+        lastSyncedAt: sync.lastSyncedAt,
+        onTap: sync.syncNow,
       ),
     );
   }

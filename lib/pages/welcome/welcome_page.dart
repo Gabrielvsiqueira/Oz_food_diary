@@ -42,9 +42,9 @@ class WelcomePage extends StatelessWidget {
                   const SizedBox(height: AppConstants.spacingXl),
                   PrimaryButton(
                     label: AppStrings.welcomeCreateAccount,
-                    onPressed: () =>
-                        Navigator.of(context)
-                            .pushNamed(AppRoutes.onboardingGoal),
+                    onPressed: () => Navigator.of(
+                      context,
+                    ).pushNamed(AppRoutes.onboardingGoal),
                   ),
                   const SizedBox(height: AppConstants.spacingMd),
                   const _GoogleButton(),

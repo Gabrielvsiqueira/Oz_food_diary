@@ -52,12 +52,16 @@ class OnboardingResultPage extends StatelessWidget {
                   Text.rich(
                     TextSpan(
                       children: [
-                        TextSpan(text: '${AppStrings.onboardingResultTitlePrefix} '),
+                        TextSpan(
+                          text: '${AppStrings.onboardingResultTitlePrefix} ',
+                        ),
                         TextSpan(
                           text: goalType.title,
                           style: const TextStyle(color: AppColors.primary),
                         ),
-                        TextSpan(text: ' ${AppStrings.onboardingResultTitleSuffix}'),
+                        TextSpan(
+                          text: ' ${AppStrings.onboardingResultTitleSuffix}',
+                        ),
                       ],
                     ),
                     style: textTheme.displaySmall,

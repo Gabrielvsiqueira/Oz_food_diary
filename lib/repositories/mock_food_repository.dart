@@ -15,9 +15,9 @@ class MockFoodRepository implements FoodRepository {
   @override
   Future<List<Food>> search(String query) async {
     await Future<void>.delayed(latency);
-    final terms = normalizeForSearch(query)
-        .split(' ')
-        .where((t) => t.isNotEmpty);
+    final terms = normalizeForSearch(
+      query,
+    ).split(' ').where((t) => t.isNotEmpty);
     return foods.where((food) {
       final name = normalizeForSearch(food.name);
       return terms.every(name.contains);

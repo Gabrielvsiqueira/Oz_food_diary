@@ -10,6 +10,7 @@ import '../../configs/theme/app_colors.dart';
 import '../../configs/theme/app_typography.dart';
 import '../../controllers/daily_log_controller.dart';
 import '../../controllers/profile_controller.dart';
+import '../../controllers/sync_controller.dart';
 import '../../models/daily_log.dart';
 import '../../models/meal.dart';
 import '../../models/nutrition_goal.dart';
@@ -34,10 +35,25 @@ class HomePage extends StatelessWidget {
     if (picked != null) dailyLog.selectDate(picked);
   }
 
+  /// Puxar a lista para baixo sincroniza na hora.
+  Future<void> _refresh(BuildContext context) async {
+    final sync = context.read<SyncController>();
+    final messenger = ScaffoldMessenger.of(context);
+    if (await sync.syncNow()) return;
+    final message = sync.status.errorMessage;
+    if (message == null) return;
+    messenger.showSnackBar(
+      SnackBar(content: Text(message), duration: AppConstants.snackBarDuration),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final profile = context.watch<ProfileController>();
     final dailyLog = context.watch<DailyLogController>();
+    final syncEnabled = context.select<SyncController, bool>(
+      (sync) => sync.isEnabled,
+    );
     final log = dailyLog.selectedLog;
 
     // Ícones da status bar escuros sobre o cabeçalho lime.
@@ -67,48 +83,53 @@ class HomePage extends StatelessWidget {
                 ),
                 child: ColoredBox(
                   color: AppColors.background,
-                  child: ListView(
-                    padding: const EdgeInsets.only(bottom: 96),
-                    children: [
-                      const SizedBox(height: AppConstants.spacingMd),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppConstants.spacingSm,
-                        ),
-                        child: DaySelector(
-                          label: _dayTitle(dailyLog.selectedDate),
-                          onPrevious: dailyLog.goToPreviousDay,
-                          onNext: dailyLog.canGoToNextDay
-                              ? dailyLog.goToNextDay
-                              : null,
-                          onLabelTap: () => _pickDate(context),
-                          previousTooltip: AppStrings.homePreviousDay,
-                          nextTooltip: AppStrings.homeNextDay,
-                        ),
-                      ),
-                      const SizedBox(height: AppConstants.spacingMd),
-                      _DaySummary(log: log, goal: profile.goal),
-                      const SizedBox(height: AppConstants.spacingXl),
-                      const Divider(),
-                      const SizedBox(height: AppConstants.spacingXl),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppConstants.spacingLg,
-                        ),
-                        child: Text(
-                          AppStrings.homeMealsSection,
-                          style: AppTypography.caption.copyWith(
-                            color: AppColors.onSurface,
+                  child: RefreshIndicator(
+                    onRefresh: () => _refresh(context),
+                    notificationPredicate: (_) => syncEnabled,
+                    child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: const EdgeInsets.only(bottom: 96),
+                      children: [
+                        const SizedBox(height: AppConstants.spacingMd),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppConstants.spacingSm,
+                          ),
+                          child: DaySelector(
+                            label: _dayTitle(dailyLog.selectedDate),
+                            onPrevious: dailyLog.goToPreviousDay,
+                            onNext: dailyLog.canGoToNextDay
+                                ? dailyLog.goToNextDay
+                                : null,
+                            onLabelTap: () => _pickDate(context),
+                            previousTooltip: AppStrings.homePreviousDay,
+                            nextTooltip: AppStrings.homeNextDay,
                           ),
                         ),
-                      ),
-                      const SizedBox(height: AppConstants.spacingMd),
-                      if (log.meals.isEmpty)
-                        _EmptyMeals(isToday: dailyLog.isTodaySelected)
-                      else
-                        for (final meal in log.meals.reversed)
-                          _MealEntry(meal: meal),
-                    ],
+                        const SizedBox(height: AppConstants.spacingMd),
+                        _DaySummary(log: log, goal: profile.goal),
+                        const SizedBox(height: AppConstants.spacingXl),
+                        const Divider(),
+                        const SizedBox(height: AppConstants.spacingXl),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppConstants.spacingLg,
+                          ),
+                          child: Text(
+                            AppStrings.homeMealsSection,
+                            style: AppTypography.caption.copyWith(
+                              color: AppColors.onSurface,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: AppConstants.spacingMd),
+                        if (log.meals.isEmpty)
+                          _EmptyMeals(isToday: dailyLog.isTodaySelected)
+                        else
+                          for (final meal in log.meals.reversed)
+                            _MealEntry(meal: meal),
+                      ],
+                    ),
                   ),
                 ),
               ),

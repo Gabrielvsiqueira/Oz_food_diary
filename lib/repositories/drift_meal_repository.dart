@@ -135,9 +135,8 @@ class DriftMealRepository implements MealRepository {
         isDirty: const Value(true),
       ),
     );
-    await (_db.update(_db.mealItems)..where(
-          (i) => i.mealId.equals(meal.id) & i.deletedAt.isNull(),
-        ))
+    await (_db.update(_db.mealItems)
+          ..where((i) => i.mealId.equals(meal.id) & i.deletedAt.isNull()))
         .write(_tombstone(now));
   });
 

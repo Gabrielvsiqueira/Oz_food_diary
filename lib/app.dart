@@ -14,6 +14,7 @@ import 'controllers/meal_controller.dart';
 import 'controllers/onboarding_controller.dart';
 import 'controllers/profile_controller.dart';
 import 'controllers/session_controller.dart';
+import 'controllers/sync_controller.dart';
 import 'database/app_database.dart';
 import 'repositories/drift_food_repository.dart';
 import 'repositories/drift_meal_repository.dart';
@@ -24,6 +25,8 @@ import 'repositories/meal_repository.dart';
 import 'repositories/profile_repository.dart';
 import 'repositories/session_repository.dart';
 import 'repositories/supabase_session_repository.dart';
+import 'repositories/supabase_sync_remote.dart';
+import 'services/sync_service.dart';
 
 class OzApp extends StatefulWidget {
   const OzApp({super.key, required this.database, this.supabase});
@@ -60,6 +63,12 @@ class _OzAppState extends State<OzApp> {
     );
   }
 
+  SyncService? _syncService() {
+    final supabase = widget.supabase;
+    if (supabase == null) return null;
+    return SyncService(database, SupabaseSyncRemote(supabase));
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -76,6 +85,16 @@ class _OzAppState extends State<OzApp> {
         ChangeNotifierProvider(create: (_) => OnboardingController()),
         ChangeNotifierProvider(
           create: (context) => ProfileController(context.read()),
+        ),
+        ChangeNotifierProvider(
+          // Não é preguiçoso: precisa ouvir a sessão e o banco desde o início.
+          lazy: false,
+          create: (context) => SyncController(
+            session: context.read(),
+            database: database,
+            service: _syncService(),
+            onProfileChanged: context.read<ProfileController>().load,
+          ),
         ),
         ChangeNotifierProvider(
           create: (context) => DailyLogController(context.read()),

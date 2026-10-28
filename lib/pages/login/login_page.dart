@@ -114,8 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                               controller: _email,
                               keyboardType: TextInputType.emailAddress,
                               autofillHints: const [AutofillHints.email],
-                              validator: fieldValidator(Validators.email,
-                              ),
+                              validator: fieldValidator(Validators.email),
                             ),
                             const SizedBox(height: AppConstants.spacingLg),
                             AppTextField(
@@ -125,8 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                               obscureText: true,
                               textInputAction: TextInputAction.done,
                               autofillHints: const [AutofillHints.password],
-                              validator: fieldValidator(Validators.password,
-                              ),
+                              validator: fieldValidator(Validators.password),
                             ),
                             const SizedBox(height: AppConstants.spacingXl),
                             PrimaryButton(

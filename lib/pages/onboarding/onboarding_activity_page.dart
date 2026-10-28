@@ -36,9 +36,7 @@ class OnboardingActivityPage extends StatelessWidget {
     return OnboardingScaffold(
       step: 6,
       title: AppStrings.onboardingActivityTitle,
-      onNext: controller.activityLevel == null
-          ? null
-          : () => _next(context),
+      onNext: controller.activityLevel == null ? null : () => _next(context),
       body: ListView.separated(
         padding: const EdgeInsets.only(top: AppConstants.spacingXl),
         itemCount: ActivityLevel.values.length,
