@@ -5,9 +5,10 @@ macronutrientes (carboidratos, proteínas e gorduras). A partir de um
 onboarding curto, o app calcula a meta calórica do usuário e permite
 registrar, editar e excluir refeições, acompanhando o progresso do dia.
 
-> **Entrega 2 em andamento.** Os dados ficam salvos no aparelho (SQLite com
-> drift) e o app funciona offline. O login usa Supabase Auth (e-mail/senha e
-> Google). A sincronização dos dados com o servidor vem na próxima etapa. As decisões de arquitetura
+> **Entrega 2.** Os dados ficam salvos no aparelho (SQLite com drift) e o app
+> funciona offline. O login usa Supabase Auth (e-mail/senha e Google), e os
+> dados sincronizam com o Postgres do Supabase em segundo plano: entrando com
+> a mesma conta em outro aparelho, tudo volta. As decisões de arquitetura
 > estão em [`docs/arquitetura.md`](docs/arquitetura.md).
 
 ---
@@ -43,7 +44,11 @@ registrar, editar e excluir refeições, acompanhando o progresso do dia.
   alimentos e são somados automaticamente.
 - **Metas**: edição manual da meta de calorias e de macros.
 - **Perfil**: edição de nome, altura e peso, com recálculo das metas quando
-  peso ou altura mudam, e logout.
+  peso ou altura mudam, estado da sincronização, logout e exclusão de conta.
+- **Sincronização offline-first**: tudo é gravado primeiro no aparelho e
+  enviado ao servidor alguns segundos depois, quando a internet volta ou ao
+  puxar a Home para baixo. Ao sair, o app tenta enviar o que falta e avisa se
+  algo seria perdido.
 - **Idioma**: app todo em português (pt-BR), com textos centralizados em `AppStrings`.
 - **Tema escuro** com tokens de cor e tipografia (fonte Host Grotesk).
 
@@ -145,13 +150,13 @@ lib/
 │   ├── strings/              # Textos (AppStrings), rótulos e formatação de números
 │   ├── routes/               # Nomes de rotas e RouteGenerator
 │   └── theme/                # Cores, tipografia e ThemeData
-├── controllers/              # Session, Onboarding, Profile, DailyLog, Meal, FoodSearch
+├── controllers/              # Session, Sync, Onboarding, Profile, DailyLog, Meal, FoodSearch
 ├── database/                 # Banco local (drift): tabelas, IDs e catálogo inicial
 ├── mocks/                    # Conta de demonstração e dados de teste
 ├── models/                   # Entidades e enums
 ├── pages/                    # Uma pasta por tela/fluxo
 ├── repositories/             # Interfaces de acesso a dados e implementações
-├── services/                 # NutritionCalculator, Validators, DateUtils, TextUtils
+├── services/                 # SyncService, NutritionCalculator, Validators, DateUtils, TextUtils
 └── widgets/                  # Botões, inputs, cards, gráficos, navbar, etc.
 ```
 
@@ -160,6 +165,7 @@ lib/
 | Controller             | Responsabilidade                                                                                                         |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `SessionController`    | Estado de autenticação (login/logout)                                                                                    |
+| `SyncController`       | Quando sincronizar (login, gravações, volta da internet), estado mostrado no Perfil e parada no logout                   |
 | `OnboardingController` | Guarda as respostas do onboarding e monta o `UserProfile`                                                                |
 | `ProfileController`    | Perfil do usuário e metas; recalcula metas quando peso/altura mudam                                                      |
 | `DailyLogController`   | Dia selecionado na Home e refeições agrupadas por dia                                                                    |
@@ -177,9 +183,12 @@ Os controllers dependem só de interfaces, injetadas via `Provider` em
 | `MealRepository`    | `DriftMealRepository`   | Refeições do dia como stream: toda gravação atualiza a Home sozinha    |
 | `ProfileRepository` | `DriftProfileRepository`| Perfil, histórico de peso e histórico de metas                         |
 | `SessionRepository` | `SupabaseSessionRepository` (ou `LocalSessionRepository` sem backend) | Login, cadastro, Google, logout e exclusão de conta; o logout apaga os dados do aparelho |
+| `SyncRemote`        | `SupabaseSyncRemote`    | Envio pela função `push_changes` e download do que mudou no servidor   |
 
 Os testes usam `MockFoodRepository` e `MockMealRepository` (em memória), e os
-repositórios do drift são testados com um banco SQLite em memória.
+repositórios do drift são testados com um banco SQLite em memória. A
+sincronização é testada com dois "aparelhos" (dois bancos em memória) e um
+servidor falso com as mesmas regras do `push_changes`.
 
 Cada `MealItem` guarda uma cópia do alimento, com seus nutrientes. Assim,
 correções futuras na base não alteram o histórico de refeições do usuário.

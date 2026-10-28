@@ -48,9 +48,8 @@ class _FoodQuantitySheetState extends State<_FoodQuantitySheet> {
     _portion = widget.initial?.portion ?? widget.food.defaultPortion;
     final quantity =
         widget.initial?.quantity ?? (_portion == FoodPortion.gram ? 100 : 1);
-    _quantity = TextEditingController(
-      text: formatEditableNumber(quantity),
-    )..addListener(() => setState(() {}));
+    _quantity = TextEditingController(text: formatEditableNumber(quantity))
+      ..addListener(() => setState(() {}));
   }
 
   @override
@@ -178,7 +177,9 @@ class _FoodQuantitySheetState extends State<_FoodQuantitySheet> {
               NutrientsSummary(items: item == null ? null : [item]),
               const SizedBox(height: AppConstants.spacingXl),
               PrimaryButton(
-                label: widget.initial == null ? AppStrings.foodAdd : AppStrings.foodUpdate,
+                label: widget.initial == null
+                    ? AppStrings.foodAdd
+                    : AppStrings.foodUpdate,
                 onPressed: _confirm,
               ),
             ],

@@ -23,6 +23,7 @@ part 'app_database.g.dart';
     MealItems,
     Foods,
     FoodPortions,
+    SyncState,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -35,10 +36,13 @@ class AppDatabase extends _$AppDatabase {
   final Future<List<Food>> Function()? foodSeed;
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
+    onUpgrade: (m, from, to) async {
+      if (from < 2) await m.createTable(syncState);
+    },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
       if (details.wasCreated && foodSeed != null) {
@@ -77,9 +81,36 @@ class AppDatabase extends _$AppDatabase {
     ]);
   });
 
+  /// Tabelas com dados do usuário, na ordem em que são sincronizadas
+  /// (a refeição antes dos itens).
+  List<TableInfo<Table, Object?>> get userTables => [
+    profiles,
+    nutritionGoals,
+    weightEntries,
+    meals,
+    mealItems,
+  ];
+
+  /// Quantos registros ainda não foram enviados ao servidor.
+  Stream<int> watchPendingCount() => _pendingCount().watchSingle();
+
+  Future<int> pendingCount() => _pendingCount().getSingle();
+
+  Selectable<int> _pendingCount() {
+    final counts = [
+      for (final table in userTables)
+        '(SELECT count(*) FROM ${table.actualTableName} WHERE is_dirty = 1)',
+    ];
+    return customSelect(
+      'SELECT ${counts.join(' + ')} AS n',
+      readsFrom: userTables.toSet(),
+    ).map((row) => row.read<int>('n'));
+  }
+
   /// Apaga os dados do usuário deste aparelho (logout). O catálogo de
   /// alimentos fica, pois é igual para todos.
   Future<void> clearUserData() => transaction(() async {
+    await delete(syncState).go();
     await delete(mealItems).go();
     await delete(meals).go();
     await delete(weightEntries).go();

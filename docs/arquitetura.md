@@ -315,19 +315,62 @@ sequenceDiagram
   `user_id` + data**. Dois aparelhos que registram o peso do mesmo dia offline
   geram o mesmo ID, e o conflito é resolvido pela PK.
 
+- **O dono vem da sessão.** A função usa `auth.uid()` como `user_id` e roda
+  com as permissões de quem chama, então a RLS continua valendo: um usuário
+  não consegue gravar nem sobrescrever linhas de outro.
+- Migration: `supabase/migrations/20261028000000_push_changes.sql`.
+
 ### Download (pull)
 
-1. `SELECT ... WHERE server_updated_at > :cursor` em cada tabela do usuário.
+1. `SELECT ... WHERE server_updated_at > :cursor - 5 min` em cada tabela do
+   usuário, filtrando pelo dono (`user_id`, ou `id` em `profiles`), em ordem de
+   `server_updated_at` e `id`, em páginas de 500.
 2. Para cada linha recebida: se a linha local estiver `is_dirty` e tiver
-   `updated_at` maior, mantém a local (ela sobe no próximo push); senão, aplica.
+   `updated_at` maior, mantém a local (ela sobe no próximo push). Se já tiver
+   o mesmo `server_updated_at`, ignora. Senão, aplica com `is_dirty = false`.
 3. Atualiza o cursor em `sync_state` com o maior `server_updated_at` recebido.
+
+A **margem de 5 minutos** cobre uma transação que começou antes da última
+busca (o `now()` do Postgres é o início da transação) mas só terminou depois
+dela. As linhas repetidas pela margem são ignoradas no passo 2.
+
+O filtro pelo dono importa para a futura plataforma de nutricionistas: com
+`can_read_user` liberando pacientes, o aparelho do nutricionista não baixaria
+os dados deles para o próprio diário.
 
 ### Quando o sync roda
 
 - Ao abrir o app e após o login.
-- Quando a conexão volta (`connectivity_plus`).
-- Alguns segundos após cada gravação local (debounce).
+- Quando a conexão volta (`connectivity_plus`) e quando o app volta para a
+  tela.
+- 3 segundos após cada gravação local (debounce), para juntar edições
+  seguidas num envio só.
+- Ao puxar a lista da Home para baixo.
 - Antes do logout (ver abaixo).
+
+Só roda uma sincronização por vez: um pedido no meio de outra espera por
+ela, e uma gravação feita durante o envio sobe logo em seguida.
+
+### Implementação
+
+| Peça | Papel |
+| ---- | ----- |
+| `SyncService` (`lib/services`) | Push e pull. As tabelas têm os mesmos nomes e colunas nos dois lados (só os `*_100g` dos itens mudam), então a conversão é a mesma para todas. |
+| `SyncRemote` / `SupabaseSyncRemote` (`lib/repositories`) | Chamada à função `push_changes` e leitura das tabelas; falhas viram `SyncOfflineFailure` ou `SyncServerFailure`. |
+| `SyncController` (`lib/controllers`) | Gatilhos, estado (`idle`, `syncing`, `offline`, `failed`), registros pendentes e parada no logout. |
+| `sync_state` (drift, versão 2 do banco) | Cursor do pull por tabela; só existe no aparelho. |
+
+**Na tela:**
+- O Perfil mostra o estado da sincronização: "Tudo sincronizado", "X
+  alterações aguardando envio", "Sem conexão" ou "Não foi possível
+  sincronizar". Tocar sincroniza na hora.
+- A Home sincroniza ao ser puxada para baixo.
+
+**Entrar em outro aparelho:** depois do login, o app baixa os dados antes de
+decidir a próxima tela. Se a conta já tem perfil, vai direto para a Home; o
+onboarding fica só para contas novas. Se o download falhar e não houver
+perfil, o app avisa e não abre o onboarding, porque ele criaria um perfil
+por cima do que já está na conta.
 
 ---
 
@@ -362,9 +405,9 @@ flowchart TD
 - **Onboarding:** a tela "Crie sua conta" cria a conta de verdade; as
   respostas viram o primeiro `profiles`, `nutrition_goals` e `weight_entries`,
   com o id do usuário do Auth.
-- **Entrar sem perfil no aparelho** (conta nova pelo Google, ou login num
-  aparelho novo antes da sincronização): o app pede o onboarding, pulando
-  "Crie sua conta"; o nome vem da conta.
+- **Entrar sem perfil no aparelho:** o app baixa os dados da conta primeiro
+  (seção 5). Se não houver perfil (conta nova pelo Google), pede o
+  onboarding, pulando "Crie sua conta"; o nome vem da conta.
 - **Sessão encerrada pelo servidor** (senha trocada, conta excluída em outro
   aparelho): o app apaga os dados locais e volta para as boas-vindas com um
   aviso.
@@ -378,12 +421,16 @@ flowchart TD
 
 ### Logout
 
-1. Tenta sincronizar.
-2. Se ainda houver linhas `is_dirty` (ex.: sem internet), mostra:
-   *"Você tem X registros não enviados. Se sair agora, eles serão perdidos."*
-3. Apaga as **tabelas do usuário** e `sync_state`. O catálogo TACO fica, pois é
+1. Confirma a saída ("Seus dados ficam salvos na sua conta…").
+2. Tenta sincronizar, com um indicador "Enviando seus dados…".
+3. Se ainda houver linhas `is_dirty` (ex.: sem internet), avisa:
+   *"X alterações ainda não foram enviadas para sua conta. Se sair agora,
+   elas serão perdidas."* O usuário escolhe entre cancelar e **sair mesmo
+   assim** (decisão: avisar e deixar sair, sem prender o usuário no app).
+4. Para a sincronização em andamento, para ela não gravar mais nada.
+5. Apaga as **tabelas do usuário** e `sync_state`. O catálogo TACO fica, pois é
    igual para todos.
-4. Cancela os lembretes agendados.
+6. Cancela os lembretes agendados (Entrega 3).
 
 O motivo de apagar é **privacidade**: outra pessoa pode entrar no mesmo
 aparelho, e os dados de usuários diferentes não podem se misturar.
@@ -555,9 +602,9 @@ duas funcionalidades seguras:
 
 | # | Etapa                                                                 | Entrega |
 | - | --------------------------------------------------------------------- | ------- |
-| 1 | drift: schema local, seed da TACO, repositórios lendo/gravando no disco | 2       |
-| 2 | Supabase: migrations, RLS, Auth e telas de login/cadastro reais       | 2       |
-| 3 | `SyncService` (push, pull, logout seguro)                             | 2       |
+| 1 | drift: schema local, seed da TACO, repositórios lendo/gravando no disco ✅ | 2       |
+| 2 | Supabase: migrations, RLS, Auth e telas de login/cadastro reais ✅    | 2       |
+| 3 | `SyncService` (push, pull, logout seguro) ✅                          | 2       |
 | 4 | Registro de peso + gráfico de evolução + histórico de metas           | 3       |
 | 5 | Lembretes de refeição                                                 | 3       |
 | 6 | Leitura de código de barras + Edge Function `food-lookup`             | 3       |

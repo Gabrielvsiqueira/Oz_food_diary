@@ -118,7 +118,9 @@ class _MealFormPageState extends State<MealFormPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? AppStrings.mealEditTitle : AppStrings.mealNewTitle),
+        title: Text(
+          _isEditing ? AppStrings.mealEditTitle : AppStrings.mealNewTitle,
+        ),
         actions: [
           if (_isEditing)
             IconButton(

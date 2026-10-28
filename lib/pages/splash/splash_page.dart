@@ -5,6 +5,7 @@ import '../../configs/constants/app_constants.dart';
 import '../../configs/routes/app_routes.dart';
 import '../../controllers/profile_controller.dart';
 import '../../controllers/session_controller.dart';
+import '../../controllers/sync_controller.dart';
 import '../../widgets/branding/oz_background.dart';
 import '../../widgets/branding/oz_logo.dart';
 
@@ -23,13 +24,17 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   /// Quem já entrou neste aparelho vai direto para a Home, mesmo offline.
-  /// Com sessão mas sem perfil salvo aqui, completa o onboarding.
+  /// Com sessão mas sem perfil salvo aqui, tenta baixar os dados da conta;
+  /// se não houver nenhum, completa o onboarding.
   Future<void> _start() async {
     final session = context.read<SessionController>();
     final profile = context.read<ProfileController>();
+    final sync = context.read<SyncController>();
     final (route, _) = await (
       session.restore().then((signedIn) async {
         if (!signedIn) return AppRoutes.welcome;
+        if (await profile.load()) return AppRoutes.main;
+        await sync.syncNow();
         return await profile.load() ? AppRoutes.main : AppRoutes.onboardingGoal;
       }),
       Future<void>.delayed(AppConstants.splashDuration),

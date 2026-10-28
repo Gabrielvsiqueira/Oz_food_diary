@@ -71,7 +71,9 @@ class _FoodSearchView extends StatelessWidget {
                 ),
               ),
               FoodSearchStatus.success when controller.results.isEmpty =>
-                _Message(text: AppStrings.foodSearchNoResults(controller.query)),
+                _Message(
+                  text: AppStrings.foodSearchNoResults(controller.query),
+                ),
               FoodSearchStatus.success => ListView.builder(
                 itemCount: controller.results.length + 1,
                 itemBuilder: (context, index) {

@@ -132,3 +132,14 @@ class FoodPortions extends Table {
   @override
   Set<Column> get primaryKey => {foodId, unit, grams};
 }
+
+/// Até onde cada tabela já foi baixada do servidor (cursor do pull da
+/// sincronização). Só existe no aparelho.
+@DataClassName('SyncStateRow')
+class SyncState extends Table {
+  TextColumn get entity => text()();
+  DateTimeColumn get pulledUntil => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {entity};
+}
