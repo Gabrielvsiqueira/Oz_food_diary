@@ -70,7 +70,11 @@ void main() {
   });
 
   test('cadastro guarda o usuário com o nome informado', () async {
-    await controller.signUp(email: 'a@b.com', password: '12345678', name: 'Ana');
+    await controller.signUp(
+      email: 'a@b.com',
+      password: '12345678',
+      name: 'Ana',
+    );
     expect(controller.isAuthenticated, isTrue);
     expect(controller.user!.name, 'Ana');
   });

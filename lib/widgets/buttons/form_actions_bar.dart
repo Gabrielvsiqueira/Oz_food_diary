@@ -37,7 +37,10 @@ class FormActionsBar extends StatelessWidget {
               ),
               const SizedBox(width: AppConstants.spacingMd),
               Expanded(
-                child: PrimaryButton(label: AppStrings.commonSave, onPressed: onSave),
+                child: PrimaryButton(
+                  label: AppStrings.commonSave,
+                  onPressed: onSave,
+                ),
               ),
             ],
           ),

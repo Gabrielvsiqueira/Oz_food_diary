@@ -74,8 +74,9 @@ class _OnboardingAccountPageState extends State<OnboardingAccountPage> {
     }
     if (!mounted) return;
     context.read<OnboardingController>().setName(_name.text);
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil(AppRoutes.onboardingLoading, (_) => false);
+    Navigator.of(
+      context,
+    ).pushNamedAndRemoveUntil(AppRoutes.onboardingLoading, (_) => false);
   }
 
   @override
