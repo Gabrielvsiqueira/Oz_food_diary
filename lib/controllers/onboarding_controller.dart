@@ -5,8 +5,6 @@ import '../models/enums/gender.dart';
 import '../models/enums/goal_type.dart';
 import '../models/user_profile.dart';
 
-/// Guarda as respostas do onboarding enquanto o usuário avança pelas telas.
-/// E-mail e senha da tela "Crie sua conta" são só validados, nunca guardados.
 class OnboardingController extends ChangeNotifier {
   GoalType? _goal;
   Gender? _gender;

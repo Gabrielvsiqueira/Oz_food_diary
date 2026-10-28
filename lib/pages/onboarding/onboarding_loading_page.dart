@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../../configs/constants/app_constants.dart';
 import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
-import '../../controllers/daily_log_controller.dart';
 import '../../controllers/onboarding_controller.dart';
 import '../../controllers/profile_controller.dart';
 import '../../controllers/session_controller.dart';
@@ -30,13 +29,15 @@ class _OnboardingLoadingPageState extends State<OnboardingLoadingPage> {
   Future<void> _personalize() async {
     final onboarding = context.read<OnboardingController>();
     final profile = onboarding.buildProfile();
-    context.read<ProfileController>().completeOnboarding(profile);
-    // Conta nova: começa com o histórico de exemplo, não com as refeições
-    // de uma conta anterior.
-    context.read<DailyLogController>().reset();
-    context.read<SessionController>().startSession();
+    final userId = context.read<SessionController>().user!.id;
+    await (
+      context.read<ProfileController>().completeOnboarding(
+        profile,
+        userId: userId,
+      ),
+      Future<void>.delayed(AppConstants.onboardingLoadingDuration),
+    ).wait;
     onboarding.reset();
-    await Future<void>.delayed(AppConstants.onboardingLoadingDuration);
     if (!mounted) return;
     Navigator.of(context).pushReplacementNamed(AppRoutes.onboardingResult);
   }

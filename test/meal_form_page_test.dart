@@ -8,16 +8,19 @@ import 'package:oz_contador_de_calorias/controllers/meal_controller.dart';
 import 'package:oz_contador_de_calorias/pages/meal/meal_form_page.dart';
 import 'package:oz_contador_de_calorias/repositories/food_repository.dart';
 import 'package:oz_contador_de_calorias/repositories/mock_food_repository.dart';
+import 'package:oz_contador_de_calorias/repositories/mock_meal_repository.dart';
 
 void main() {
-  late DailyLogController dailyLog;
+  late MockMealRepository meals;
 
   Future<void> pumpForm(WidgetTester tester) async {
     // Tela de celular alta o bastante para o ListView montar tudo.
     tester.view.physicalSize = const Size(1080, 2400);
     tester.view.devicePixelRatio = 2.5;
     addTearDown(tester.view.reset);
-    dailyLog = DailyLogController();
+    meals = MockMealRepository();
+    final dailyLog = DailyLogController(meals);
+    addTearDown(dailyLog.dispose);
     await tester.pumpWidget(
       MultiProvider(
         providers: [
@@ -25,7 +28,9 @@ void main() {
             create: (_) => const MockFoodRepository(latency: Duration.zero),
           ),
           ChangeNotifierProvider.value(value: dailyLog),
-          ChangeNotifierProvider(create: (_) => MealController(dailyLog)),
+          ChangeNotifierProvider(
+            create: (_) => MealController(meals, dailyLog),
+          ),
         ],
         child: MaterialApp(
           locale: const Locale('pt', 'BR'),
@@ -59,11 +64,10 @@ void main() {
 
   testWidgets('bloqueia salvar refeição sem alimentos', (tester) async {
     await pumpForm(tester);
-    final before = dailyLog.logFor(DateTime.now()).meals.length;
     await tester.tap(find.text('Salvar'));
     await tester.pumpAndSettle();
     expect(find.text('Adicione ao menos um alimento'), findsOneWidget);
-    expect(dailyLog.logFor(DateTime.now()).meals.length, before);
+    expect(meals.meals, isEmpty);
   });
 
   testWidgets('adiciona alimento pela busca e salva a refeição', (
@@ -83,7 +87,7 @@ void main() {
     await tester.tap(find.text('Salvar'));
     await tester.pumpAndSettle();
 
-    final saved = dailyLog.logFor(DateTime.now()).meals.last;
+    final saved = meals.meals.single;
     expect(saved.items.single.grams, 86);
     expect(saved.calories, 65);
     expect(find.text('home'), findsOneWidget);
