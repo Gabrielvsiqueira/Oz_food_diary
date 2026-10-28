@@ -7,6 +7,7 @@ import '../../configs/constants/app_constants.dart';
 import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
 import '../../configs/theme/app_colors.dart';
+import '../../controllers/daily_log_controller.dart';
 import '../../controllers/meal_controller.dart';
 import '../../models/enums/meal_type.dart';
 import '../../models/meal.dart';
@@ -182,6 +183,26 @@ class _MealFormPageState extends State<MealFormPage> {
       body: ListView(
         padding: const EdgeInsets.all(AppConstants.spacingLg),
         children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.calendar_today_outlined,
+                size: 16,
+                color: AppColors.onSurfaceSecondary,
+              ),
+              const SizedBox(width: AppConstants.spacingSm),
+              Text(
+                formatDayTitle(
+                  widget.meal?.createdAt ??
+                      context.read<DailyLogController>().selectedDate,
+                ),
+                style: textTheme.bodyMedium?.copyWith(
+                  color: AppColors.onSurfaceSecondary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppConstants.spacingLg),
           Text(AppStrings.mealTypeLabel, style: textTheme.labelLarge),
           const SizedBox(height: AppConstants.spacingSm),
           Wrap(

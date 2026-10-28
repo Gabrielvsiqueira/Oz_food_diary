@@ -8,6 +8,7 @@ import 'package:oz_contador_de_calorias/models/food_portion.dart';
 import 'package:oz_contador_de_calorias/models/meal.dart';
 import 'package:oz_contador_de_calorias/models/meal_item.dart';
 import 'package:oz_contador_de_calorias/repositories/mock_meal_repository.dart';
+import 'package:oz_contador_de_calorias/services/date_utils.dart';
 import 'package:oz_contador_de_calorias/services/validators.dart';
 
 void main() {
@@ -120,6 +121,26 @@ void main() {
       await pumpEventQueue();
       expect(dailyLog.isTodaySelected, isTrue);
       expect(dailyLog.selectedLog.totalCalories, 128);
+    });
+
+    test('addMeal registra no dia aberto na Home, sem trocar o dia', () async {
+      dailyLog.goToPreviousDay();
+      final yesterday = dailyLog.selectedDate;
+
+      final added = await controller.addMeal(
+        type: MealType.dinner,
+        items: const [
+          MealItem(food: rice, portion: FoodPortion.gram, quantity: 100),
+        ],
+      );
+      await pumpEventQueue();
+
+      expect(isSameDay(added.createdAt, yesterday), isTrue);
+      expect(dailyLog.selectedDate, yesterday);
+      expect(dailyLog.selectedLog.meals.single.id, added.id);
+      dailyLog.selectDate(today());
+      await pumpEventQueue();
+      expect(dailyLog.selectedLog.meals, isEmpty);
     });
 
     test('updateMeal substitui os itens da refeição', () async {

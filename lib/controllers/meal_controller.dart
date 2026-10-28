@@ -5,6 +5,7 @@ import '../models/enums/meal_type.dart';
 import '../models/meal.dart';
 import '../models/meal_item.dart';
 import '../repositories/meal_repository.dart';
+import '../services/date_utils.dart';
 import '../services/validators.dart';
 import 'daily_log_controller.dart';
 
@@ -25,18 +26,25 @@ class MealController extends ChangeNotifier {
     required List<MealItem> items,
     String? photoPath,
   }) async {
-    final now = DateTime.now();
     final meal = Meal(
       id: _uuid.v4(),
       type: type,
       items: items,
-      createdAt: now,
+      createdAt: _eatenAtOnSelectedDay(),
       photoPath: photoPath,
     );
     await _repository.save(meal);
-    _dailyLog.selectDate(now);
     notifyListeners();
     return meal;
+  }
+
+  /// A refeição nova vai para o dia aberto na Home (para registrar algo
+  /// esquecido ontem), no horário de agora.
+  DateTime _eatenAtOnSelectedDay() {
+    final now = DateTime.now();
+    final day = _dailyLog.selectedDate;
+    if (isSameDay(day, now)) return now;
+    return DateTime(day.year, day.month, day.day, now.hour, now.minute);
   }
 
   Future<void> updateMeal(Meal meal) async {
