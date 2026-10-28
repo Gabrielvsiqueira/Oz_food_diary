@@ -7,6 +7,7 @@ import '../../models/enums/gender.dart';
 import '../../models/enums/goal_type.dart';
 import '../../models/enums/meal_type.dart';
 import '../../models/enums/portion_unit.dart';
+import '../../models/enums/sync_status.dart';
 import '../../models/food_portion.dart';
 import '../../models/meal_item.dart';
 import '../../services/validators.dart';
@@ -64,6 +65,15 @@ extension AuthFailureLabels on AuthFailure {
     SignInCancelledFailure() => null,
     ProviderUnavailableFailure() => AppStrings.authErrorProviderUnavailable,
     UnknownAuthFailure() => AppStrings.authErrorUnknown,
+  };
+}
+
+extension SyncStatusLabels on SyncStatus {
+  /// Aviso de uma sincronização pedida pelo usuário que não deu certo.
+  String? get errorMessage => switch (this) {
+    SyncStatus.offline => AppStrings.syncErrorOffline,
+    SyncStatus.failed => AppStrings.syncErrorFailed,
+    SyncStatus.idle || SyncStatus.syncing => null,
   };
 }
 

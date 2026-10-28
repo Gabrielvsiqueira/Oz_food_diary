@@ -4514,6 +4514,227 @@ class FoodPortionsCompanion extends UpdateCompanion<FoodPortionRow> {
   }
 }
 
+class $SyncStateTable extends SyncState
+    with TableInfo<$SyncStateTable, SyncStateRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SyncStateTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _entityMeta = const VerificationMeta('entity');
+  @override
+  late final GeneratedColumn<String> entity = GeneratedColumn<String>(
+    'entity',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _pulledUntilMeta = const VerificationMeta(
+    'pulledUntil',
+  );
+  @override
+  late final GeneratedColumn<DateTime> pulledUntil = GeneratedColumn<DateTime>(
+    'pulled_until',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [entity, pulledUntil];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'sync_state';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SyncStateRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('entity')) {
+      context.handle(
+        _entityMeta,
+        entity.isAcceptableOrUnknown(data['entity']!, _entityMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entityMeta);
+    }
+    if (data.containsKey('pulled_until')) {
+      context.handle(
+        _pulledUntilMeta,
+        pulledUntil.isAcceptableOrUnknown(
+          data['pulled_until']!,
+          _pulledUntilMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_pulledUntilMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {entity};
+  @override
+  SyncStateRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SyncStateRow(
+      entity: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entity'],
+      )!,
+      pulledUntil: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}pulled_until'],
+      )!,
+    );
+  }
+
+  @override
+  $SyncStateTable createAlias(String alias) {
+    return $SyncStateTable(attachedDatabase, alias);
+  }
+}
+
+class SyncStateRow extends DataClass implements Insertable<SyncStateRow> {
+  final String entity;
+  final DateTime pulledUntil;
+  const SyncStateRow({required this.entity, required this.pulledUntil});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['entity'] = Variable<String>(entity);
+    map['pulled_until'] = Variable<DateTime>(pulledUntil);
+    return map;
+  }
+
+  SyncStateCompanion toCompanion(bool nullToAbsent) {
+    return SyncStateCompanion(
+      entity: Value(entity),
+      pulledUntil: Value(pulledUntil),
+    );
+  }
+
+  factory SyncStateRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SyncStateRow(
+      entity: serializer.fromJson<String>(json['entity']),
+      pulledUntil: serializer.fromJson<DateTime>(json['pulledUntil']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'entity': serializer.toJson<String>(entity),
+      'pulledUntil': serializer.toJson<DateTime>(pulledUntil),
+    };
+  }
+
+  SyncStateRow copyWith({String? entity, DateTime? pulledUntil}) =>
+      SyncStateRow(
+        entity: entity ?? this.entity,
+        pulledUntil: pulledUntil ?? this.pulledUntil,
+      );
+  SyncStateRow copyWithCompanion(SyncStateCompanion data) {
+    return SyncStateRow(
+      entity: data.entity.present ? data.entity.value : this.entity,
+      pulledUntil: data.pulledUntil.present
+          ? data.pulledUntil.value
+          : this.pulledUntil,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncStateRow(')
+          ..write('entity: $entity, ')
+          ..write('pulledUntil: $pulledUntil')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(entity, pulledUntil);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SyncStateRow &&
+          other.entity == this.entity &&
+          other.pulledUntil == this.pulledUntil);
+}
+
+class SyncStateCompanion extends UpdateCompanion<SyncStateRow> {
+  final Value<String> entity;
+  final Value<DateTime> pulledUntil;
+  final Value<int> rowid;
+  const SyncStateCompanion({
+    this.entity = const Value.absent(),
+    this.pulledUntil = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SyncStateCompanion.insert({
+    required String entity,
+    required DateTime pulledUntil,
+    this.rowid = const Value.absent(),
+  }) : entity = Value(entity),
+       pulledUntil = Value(pulledUntil);
+  static Insertable<SyncStateRow> custom({
+    Expression<String>? entity,
+    Expression<DateTime>? pulledUntil,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (entity != null) 'entity': entity,
+      if (pulledUntil != null) 'pulled_until': pulledUntil,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SyncStateCompanion copyWith({
+    Value<String>? entity,
+    Value<DateTime>? pulledUntil,
+    Value<int>? rowid,
+  }) {
+    return SyncStateCompanion(
+      entity: entity ?? this.entity,
+      pulledUntil: pulledUntil ?? this.pulledUntil,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (entity.present) {
+      map['entity'] = Variable<String>(entity.value);
+    }
+    if (pulledUntil.present) {
+      map['pulled_until'] = Variable<DateTime>(pulledUntil.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncStateCompanion(')
+          ..write('entity: $entity, ')
+          ..write('pulledUntil: $pulledUntil, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -4524,6 +4745,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $MealItemsTable mealItems = $MealItemsTable(this);
   late final $FoodsTable foods = $FoodsTable(this);
   late final $FoodPortionsTable foodPortions = $FoodPortionsTable(this);
+  late final $SyncStateTable syncState = $SyncStateTable(this);
   late final Index mealsLocalDate = Index(
     'meals_local_date',
     'CREATE INDEX meals_local_date ON meals (local_date)',
@@ -4544,6 +4766,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     mealItems,
     foods,
     foodPortions,
+    syncState,
     mealsLocalDate,
     mealItemsMealId,
   ];
@@ -4552,36 +4775,38 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       const DriftDatabaseOptions(storeDateTimeAsText: true);
 }
 
-typedef $$ProfilesTableCreateCompanionBuilder = ProfilesCompanion Function({
-  required DateTime createdAt,
-  required DateTime updatedAt,
-  Value<DateTime?> deletedAt,
-  Value<DateTime?> serverUpdatedAt,
-  Value<bool> isDirty,
-  required String id,
-  required String name,
-  required GoalType goal,
-  required Gender gender,
-  required DateTime birthDate,
-  required ActivityLevel activityLevel,
-  required double heightCm,
-  Value<int> rowid,
-});
-typedef $$ProfilesTableUpdateCompanionBuilder = ProfilesCompanion Function({
-  Value<DateTime> createdAt,
-  Value<DateTime> updatedAt,
-  Value<DateTime?> deletedAt,
-  Value<DateTime?> serverUpdatedAt,
-  Value<bool> isDirty,
-  Value<String> id,
-  Value<String> name,
-  Value<GoalType> goal,
-  Value<Gender> gender,
-  Value<DateTime> birthDate,
-  Value<ActivityLevel> activityLevel,
-  Value<double> heightCm,
-  Value<int> rowid,
-});
+typedef $$ProfilesTableCreateCompanionBuilder =
+    ProfilesCompanion Function({
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<DateTime?> deletedAt,
+      Value<DateTime?> serverUpdatedAt,
+      Value<bool> isDirty,
+      required String id,
+      required String name,
+      required GoalType goal,
+      required Gender gender,
+      required DateTime birthDate,
+      required ActivityLevel activityLevel,
+      required double heightCm,
+      Value<int> rowid,
+    });
+typedef $$ProfilesTableUpdateCompanionBuilder =
+    ProfilesCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime?> deletedAt,
+      Value<DateTime?> serverUpdatedAt,
+      Value<bool> isDirty,
+      Value<String> id,
+      Value<String> name,
+      Value<GoalType> goal,
+      Value<Gender> gender,
+      Value<DateTime> birthDate,
+      Value<ActivityLevel> activityLevel,
+      Value<double> heightCm,
+      Value<int> rowid,
+    });
 
 class $$ProfilesTableFilterComposer
     extends Composer<_$AppDatabase, $ProfilesTable> {
@@ -5505,30 +5730,32 @@ typedef $$WeightEntriesTableProcessedTableManager =
       WeightEntryRow,
       PrefetchHooks Function()
     >;
-typedef $$MealsTableCreateCompanionBuilder = MealsCompanion Function({
-  required DateTime createdAt,
-  required DateTime updatedAt,
-  Value<DateTime?> deletedAt,
-  Value<DateTime?> serverUpdatedAt,
-  Value<bool> isDirty,
-  required String id,
-  required MealType type,
-  required DateTime eatenAt,
-  required DateTime localDate,
-  Value<int> rowid,
-});
-typedef $$MealsTableUpdateCompanionBuilder = MealsCompanion Function({
-  Value<DateTime> createdAt,
-  Value<DateTime> updatedAt,
-  Value<DateTime?> deletedAt,
-  Value<DateTime?> serverUpdatedAt,
-  Value<bool> isDirty,
-  Value<String> id,
-  Value<MealType> type,
-  Value<DateTime> eatenAt,
-  Value<DateTime> localDate,
-  Value<int> rowid,
-});
+typedef $$MealsTableCreateCompanionBuilder =
+    MealsCompanion Function({
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<DateTime?> deletedAt,
+      Value<DateTime?> serverUpdatedAt,
+      Value<bool> isDirty,
+      required String id,
+      required MealType type,
+      required DateTime eatenAt,
+      required DateTime localDate,
+      Value<int> rowid,
+    });
+typedef $$MealsTableUpdateCompanionBuilder =
+    MealsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime?> deletedAt,
+      Value<DateTime?> serverUpdatedAt,
+      Value<bool> isDirty,
+      Value<String> id,
+      Value<MealType> type,
+      Value<DateTime> eatenAt,
+      Value<DateTime> localDate,
+      Value<int> rowid,
+    });
 
 final class $$MealsTableReferences
     extends BaseReferences<_$AppDatabase, $MealsTable, MealRow> {
@@ -5879,48 +6106,50 @@ typedef $$MealsTableProcessedTableManager =
       MealRow,
       PrefetchHooks Function({bool mealItemsRefs})
     >;
-typedef $$MealItemsTableCreateCompanionBuilder = MealItemsCompanion Function({
-  required DateTime createdAt,
-  required DateTime updatedAt,
-  Value<DateTime?> deletedAt,
-  Value<DateTime?> serverUpdatedAt,
-  Value<bool> isDirty,
-  required String id,
-  required String mealId,
-  Value<String?> foodId,
-  required int position,
-  required String foodName,
-  required String foodEmoji,
-  required double kcal100g,
-  required double carbs100g,
-  required double protein100g,
-  required double fat100g,
-  required PortionUnit portionUnit,
-  required double portionGrams,
-  required double quantity,
-  Value<int> rowid,
-});
-typedef $$MealItemsTableUpdateCompanionBuilder = MealItemsCompanion Function({
-  Value<DateTime> createdAt,
-  Value<DateTime> updatedAt,
-  Value<DateTime?> deletedAt,
-  Value<DateTime?> serverUpdatedAt,
-  Value<bool> isDirty,
-  Value<String> id,
-  Value<String> mealId,
-  Value<String?> foodId,
-  Value<int> position,
-  Value<String> foodName,
-  Value<String> foodEmoji,
-  Value<double> kcal100g,
-  Value<double> carbs100g,
-  Value<double> protein100g,
-  Value<double> fat100g,
-  Value<PortionUnit> portionUnit,
-  Value<double> portionGrams,
-  Value<double> quantity,
-  Value<int> rowid,
-});
+typedef $$MealItemsTableCreateCompanionBuilder =
+    MealItemsCompanion Function({
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<DateTime?> deletedAt,
+      Value<DateTime?> serverUpdatedAt,
+      Value<bool> isDirty,
+      required String id,
+      required String mealId,
+      Value<String?> foodId,
+      required int position,
+      required String foodName,
+      required String foodEmoji,
+      required double kcal100g,
+      required double carbs100g,
+      required double protein100g,
+      required double fat100g,
+      required PortionUnit portionUnit,
+      required double portionGrams,
+      required double quantity,
+      Value<int> rowid,
+    });
+typedef $$MealItemsTableUpdateCompanionBuilder =
+    MealItemsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime?> deletedAt,
+      Value<DateTime?> serverUpdatedAt,
+      Value<bool> isDirty,
+      Value<String> id,
+      Value<String> mealId,
+      Value<String?> foodId,
+      Value<int> position,
+      Value<String> foodName,
+      Value<String> foodEmoji,
+      Value<double> kcal100g,
+      Value<double> carbs100g,
+      Value<double> protein100g,
+      Value<double> fat100g,
+      Value<PortionUnit> portionUnit,
+      Value<double> portionGrams,
+      Value<double> quantity,
+      Value<int> rowid,
+    });
 
 final class $$MealItemsTableReferences
     extends BaseReferences<_$AppDatabase, $MealItemsTable, MealItemRow> {
@@ -6413,15 +6642,17 @@ class $$MealItemsTableTableManager
                     >
                   >(state) {
                     if (mealId) {
-                      state = state.withJoin(
-                        currentTable: table,
-                        currentColumn: table.mealId,
-                        referencedTable: $$MealItemsTableReferences
-                            ._mealIdTable(db),
-                        referencedColumn: $$MealItemsTableReferences
-                            ._mealIdTable(db)
-                            .id,
-                      ) as T;
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.mealId,
+                                referencedTable: $$MealItemsTableReferences
+                                    ._mealIdTable(db),
+                                referencedColumn: $$MealItemsTableReferences
+                                    ._mealIdTable(db)
+                                    .id,
+                              )
+                              as T;
                     }
 
                     return state;
@@ -6449,34 +6680,36 @@ typedef $$MealItemsTableProcessedTableManager =
       MealItemRow,
       PrefetchHooks Function({bool mealId})
     >;
-typedef $$FoodsTableCreateCompanionBuilder = FoodsCompanion Function({
-  required String id,
-  required FoodSource source,
-  Value<String?> sourceRef,
-  Value<String?> barcode,
-  required String name,
-  required String searchName,
-  required String emoji,
-  required double kcal100g,
-  required double carbs100g,
-  required double protein100g,
-  required double fat100g,
-  Value<int> rowid,
-});
-typedef $$FoodsTableUpdateCompanionBuilder = FoodsCompanion Function({
-  Value<String> id,
-  Value<FoodSource> source,
-  Value<String?> sourceRef,
-  Value<String?> barcode,
-  Value<String> name,
-  Value<String> searchName,
-  Value<String> emoji,
-  Value<double> kcal100g,
-  Value<double> carbs100g,
-  Value<double> protein100g,
-  Value<double> fat100g,
-  Value<int> rowid,
-});
+typedef $$FoodsTableCreateCompanionBuilder =
+    FoodsCompanion Function({
+      required String id,
+      required FoodSource source,
+      Value<String?> sourceRef,
+      Value<String?> barcode,
+      required String name,
+      required String searchName,
+      required String emoji,
+      required double kcal100g,
+      required double carbs100g,
+      required double protein100g,
+      required double fat100g,
+      Value<int> rowid,
+    });
+typedef $$FoodsTableUpdateCompanionBuilder =
+    FoodsCompanion Function({
+      Value<String> id,
+      Value<FoodSource> source,
+      Value<String?> sourceRef,
+      Value<String?> barcode,
+      Value<String> name,
+      Value<String> searchName,
+      Value<String> emoji,
+      Value<double> kcal100g,
+      Value<double> carbs100g,
+      Value<double> protein100g,
+      Value<double> fat100g,
+      Value<int> rowid,
+    });
 
 final class $$FoodsTableReferences
     extends BaseReferences<_$AppDatabase, $FoodsTable, FoodRow> {
@@ -7126,15 +7359,17 @@ class $$FoodPortionsTableTableManager
                     >
                   >(state) {
                     if (foodId) {
-                      state = state.withJoin(
-                        currentTable: table,
-                        currentColumn: table.foodId,
-                        referencedTable: $$FoodPortionsTableReferences
-                            ._foodIdTable(db),
-                        referencedColumn: $$FoodPortionsTableReferences
-                            ._foodIdTable(db)
-                            .id,
-                      ) as T;
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.foodId,
+                                referencedTable: $$FoodPortionsTableReferences
+                                    ._foodIdTable(db),
+                                referencedColumn: $$FoodPortionsTableReferences
+                                    ._foodIdTable(db)
+                                    .id,
+                              )
+                              as T;
                     }
 
                     return state;
@@ -7162,6 +7397,160 @@ typedef $$FoodPortionsTableProcessedTableManager =
       FoodPortionRow,
       PrefetchHooks Function({bool foodId})
     >;
+typedef $$SyncStateTableCreateCompanionBuilder =
+    SyncStateCompanion Function({
+      required String entity,
+      required DateTime pulledUntil,
+      Value<int> rowid,
+    });
+typedef $$SyncStateTableUpdateCompanionBuilder =
+    SyncStateCompanion Function({
+      Value<String> entity,
+      Value<DateTime> pulledUntil,
+      Value<int> rowid,
+    });
+
+class $$SyncStateTableFilterComposer
+    extends Composer<_$AppDatabase, $SyncStateTable> {
+  $$SyncStateTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get pulledUntil => $composableBuilder(
+    column: $table.pulledUntil,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SyncStateTableOrderingComposer
+    extends Composer<_$AppDatabase, $SyncStateTable> {
+  $$SyncStateTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get pulledUntil => $composableBuilder(
+    column: $table.pulledUntil,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SyncStateTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SyncStateTable> {
+  $$SyncStateTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get entity =>
+      $composableBuilder(column: $table.entity, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get pulledUntil => $composableBuilder(
+    column: $table.pulledUntil,
+    builder: (column) => column,
+  );
+}
+
+class $$SyncStateTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SyncStateTable,
+          SyncStateRow,
+          $$SyncStateTableFilterComposer,
+          $$SyncStateTableOrderingComposer,
+          $$SyncStateTableAnnotationComposer,
+          $$SyncStateTableCreateCompanionBuilder,
+          $$SyncStateTableUpdateCompanionBuilder,
+          (
+            SyncStateRow,
+            BaseReferences<_$AppDatabase, $SyncStateTable, SyncStateRow>,
+          ),
+          SyncStateRow,
+          PrefetchHooks Function()
+        > {
+  $$SyncStateTableTableManager(_$AppDatabase db, $SyncStateTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SyncStateTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SyncStateTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SyncStateTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> entity = const Value.absent(),
+                Value<DateTime> pulledUntil = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SyncStateCompanion(
+                entity: entity,
+                pulledUntil: pulledUntil,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String entity,
+                required DateTime pulledUntil,
+                Value<int> rowid = const Value.absent(),
+              }) => SyncStateCompanion.insert(
+                entity: entity,
+                pulledUntil: pulledUntil,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$SyncStateTable, SyncStateRow>(table),
+                  BaseReferences<_$AppDatabase, $SyncStateTable, SyncStateRow>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SyncStateTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SyncStateTable,
+      SyncStateRow,
+      $$SyncStateTableFilterComposer,
+      $$SyncStateTableOrderingComposer,
+      $$SyncStateTableAnnotationComposer,
+      $$SyncStateTableCreateCompanionBuilder,
+      $$SyncStateTableUpdateCompanionBuilder,
+      (
+        SyncStateRow,
+        BaseReferences<_$AppDatabase, $SyncStateTable, SyncStateRow>,
+      ),
+      SyncStateRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -7180,4 +7569,6 @@ class $AppDatabaseManager {
       $$FoodsTableTableManager(_db, _db.foods);
   $$FoodPortionsTableTableManager get foodPortions =>
       $$FoodPortionsTableTableManager(_db, _db.foodPortions);
+  $$SyncStateTableTableManager get syncState =>
+      $$SyncStateTableTableManager(_db, _db.syncState);
 }

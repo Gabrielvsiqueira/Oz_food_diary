@@ -183,6 +183,15 @@ abstract final class AppStrings {
   static const profileLogoutMessage =
       'Você voltará para a tela inicial e os dados salvos neste aparelho serão apagados.';
 
+  static const profileLogoutSyncedMessage =
+      'Seus dados ficam salvos na sua conta e voltam quando você entrar de novo.';
+  static const profileLogoutSending = 'Enviando seus dados…';
+  static const profileLogoutPendingTitle = 'Dados não enviados';
+  static String profileLogoutPendingMessage(int count) => count == 1
+      ? 'Uma alteração ainda não foi enviada para sua conta. Se sair agora, ela será perdida.'
+      : '$count alterações ainda não foram enviadas para sua conta. Se sair agora, elas serão perdidas.';
+  static const profileLogoutAnyway = 'Sair mesmo assim';
+
   static const profileDeleteAccount = 'Excluir conta';
   static const profileDeleteAccountTitle = 'Excluir sua conta?';
   static const profileDeleteAccountMessage =
@@ -201,6 +210,28 @@ abstract final class AppStrings {
   static const authErrorUnknown = 'Não foi possível concluir. Tente novamente';
   static const defaultUserName = 'Você';
   static const authSessionRevoked = 'Sua sessão expirou. Entre novamente.';
+
+  static const syncStatusSynced = 'Tudo sincronizado';
+  static const syncStatusSyncing = 'Sincronizando…';
+  static const syncStatusOffline = 'Sem conexão';
+  static const syncStatusFailed = 'Não foi possível sincronizar';
+  static String syncPending(int count) => count == 1
+      ? '1 alteração aguardando envio'
+      : '$count alterações aguardando envio';
+  static String syncPendingWhenOnline(int count) => count == 1
+      ? '1 alteração será enviada quando a internet voltar'
+      : '$count alterações serão enviadas quando a internet voltar';
+  static const syncSavedOnDevice = 'Seus dados estão salvos neste aparelho';
+  static String syncLastSyncedAt(String time) =>
+      'Última sincronização às $time';
+  static const syncTapToSync = 'Toque para sincronizar agora';
+  static const syncTapToRetry = 'Toque para tentar novamente';
+  static const syncErrorOffline =
+      'Sem conexão. Seus dados continuam salvos neste aparelho.';
+  static const syncErrorFailed =
+      'Não foi possível sincronizar. Tente novamente.';
+  static const syncErrorFirstDownload =
+      'Não foi possível baixar seus dados. Verifique sua conexão e tente novamente.';
 
   static const welcomeTitle = 'Controle sua dieta de forma simples';
   static const welcomeCreateAccount = 'Criar conta';
