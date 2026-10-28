@@ -7,4 +7,7 @@ enum PortionUnit {
   cup,
   ladle,
   servingSpoon,
+
+  /// Porção informada na embalagem (Open Food Facts).
+  serving,
 }

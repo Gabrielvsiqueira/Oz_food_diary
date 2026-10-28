@@ -143,3 +143,29 @@ class SyncState extends Table {
   @override
   Set<Column> get primaryKey => {entity};
 }
+
+/// Foto de uma refeição. Só existe no aparelho: não sincroniza e é apagada
+/// no logout. Guarda o nome do arquivo, não o caminho, porque a pasta do app
+/// muda entre instalações no iOS.
+@DataClassName('MealPhotoRow')
+class MealPhotos extends Table {
+  TextColumn get mealId => text().references(Meals, #id)();
+  TextColumn get fileName => text()();
+
+  @override
+  Set<Column> get primaryKey => {mealId};
+}
+
+/// Horário de cada lembrete de refeição. Só existe no aparelho: cada
+/// aparelho tem a sua configuração, e o logout volta ao padrão.
+@DataClassName('ReminderSettingRow')
+class ReminderSettings extends Table {
+  TextColumn get mealType => textEnum<MealType>()();
+  BoolColumn get enabled => boolean()();
+
+  /// Minutos desde a meia-noite (ex.: 12h30 = 750).
+  IntColumn get minuteOfDay => integer()();
+
+  @override
+  Set<Column> get primaryKey => {mealType};
+}

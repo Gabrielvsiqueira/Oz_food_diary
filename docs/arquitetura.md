@@ -33,8 +33,8 @@ ainda; serve de referência para a implementação e para o relatório.
 | ------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
 | **2**   | Integração com banco de dados (online ou offline)                         | SQLite local (drift) + Postgres no Supabase, sincronizados                |
 | **2**   | Autenticação protegendo o acesso às funcionalidades                       | Supabase Auth (e-mail/senha e Google) com regras de acesso por usuário    |
-| **3**   | API externa via HTTP **ou** Cloud/Lambda Functions                        | Edge Function `food-lookup` que consulta a Open Food Facts via HTTP       |
-| **3**   | Recursos nativos que façam sentido para o app                             | Câmera (leitura de código de barras) e notificações locais (lembretes)    |
+| **3**   | API externa via HTTP **ou** Cloud/Lambda Functions                        | API HTTP da Open Food Facts, consultada pelo app pelo código de barras    |
+| **3**   | Recursos nativos que façam sentido para o app                             | Câmera (código de barras e foto da refeição), galeria e notificações locais (lembretes) |
 
 ---
 
@@ -54,16 +54,13 @@ flowchart TB
     subgraph Supabase
         AUTH[Auth]
         PG[(Postgres<br/>+ RLS)]
-        EF[Edge Function<br/>food-lookup]
     end
 
     OFF[Open Food Facts]
 
     S <-->|HTTPS + JWT| PG
     R -->|login / refresh| AUTH
-    R -->|barcode| EF
-    EF --> PG
-    EF -->|HTTP| OFF
+    R -->|HTTPS: código de barras| OFF
 ```
 
 **A UI só lê e grava no SQLite local.** Toda gravação é instantânea e
@@ -127,7 +124,7 @@ profiles (
   name            text NOT NULL,
   goal            text NOT NULL CHECK (goal IN ('lose','maintain','gain')),
   gender          text NOT NULL CHECK (gender IN ('male','female')),
-  birth_date      date NOT NULL,
+  birth_date      date NOT NULL,  -- estimada a partir da idade informada
   activity_level  text NOT NULL CHECK (activity_level IN
                     ('sedentary','light','moderate','heavy','athlete')),
   height_cm       numeric NOT NULL CHECK (height_cm BETWEEN 100 AND 250),
@@ -228,7 +225,7 @@ create function can_read_user(target uuid) returns boolean
 | ----------------------------------------------------------------------------- | ------------------------------------- | ---------------------------------------- |
 | `profiles`                                                                    | `can_read_user(id)`                   | `id = auth.uid()`                        |
 | `nutrition_goals`, `weight_entries`, `meals`, `meal_items`                    | `can_read_user(user_id)`              | `user_id = auth.uid()`                   |
-| `foods`, `food_portions`                                                      | `owner_id IS NULL OR owner_id = auth.uid()` | Só alimentos `custom` do próprio dono; `taco` e `off` só pela Edge Function (service role) |
+| `foods`, `food_portions`                                                      | Não existem no servidor por enquanto: o catálogo e os produtos lidos ficam só no aparelho (ver seção 7) | — |
 
 ### Banco local (drift)
 
@@ -243,7 +240,8 @@ As mesmas tabelas (`lib/database/tables.dart`), com as diferenças:
 | Timestamps           | Texto ISO-8601 (`store_date_time_values_as_text`), com milissegundos                        |
 | `foods.search_name`  | Nome minúsculo e sem acentos; a busca usa `LIKE '%termo%'` para cada palavra                |
 | `sync_state`         | Tabela de uma linha com o último `server_updated_at` recebido (etapa 3)                     |
-| `reminder_settings`  | Horários dos lembretes; **só local**, não sincroniza (etapa 5)                              |
+| `meal_photos`        | Foto de cada refeição (nome do arquivo); **só local**, não sincroniza                      |
+| `reminder_settings`  | Horário e liga/desliga de cada lembrete; **só local**, não sincroniza                       |
 | Seed                 | Catálogo em `assets/data/foods.json`, inserido quando o banco é criado                      |
 
 > **Busca:** com algumas centenas de alimentos, `LIKE` numa coluna já
@@ -441,48 +439,125 @@ aparelho, e os dados de usuários diferentes não podem se misturar.
 
 ```mermaid
 flowchart TD
-    Scan[Câmera lê o código] --> Local{Existe no SQLite?}
-    Local -->|Sim| Show[Mostra o alimento — funciona offline]
-    Local -->|Não| Net{Online?}
-    Net -->|Não| Manual[Sem conexão: tentar depois<br/>ou cadastrar manualmente]
-    Net -->|Sim| EF[Edge Function food-lookup]
-    EF --> Cache{Existe em foods<br/>no Postgres?}
-    Cache -->|Sim| Return[Devolve]
-    Cache -->|Não| OFF[GET Open Food Facts]
-    OFF -->|achou| Norm[Normaliza, grava em foods] --> Return
-    OFF -->|não achou| Manual
-    Return --> Save[Salva no SQLite] --> Show
+    Scan[Câmera lê o código<br/>ou o usuário digita] --> Local{Existe no SQLite?}
+    Local -->|Sim| Show[Escolhe a quantidade — funciona offline]
+    Local -->|Não| OFF[GET Open Food Facts]
+    OFF -->|sem conexão / erro| Msg[Avisa e mantém a busca da TACO]
+    OFF -->|completo| Save[Salva em foods no SQLite] --> Show
+    OFF -->|faltam dados| Form[Formulário já preenchido]
+    OFF -->|não achou| Ask{Cadastrar?}
+    Ask -->|Sim| Blank[Formulário em branco]
+    Form --> Save
+    Blank --> Save
 ```
 
 - A TACO não tem código de barras; a leitura serve para **produtos
   industrializados**.
-- **Dados incompletos:** se a Open Food Facts não tiver todos os macros, abre o
-  cadastro manual já preenchido com o que veio.
-- **Porção da embalagem:** o campo de porção da OFF (ex.: "1 barra = 25 g") vira
-  uma `food_portions` com `unit = 'serving'`.
-- **Por que passar pela Edge Function:** a OFF pede um User-Agent identificando
-  o app e limita requisições; a tabela `foods` funciona como cache
-  compartilhado — o produto escaneado por um usuário fica disponível para
-  todos.
-- **Pacote:** `mobile_scanner`. Permissão de câmera pedida só ao tocar em
-  "Escanear".
+- **API:** `GET https://world.openfoodfacts.org/api/v2/product/{código}`,
+  pública e sem chave, pedindo só os campos usados (`fields=`). Produto
+  inexistente volta como HTTP 404; código inválido, como 200 com
+  `status: 0`. Os dois viram "não encontrado".
+- **User-Agent:** a Open Food Facts pede que o app se identifique; o Oz manda
+  `Oz/1.0.0 (URL do repositório)`, sem dados do usuário.
+- **Falhas:** sem conexão ou com o servidor demorando mais de 10 s, o app
+  avisa "Sem conexão"; erros HTTP e respostas ilegíveis viram "Não foi
+  possível buscar o produto". Os dois são falhas tipadas
+  (`ProductLookupFailure`), com a mensagem na camada de View.
+- **Normalização:** nome em português quando houver, com a marca somada se
+  não aparece no nome; números em texto são aceitos e negativos descartados;
+  energia só em kJ é convertida para kcal. A Open Food Facts informa bebidas
+  a cada 100 ml, tratados como 100 g.
+- **Dados incompletos:** se faltar nome ou algum dos quatro valores, abre o
+  formulário já preenchido com o que veio. Produto desconhecido pode ser
+  cadastrado em branco (`source = 'custom'`).
+- **Porção da embalagem:** `serving_quantity` (ex.: 20 g) vira uma
+  `food_portions` com `unit = 'serving'` ("porção").
+- **Cache local:** o produto é gravado em `foods` (id `off-{código}` ou
+  `custom-{código}`, coluna `barcode` única) e passa a aparecer na busca por
+  nome. A segunda leitura do mesmo código não usa a internet. O logout não
+  apaga esses produtos, assim como o catálogo da TACO.
+- **Sincronização:** os produtos ficam só no aparelho. As refeições continuam
+  sincronizando normalmente, porque cada item guarda uma cópia do nome e dos
+  nutrientes do alimento.
+- **Por que não uma Edge Function:** o plano inicial era passar por uma
+  função `food-lookup` no Supabase, com a tabela `foods` no Postgres como
+  cache compartilhado entre usuários. Chamar a API direto tem menos peças
+  (nada para publicar no servidor) e atende o requisito de API HTTP da
+  Entrega 3; a Edge Function fica como evolução se o limite de requisições da
+  Open Food Facts virar problema.
+- **Pacote:** `mobile_scanner` (ML Kit no Android, Vision no iOS), lendo só
+  EAN-13, EAN-8, UPC-A e UPC-E. A permissão da câmera é pedida ao abrir o
+  leitor; negada, a tela explica e oferece "Digitar código" (também útil no
+  emulador). Há botão de lanterna quando o aparelho tem uma.
+- **Implementação:** `OpenFoodFactsRepository` (HTTP e conversão),
+  `BarcodeLookupService` (aparelho primeiro, depois a API, e gravação),
+  `BarcodeScannerPage`, `ProductFormPage` e o fluxo na `FoodSearchPage`.
+- **Crédito:** os dados da Open Food Facts são ODbL; a fonte aparece no fim
+  da lista da busca de alimentos, junto com TACO e IBGE.
+
+### Foto da refeição
+
+- **Para quê:** registro visual opcional do que foi comido; a miniatura
+  aparece no card da refeição na Home.
+- **Como:** no formulário da refeição, "Adicionar foto" abre "Tirar foto"
+  (câmera nativa) ou "Escolher da galeria", pelo `image_picker`. A foto é
+  reduzida no próprio seletor (lado maior de 1600 px, qualidade 80) e só é
+  guardada ao salvar a refeição; cancelar descarta a troca.
+- **Onde fica:** o arquivo é copiado para `Documentos do app/meal_photos/`
+  (`MealPhotoStorage`) com o nome `{meal_id}-{horário}.jpg`, e a tabela local
+  `meal_photos` guarda só o nome do arquivo, porque a pasta do app muda entre
+  instalações no iOS.
+- **Só no aparelho:** a foto não sincroniza. A tabela fica fora das
+  `userTables`, então não conta como pendência e não vai no `push_changes`.
+  Mandar para o Supabase Storage fica como evolução.
+- **Miniatura:** o card decodifica a foto já pequena, com o lado menor no
+  tamanho do quadrado (`_CoverFileImage`), para o `BoxFit.cover` não precisar
+  ampliá-la.
+- **Limpeza:** trocar ou remover a foto apaga o arquivo anterior; excluir a
+  refeição apaga a foto; o logout apaga a pasta inteira
+  (`AppDatabase.clearUserFiles`). Ao abrir o app, `prunePhotos` apaga fotos de
+  refeições excluídas em outro aparelho e arquivos que sobraram de uma
+  gravação interrompida.
+- **Permissões:** no iOS, textos de uso da câmera e da galeria no
+  `Info.plist`. No Android, a galeria usa o seletor de fotos do sistema (sem
+  permissão) e a câmera pede permissão na hora, porque o app já declara
+  `CAMERA` por causa do leitor. Negado o acesso, o app avisa num `SnackBar`
+  (`PhotoPickerFailure`).
 
 ---
 
 ## 8. Lembretes de refeição
 
 - **Agendados no próprio aparelho** com `flutter_local_notifications` +
-  `timezone`: não dependem de servidor e funcionam offline.
-- **Horários configuráveis** por tipo de refeição (padrão: café 8h, almoço
-  12h30, jantar 19h30; lanche desligado).
+  `timezone` (fuso do aparelho pelo `flutter_timezone`): não dependem de
+  servidor e funcionam offline.
+- **Horários configuráveis** por refeição na tela "Lembretes de refeição",
+  aberta pelo Perfil: café 8h, almoço 12h30 e jantar 19h30 ligados; lanche
+  16h desligado. Cada um tem um seletor de horário e um liga/desliga.
 - **Não incomodar quem já registrou:** os lembretes são agendados um a um para
-  os **próximos 7 dias** (não como alarme diário repetido). Ao registrar o
-  almoço de hoje, o app cancela só o lembrete do almoço de hoje. Ao abrir o app,
-  a janela de 7 dias é reagendada. 3 refeições × 7 dias = 21 agendamentos,
-  abaixo do limite de 64 do iOS.
-- **Permissão:** pedida no fim do onboarding, explicando o motivo (obrigatória
-  no Android 13+ e no iOS).
-- **Configuração só local** (`reminder_settings`): cada aparelho tem a sua.
+  os **próximos 7 dias** (não como alarme diário repetido), pela função pura
+  `planReminders`. Uma refeição registrada hoje tira só o lembrete de hoje
+  daquele tipo. 4 refeições × 7 dias = 28 agendamentos, abaixo do limite de
+  64 do iOS.
+- **Quando reagenda** (`ReminderController`): ao entrar na conta, a cada
+  refeição de hoje salva ou excluída (stream do drift), ao mudar um horário
+  e quando o app volta para a tela (a janela de 7 dias anda; num dia novo, as
+  refeições de "hoje" são outras). Os agendamentos ficam em fila para não se
+  sobreporem.
+- **Android:** agendamento inexato (`inexactAllowWhileIdle`), que pode
+  atrasar alguns minutos mas dispensa a permissão de alarme exato. Receptores
+  do plugin no `AndroidManifest.xml` reagendam depois que o aparelho
+  reinicia, e o Gradle liga o *desugaring* que o plugin exige.
+- **iOS:** o `AppDelegate` define o delegate de notificações, para o aviso
+  aparecer mesmo com o app aberto.
+- **Permissão:** pedida no fim do onboarding ("Começar"), obrigatória no
+  Android 13+ e no iOS. Quem entra pelo login num aparelho novo vê na tela
+  de lembretes um aviso "Notificações desativadas" com "Permitir"; ligar um
+  lembrete sem permissão também a pede. Negada de vez, o app orienta a
+  liberar nos ajustes. Ao voltar para o app, a permissão é verificada de
+  novo.
+- **Configuração só local** (`reminder_settings`, banco local versão 4): cada
+  aparelho tem a sua. O logout cancela todos os lembretes e volta ao padrão.
 
 ---
 
@@ -491,8 +566,26 @@ flowchart TD
 - **Peso:** `weight_entries`, uma medição por dia. O perfil mostra o mais
   recente. Ao registrar um peso novo, as metas são recalculadas (com
   confirmação, como hoje no Perfil).
-- **Gráfico:** linha do peso ao longo do tempo com `fl_chart`, com filtros de
-  período (30 dias, 90 dias, tudo).
+- **Aba Evolução** (entre Metas e Perfil): resumo com peso atual, início do
+  período e variação; filtros de período (30 dias, 90 dias, tudo); gráfico;
+  lista das medições com a diferença para a anterior; e o botão "Registrar
+  peso", que abre um campo com o peso atual.
+- **Gráfico:** linha do peso ao longo do tempo com `fl_chart`. O eixo X é em dias desde a primeira
+  medição, para que semanas sem medição apareçam com o espaço certo; o toque
+  mostra peso e data.
+- **Atualização:** `ProfileRepository.watchWeightHistory()` é um stream do
+  drift, então um peso salvo no Perfil ou baixado pela sincronização aparece
+  no gráfico na hora (`WeightHistoryController`).
+- **Poucos dados:** com uma medição só (ou nenhuma no período), a aba mostra
+  um aviso em vez de um gráfico vazio.
+- **Registrar:** pela aba Evolução, escolhendo o dia (hoje por padrão, ou um
+  dia esquecido, até a data de nascimento estimada), ou alterando o peso no Perfil
+  (sempre hoje). A medição daquele dia é criada ou substituída. O peso atual
+  é sempre o da medição mais recente: só quando o dia registrado não é
+  anterior à última medição e o peso muda é que as metas são recalculadas,
+  com confirmação; um dia antigo entra só no histórico. O Perfil acompanha o `ProfileController`, então um peso
+  registrado na Evolução (ou baixado pela sincronização) já aparece no campo
+  e salvar o Perfil não volta ao peso antigo.
 - **Metas:** `nutrition_goals` guarda o histórico (`effective_from`). Toda
   alteração — manual na aba Metas ou recálculo pelo peso — cria ou atualiza a
   linha do dia. Permite, no futuro, um gráfico de meta × consumido.
@@ -606,8 +699,10 @@ duas funcionalidades seguras:
 | 2 | Supabase: migrations, RLS, Auth e telas de login/cadastro reais ✅    | 2       |
 | 3 | `SyncService` (push, pull, logout seguro) ✅                          | 2       |
 | 4 | Registro de peso + gráfico de evolução + histórico de metas           | 3       |
-| 5 | Lembretes de refeição                                                 | 3       |
-| 6 | Leitura de código de barras + Edge Function `food-lookup`             | 3       |
+| 5 | Lembretes de refeição ✅                                              | 3       |
+| 6 | Leitura de código de barras + API da Open Food Facts ✅                | 3       |
+| 7 | Foto da refeição (câmera e galeria) ✅                                 | 3       |
+| 8 | Gráfico de evolução do peso ✅ (sem o histórico de metas na tela)     | 3       |
 
 ---
 
@@ -617,10 +712,12 @@ duas funcionalidades seguras:
 | ----------------------------- | ------------------------------------------------ |
 | `drift`, `drift_flutter`      | SQLite tipado, migrations e streams              |
 | `drift_dev`, `build_runner`   | Geração de código do drift (dev)                 |
-| `supabase_flutter`            | Auth, Postgres (PostgREST/RPC) e Edge Functions  |
+| `supabase_flutter`            | Auth e Postgres (PostgREST/RPC)                  |
 | `flutter_secure_storage`      | Armazenamento seguro da sessão                   |
 | `connectivity_plus`           | Detectar volta da conexão para sincronizar       |
 | `uuid` (já existe)            | IDs v4 e v5 gerados no app                       |
 | `fl_chart`                    | Gráfico de evolução do peso                      |
-| `flutter_local_notifications`, `timezone` | Lembretes agendados                  |
+| `flutter_local_notifications`, `timezone`, `flutter_timezone` | Lembretes agendados no fuso do aparelho |
 | `mobile_scanner`              | Leitura de código de barras pela câmera          |
+| `image_picker`                | Foto da refeição pela câmera ou galeria          |
+| `path_provider`               | Pasta de documentos do app, onde ficam as fotos  |

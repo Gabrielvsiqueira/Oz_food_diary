@@ -7,12 +7,16 @@ class Meal {
     required this.type,
     required List<MealItem> items,
     required this.createdAt,
+    this.photoPath,
   }) : items = List.unmodifiable(items);
 
   final String id;
   final MealType type;
   final List<MealItem> items;
   final DateTime createdAt;
+
+  /// Foto opcional, só deste aparelho (caminho do arquivo).
+  final String? photoPath;
 
   int get calories => items.fold(0.0, (sum, i) => sum + i.calories).round();
   double get carbsG => items.fold(0, (sum, i) => sum + i.carbsG);
@@ -26,5 +30,15 @@ class Meal {
     type: type ?? this.type,
     items: items ?? this.items,
     createdAt: createdAt,
+    photoPath: photoPath,
+  );
+
+  /// Troca ou remove ([path] nulo) a foto.
+  Meal withPhoto(String? path) => Meal(
+    id: id,
+    type: type,
+    items: items,
+    createdAt: createdAt,
+    photoPath: path,
   );
 }
