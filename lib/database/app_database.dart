@@ -24,24 +24,35 @@ part 'app_database.g.dart';
     Foods,
     FoodPortions,
     SyncState,
+    MealPhotos,
   ],
 )
 class AppDatabase extends _$AppDatabase {
-  AppDatabase(super.executor, {this.foodSeed});
+  AppDatabase(super.executor, {this.foodSeed, this.clearUserFiles});
 
-  AppDatabase.open({Future<List<Food>> Function()? foodSeed})
-    : this(driftDatabase(name: 'oz'), foodSeed: foodSeed);
+  AppDatabase.open({
+    Future<List<Food>> Function()? foodSeed,
+    Future<void> Function()? clearUserFiles,
+  }) : this(
+         driftDatabase(name: 'oz'),
+         foodSeed: foodSeed,
+         clearUserFiles: clearUserFiles,
+       );
 
   /// Catálogo inicial, inserido só quando o banco é criado.
   final Future<List<Food>> Function()? foodSeed;
 
+  /// Apaga os arquivos do usuário (fotos das refeições) junto com os dados.
+  final Future<void> Function()? clearUserFiles;
+
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onUpgrade: (m, from, to) async {
       if (from < 2) await m.createTable(syncState);
+      if (from < 3) await m.createTable(mealPhotos);
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -109,12 +120,16 @@ class AppDatabase extends _$AppDatabase {
 
   /// Apaga os dados do usuário deste aparelho (logout). O catálogo de
   /// alimentos fica, pois é igual para todos.
-  Future<void> clearUserData() => transaction(() async {
-    await delete(syncState).go();
-    await delete(mealItems).go();
-    await delete(meals).go();
-    await delete(weightEntries).go();
-    await delete(nutritionGoals).go();
-    await delete(profiles).go();
-  });
+  Future<void> clearUserData() async {
+    await transaction(() async {
+      await delete(syncState).go();
+      await delete(mealPhotos).go();
+      await delete(mealItems).go();
+      await delete(meals).go();
+      await delete(weightEntries).go();
+      await delete(nutritionGoals).go();
+      await delete(profiles).go();
+    });
+    await clearUserFiles?.call();
+  }
 }

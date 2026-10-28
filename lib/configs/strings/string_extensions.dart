@@ -11,6 +11,7 @@ import '../../models/enums/sync_status.dart';
 import '../../models/food_portion.dart';
 import '../../models/meal_item.dart';
 import '../../models/product_lookup_failure.dart';
+import '../../services/photo_picker.dart';
 import '../../services/validators.dart';
 import 'app_strings.dart';
 
@@ -76,6 +77,13 @@ extension SyncStatusLabels on SyncStatus {
     SyncStatus.offline => AppStrings.syncErrorOffline,
     SyncStatus.failed => AppStrings.syncErrorFailed,
     SyncStatus.idle || SyncStatus.syncing => null,
+  };
+}
+
+extension PhotoPickerFailureLabels on PhotoPickerFailure {
+  String get message => switch (this) {
+    PhotoAccessDeniedFailure() => AppStrings.mealPhotoDenied,
+    PhotoUnavailableFailure() => AppStrings.mealPhotoUnavailable,
   };
 }
 

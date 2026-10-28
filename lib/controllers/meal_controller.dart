@@ -23,9 +23,16 @@ class MealController extends ChangeNotifier {
   Future<Meal> addMeal({
     required MealType type,
     required List<MealItem> items,
+    String? photoPath,
   }) async {
     final now = DateTime.now();
-    final meal = Meal(id: _uuid.v4(), type: type, items: items, createdAt: now);
+    final meal = Meal(
+      id: _uuid.v4(),
+      type: type,
+      items: items,
+      createdAt: now,
+      photoPath: photoPath,
+    );
     await _repository.save(meal);
     _dailyLog.selectDate(now);
     notifyListeners();

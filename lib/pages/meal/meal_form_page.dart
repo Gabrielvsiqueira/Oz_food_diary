@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +11,7 @@ import '../../controllers/meal_controller.dart';
 import '../../models/enums/meal_type.dart';
 import '../../models/meal.dart';
 import '../../models/meal_item.dart';
+import '../../services/photo_picker.dart';
 import '../../services/validators.dart';
 import '../../widgets/buttons/form_actions_bar.dart';
 import '../../widgets/charts/nutrients_summary.dart';
@@ -29,6 +32,7 @@ class MealFormPage extends StatefulWidget {
 class _MealFormPageState extends State<MealFormPage> {
   late MealType _type;
   late List<MealItem> _items;
+  String? _photoPath;
   ValidationError? _itemsError;
 
   bool get _isEditing => widget.meal != null;
@@ -38,6 +42,7 @@ class _MealFormPageState extends State<MealFormPage> {
     super.initState();
     _type = widget.meal?.type ?? _suggestedType(DateTime.now());
     _items = [...?widget.meal?.items];
+    _photoPath = widget.meal?.photoPath;
   }
 
   /// Sugere o tipo pelo horário para agilizar o cadastro.
@@ -71,6 +76,45 @@ class _MealFormPageState extends State<MealFormPage> {
   void _removeItem(int index) =>
       setState(() => _items = [..._items]..removeAt(index));
 
+  /// A foto só é guardada ao salvar; cancelar descarta a troca.
+  Future<void> _pickPhoto() async {
+    final picker = context.read<PhotoPicker>();
+    final source = await showModalBottomSheet<PhotoSource>(
+      context: context,
+      backgroundColor: AppColors.surface,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_camera_outlined),
+              title: Text(AppStrings.mealPhotoCamera),
+              onTap: () => Navigator.of(context).pop(PhotoSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library_outlined),
+              title: Text(AppStrings.mealPhotoGallery),
+              onTap: () => Navigator.of(context).pop(PhotoSource.gallery),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (source == null) return;
+    try {
+      final path = await picker.pick(source);
+      if (path != null && mounted) setState(() => _photoPath = path);
+    } on PhotoPickerFailure catch (failure) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(failure.message),
+          duration: AppConstants.snackBarDuration,
+        ),
+      );
+    }
+  }
+
   Future<void> _save() async {
     final controller = context.read<MealController>();
     final error = controller.validateItems(_items);
@@ -81,10 +125,14 @@ class _MealFormPageState extends State<MealFormPage> {
 
     if (_isEditing) {
       await controller.updateMeal(
-        widget.meal!.copyWith(type: _type, items: _items),
+        widget.meal!.copyWith(type: _type, items: _items).withPhoto(_photoPath),
       );
     } else {
-      await controller.addMeal(type: _type, items: _items);
+      await controller.addMeal(
+        type: _type,
+        items: _items,
+        photoPath: _photoPath,
+      );
     }
     if (!mounted) return;
     _closeWithMessage(AppStrings.mealSaved);
@@ -196,6 +244,21 @@ class _MealFormPageState extends State<MealFormPage> {
             ),
           ],
           const SizedBox(height: AppConstants.spacingXl),
+          Text(AppStrings.mealPhotoLabel, style: textTheme.labelLarge),
+          const SizedBox(height: AppConstants.spacingXs),
+          Text(
+            AppStrings.mealPhotoHint,
+            style: textTheme.bodySmall?.copyWith(
+              color: AppColors.onSurfaceSecondary,
+            ),
+          ),
+          const SizedBox(height: AppConstants.spacingSm),
+          _MealPhoto(
+            path: _photoPath,
+            onPick: _pickPhoto,
+            onRemove: () => setState(() => _photoPath = null),
+          ),
+          const SizedBox(height: AppConstants.spacingXl),
           Text(AppStrings.mealTotalLabel, style: textTheme.labelLarge),
           const SizedBox(height: AppConstants.spacingMd),
           NutrientsSummary(items: _items),
@@ -237,6 +300,72 @@ class _MealItemTile extends StatelessWidget {
         onPressed: onRemove,
         icon: const Icon(Icons.close_rounded),
       ),
+    );
+  }
+}
+
+class _MealPhoto extends StatelessWidget {
+  const _MealPhoto({
+    required this.path,
+    required this.onPick,
+    required this.onRemove,
+  });
+
+  final String? path;
+  final VoidCallback onPick;
+  final VoidCallback onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    final path = this.path;
+    if (path == null) {
+      return OutlinedButton.icon(
+        onPressed: onPick,
+        icon: const Icon(Icons.add_a_photo_outlined),
+        label: Text(AppStrings.mealPhotoAdd),
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+          child: AspectRatio(
+            aspectRatio: 4 / 3,
+            child: Image.file(
+              File(path),
+              fit: BoxFit.cover,
+              errorBuilder: (_, _, _) => const ColoredBox(
+                color: AppColors.surfaceVariant,
+                child: Icon(
+                  Icons.broken_image_outlined,
+                  color: AppColors.onSurfaceSecondary,
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: AppConstants.spacingSm),
+        Row(
+          children: [
+            Expanded(
+              child: TextButton.icon(
+                onPressed: onPick,
+                icon: const Icon(Icons.photo_camera_outlined),
+                label: Text(AppStrings.mealPhotoChange),
+              ),
+            ),
+            Expanded(
+              child: TextButton.icon(
+                onPressed: onRemove,
+                style: TextButton.styleFrom(foregroundColor: AppColors.error),
+                icon: const Icon(Icons.delete_outline_rounded),
+                label: Text(AppStrings.mealPhotoRemove),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../../configs/constants/app_constants.dart';
@@ -38,7 +40,7 @@ class MealCard extends StatelessWidget {
                 padding: const EdgeInsets.all(AppConstants.spacingSm),
                 child: Row(
                   children: [
-                    EmojiBox(emoji: meal.type.emoji, size: 48),
+                    _MealLeading(meal: meal),
                     const SizedBox(width: AppConstants.spacingMd),
                     Expanded(
                       child: Column(
@@ -138,6 +140,35 @@ class _MacroCell extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Miniatura da foto, quando houver; senão, o emoji do tipo da refeição.
+class _MealLeading extends StatelessWidget {
+  const _MealLeading({required this.meal});
+
+  static const _size = 48.0;
+
+  final Meal meal;
+
+  @override
+  Widget build(BuildContext context) {
+    final emoji = EmojiBox(emoji: meal.type.emoji, size: _size);
+    final path = meal.photoPath;
+    if (path == null) return emoji;
+    final pixels = (_size * MediaQuery.devicePixelRatioOf(context)).round();
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+      child: Image.file(
+        File(path),
+        width: _size,
+        height: _size,
+        fit: BoxFit.cover,
+        // Decodifica no tamanho da miniatura, não no da foto inteira.
+        cacheWidth: pixels,
+        errorBuilder: (_, _, _) => emoji,
       ),
     );
   }

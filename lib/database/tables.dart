@@ -143,3 +143,15 @@ class SyncState extends Table {
   @override
   Set<Column> get primaryKey => {entity};
 }
+
+/// Foto de uma refeição. Só existe no aparelho: não sincroniza e é apagada
+/// no logout. Guarda o nome do arquivo, não o caminho, porque a pasta do app
+/// muda entre instalações no iOS.
+@DataClassName('MealPhotoRow')
+class MealPhotos extends Table {
+  TextColumn get mealId => text().references(Meals, #id)();
+  TextColumn get fileName => text()();
+
+  @override
+  Set<Column> get primaryKey => {mealId};
+}

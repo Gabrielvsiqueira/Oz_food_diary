@@ -138,6 +138,18 @@ abstract final class AppStrings {
   static const mealNoFoods = 'Nenhum alimento adicionado ainda';
   static const mealRemoveFood = 'Remover alimento';
   static const mealTotalLabel = 'Total da refeição';
+  static const mealPhotoLabel = 'Foto';
+  static const mealPhotoHint = 'Opcional. A foto fica salva só neste aparelho.';
+  static const mealPhotoAdd = 'Adicionar foto';
+  static const mealPhotoChange = 'Trocar foto';
+  static const mealPhotoRemove = 'Remover foto';
+  static const mealPhotoCamera = 'Tirar foto';
+  static const mealPhotoGallery = 'Escolher da galeria';
+  static const mealPhotoDenied =
+      'O Oz não tem acesso à câmera ou às fotos. Libere o acesso nos ajustes '
+      'do aparelho.';
+  static const mealPhotoUnavailable =
+      'Não foi possível abrir a câmera ou a galeria.';
 
   static const foodSearchTitle = 'Buscar alimento';
   static const foodSearchHint = 'Ex.: arroz, frango, banana';

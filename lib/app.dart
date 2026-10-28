@@ -28,12 +28,20 @@ import 'repositories/session_repository.dart';
 import 'repositories/supabase_session_repository.dart';
 import 'repositories/supabase_sync_remote.dart';
 import 'services/barcode_lookup_service.dart';
+import 'services/meal_photo_storage.dart';
+import 'services/photo_picker.dart';
 import 'services/sync_service.dart';
 
 class OzApp extends StatefulWidget {
-  const OzApp({super.key, required this.database, this.supabase});
+  const OzApp({
+    super.key,
+    required this.database,
+    required this.photos,
+    this.supabase,
+  });
 
   final AppDatabase database;
+  final MealPhotoStorage photos;
 
   /// Sem cliente (Supabase não configurado), usa a sessão local.
   final SupabaseClient? supabase;
@@ -80,7 +88,10 @@ class _OzAppState extends State<OzApp> {
           create: (context) =>
               BarcodeLookupService(context.read(), OpenFoodFactsRepository()),
         ),
-        Provider<MealRepository>(create: (_) => DriftMealRepository(database)),
+        Provider<MealRepository>(
+          create: (_) => DriftMealRepository(database, photos: widget.photos),
+        ),
+        Provider(create: (_) => PhotoPicker()),
         Provider<ProfileRepository>(
           create: (_) => DriftProfileRepository(database),
         ),
