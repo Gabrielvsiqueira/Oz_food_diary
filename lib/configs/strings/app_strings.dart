@@ -23,6 +23,8 @@ abstract final class AppStrings {
   static String errorAgeOutOfRange(int min, int max) =>
       'A idade deve estar entre $min e $max anos';
   static const errorEmptyMeal = 'Adicione ao menos um alimento';
+  static const errorInvalidBarcode =
+      'Digite os números do código de barras (8 a 14 dígitos)';
   static String errorFoodQuantityTooLarge(int max) =>
       'Máximo de $max g por alimento';
 
@@ -144,12 +146,51 @@ abstract final class AppStrings {
   static const foodSearchError = 'Não foi possível carregar os alimentos';
   static const foodSourceCredit =
       'Fontes: Tabela Brasileira de Composição de Alimentos (TACO), 4ª ed., '
-      'NEPA/UNICAMP, 2011; medidas caseiras: IBGE, POF 2008-2009.';
+      'NEPA/UNICAMP, 2011; medidas caseiras: IBGE, POF 2008-2009; '
+      'produtos industrializados: Open Food Facts (ODbL).';
   static String foodPer100g(String kcal) => '$kcal kcal a cada 100 g';
   static const foodQuantityLabel = 'Quantidade';
   static const foodPortionLabel = 'Medida';
   static const foodAdd = 'Adicionar';
   static const foodUpdate = 'Atualizar';
+
+  static const barcodeScanTooltip = 'Escanear código de barras';
+  static const barcodeScannerTitle = 'Código de barras';
+  static const barcodeScannerHint =
+      'Aponte a câmera para o código de barras da embalagem';
+  static const barcodeTypeCode = 'Digitar código';
+  static const barcodeTorch = 'Lanterna';
+  static const barcodeCameraDenied =
+      'O Oz não tem acesso à câmera. Libere o acesso nos ajustes do aparelho '
+      'ou digite o código.';
+  static const barcodeCameraUnavailable =
+      'Não foi possível abrir a câmera. Você pode digitar o código.';
+  static const barcodeLabel = 'Código de barras';
+  static const barcodeSearch = 'Buscar';
+  static const barcodeSearching = 'Buscando produto…';
+  static const barcodeErrorOffline =
+      'Sem conexão. Conecte-se à internet para buscar produtos novos.';
+  static const barcodeErrorFailed =
+      'Não foi possível buscar o produto. Tente novamente.';
+  static const barcodeNotFoundTitle = 'Produto não encontrado';
+  static String barcodeNotFoundMessage(String barcode) =>
+      'O código $barcode não está na Open Food Facts. Quer cadastrar o '
+      'produto com os dados da embalagem?';
+  static const barcodeRegister = 'Cadastrar';
+
+  static const productFormNewTitle = 'Novo produto';
+  static const productFormCompleteTitle = 'Completar produto';
+  static const productFormNewHint =
+      'Preencha com a tabela nutricional da embalagem. Os valores são a cada '
+      '100 g (ou 100 ml).';
+  static const productFormCompleteHint =
+      'A Open Food Facts não tem todas as informações deste produto. Confira '
+      'e complete com a tabela nutricional da embalagem, a cada 100 g '
+      '(ou 100 ml).';
+  static const productFormName = 'Nome';
+  static const productFormNameHint = 'Ex.: Iogurte natural integral';
+  static const productFormServing = 'Porção da embalagem';
+  static const productFormServingHelper = 'Opcional. Ex.: 1 pote = 170 g';
 
   static String portionGram(num count) => count == 1 ? 'grama' : 'gramas';
   static String portionUnit(num count) => count == 1 ? 'unidade' : 'unidades';
@@ -162,6 +203,7 @@ abstract final class AppStrings {
   static String portionLadle(num count) => count == 1 ? 'concha' : 'conchas';
   static String portionServingSpoon(num count) =>
       count == 1 ? 'colher de servir' : 'colheres de servir';
+  static String portionServing(num count) => count == 1 ? 'porção' : 'porções';
 
   static const mealDeleteTitle = 'Excluir refeição?';
   static const mealDeleteMessage = 'Essa ação não pode ser desfeita.';

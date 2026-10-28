@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../database/app_database.dart';
+import '../models/enums/food_source.dart';
 import '../models/food.dart';
 import '../models/food_portion.dart';
 import '../services/text_utils.dart';
@@ -28,6 +29,58 @@ class DriftFoodRepository implements FoodRepository {
               ..orderBy([(f) => OrderingTerm.asc(f.searchName)])
               ..limit(limit))
             .get();
+    return _toFoods(rows);
+  }
+
+  @override
+  Future<Food?> findByBarcode(String barcode) async {
+    final row = await (_db.select(
+      _db.foods,
+    )..where((f) => f.barcode.equals(barcode))).getSingleOrNull();
+    if (row == null) return null;
+    return (await _toFoods([row])).single;
+  }
+
+  @override
+  Future<void> saveProduct(
+    Food food, {
+    required String barcode,
+    required FoodSource source,
+  }) => _db.transaction(() async {
+    await _db
+        .into(_db.foods)
+        .insertOnConflictUpdate(
+          FoodsCompanion.insert(
+            id: food.id,
+            source: source,
+            sourceRef: Value(source == FoodSource.off ? barcode : null),
+            barcode: Value(barcode),
+            name: food.name,
+            searchName: normalizeForSearch(food.name),
+            emoji: food.emoji,
+            kcal100g: food.kcalPer100g,
+            carbs100g: food.carbsPer100g,
+            protein100g: food.proteinPer100g,
+            fat100g: food.fatPer100g,
+          ),
+        );
+    await (_db.delete(
+      _db.foodPortions,
+    )..where((p) => p.foodId.equals(food.id))).go();
+    await _db.batch(
+      (batch) => batch.insertAll(_db.foodPortions, [
+        for (final (index, portion) in food.householdPortions.indexed)
+          FoodPortionsCompanion.insert(
+            foodId: food.id,
+            unit: portion.unit,
+            grams: portion.grams,
+            position: index,
+          ),
+      ]),
+    );
+  });
+
+  Future<List<Food>> _toFoods(List<FoodRow> rows) async {
     final portions = await portionsFor(_db, rows.map((r) => r.id));
     return [
       for (final row in rows)

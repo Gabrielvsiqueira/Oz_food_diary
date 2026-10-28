@@ -10,6 +10,7 @@ import '../../models/enums/portion_unit.dart';
 import '../../models/enums/sync_status.dart';
 import '../../models/food_portion.dart';
 import '../../models/meal_item.dart';
+import '../../models/product_lookup_failure.dart';
 import '../../services/validators.dart';
 import 'app_strings.dart';
 
@@ -51,6 +52,7 @@ extension ValidationErrorLabels on ValidationError {
     EmptyMealError() => AppStrings.errorEmptyMeal,
     FoodQuantityTooLargeError(:final maxGrams) =>
       AppStrings.errorFoodQuantityTooLarge(maxGrams),
+    InvalidBarcodeError() => AppStrings.errorInvalidBarcode,
   };
 }
 
@@ -74,6 +76,13 @@ extension SyncStatusLabels on SyncStatus {
     SyncStatus.offline => AppStrings.syncErrorOffline,
     SyncStatus.failed => AppStrings.syncErrorFailed,
     SyncStatus.idle || SyncStatus.syncing => null,
+  };
+}
+
+extension ProductLookupFailureLabels on ProductLookupFailure {
+  String get message => switch (this) {
+    ProductLookupOfflineFailure() => AppStrings.barcodeErrorOffline,
+    ProductLookupServerFailure() => AppStrings.barcodeErrorFailed,
   };
 }
 
@@ -166,6 +175,7 @@ extension PortionUnitLabels on PortionUnit {
     PortionUnit.cup => AppStrings.portionCup(count),
     PortionUnit.ladle => AppStrings.portionLadle(count),
     PortionUnit.servingSpoon => AppStrings.portionServingSpoon(count),
+    PortionUnit.serving => AppStrings.portionServing(count),
   };
 }
 

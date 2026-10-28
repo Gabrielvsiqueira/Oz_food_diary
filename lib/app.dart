@@ -22,10 +22,12 @@ import 'repositories/drift_profile_repository.dart';
 import 'repositories/food_repository.dart';
 import 'repositories/local_session_repository.dart';
 import 'repositories/meal_repository.dart';
+import 'repositories/open_food_facts_repository.dart';
 import 'repositories/profile_repository.dart';
 import 'repositories/session_repository.dart';
 import 'repositories/supabase_session_repository.dart';
 import 'repositories/supabase_sync_remote.dart';
+import 'services/barcode_lookup_service.dart';
 import 'services/sync_service.dart';
 
 class OzApp extends StatefulWidget {
@@ -74,6 +76,10 @@ class _OzAppState extends State<OzApp> {
     return MultiProvider(
       providers: [
         Provider<FoodRepository>(create: (_) => DriftFoodRepository(database)),
+        Provider(
+          create: (context) =>
+              BarcodeLookupService(context.read(), OpenFoodFactsRepository()),
+        ),
         Provider<MealRepository>(create: (_) => DriftMealRepository(database)),
         Provider<ProfileRepository>(
           create: (_) => DriftProfileRepository(database),

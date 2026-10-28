@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../models/meal.dart';
+import '../../models/product_info.dart';
+import '../../pages/barcode_scanner/barcode_scanner_page.dart';
 import '../../pages/food_search/food_search_page.dart';
 import '../../pages/login/login_page.dart';
 import '../../pages/main_shell/main_shell_page.dart';
@@ -14,6 +16,7 @@ import '../../pages/onboarding/onboarding_height_page.dart';
 import '../../pages/onboarding/onboarding_loading_page.dart';
 import '../../pages/onboarding/onboarding_result_page.dart';
 import '../../pages/onboarding/onboarding_weight_page.dart';
+import '../../pages/product_form/product_form_page.dart';
 import '../../pages/splash/splash_page.dart';
 import '../../pages/welcome/welcome_page.dart';
 import 'app_routes.dart';
@@ -38,6 +41,10 @@ class RouteGenerator {
       AppRoutes.main => const MainShellPage(),
       AppRoutes.mealForm => MealFormPage(meal: settings.arguments as Meal?),
       AppRoutes.foodSearch => const FoodSearchPage(),
+      AppRoutes.barcodeScanner => const BarcodeScannerPage(),
+      AppRoutes.productForm => ProductFormPage(
+        product: settings.arguments! as ProductInfo,
+      ),
       _ => const SplashPage(),
     };
     return MaterialPageRoute(builder: (_) => page, settings: settings);

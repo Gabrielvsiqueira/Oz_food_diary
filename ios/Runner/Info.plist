@@ -82,5 +82,7 @@
 			</array>
 		</dict>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>O Oz usa a câmera para ler o código de barras dos produtos.</string>
 </dict>
 </plist>

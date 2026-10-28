@@ -22,4 +22,10 @@ class AppRoutes {
 
   /// Retorna o `MealItem` escolhido ao fechar.
   static const foodSearch = '/meal/food-search';
+
+  /// Retorna o código de barras lido (`String`).
+  static const barcodeScanner = '/meal/barcode-scanner';
+
+  /// Argumento: `ProductInfo`. Retorna o `ProductInfo` completo.
+  static const productForm = '/meal/product-form';
 }

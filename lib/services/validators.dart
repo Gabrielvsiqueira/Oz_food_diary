@@ -57,6 +57,10 @@ class FoodQuantityTooLargeError extends ValidationError {
   final int maxGrams;
 }
 
+class InvalidBarcodeError extends ValidationError {
+  const InvalidBarcodeError();
+}
+
 class Validators {
   Validators._();
 
@@ -153,6 +157,19 @@ class Validators {
         ? const FoodQuantityTooLargeError(NutritionConstants.maxFoodGrams)
         : null;
   }
+
+  /// EAN-8, UPC-A (12), EAN-13 ou GTIN-14: só dígitos.
+  static ValidationError? barcode(String? value) {
+    final error = required(value);
+    if (error != null) return error;
+    return RegExp(r'^\d{8,14}$').hasMatch(value!.trim())
+        ? null
+        : const InvalidBarcodeError();
+  }
+
+  /// Porção da embalagem, em gramas; opcional.
+  static ValidationError? servingGrams(String? value) =>
+      (value == null || value.trim().isEmpty) ? null : foodQuantity(value, 1);
 
   static ValidationError? birthDate(DateTime? date, {DateTime? now}) {
     if (date == null) return const InvalidDateError();
