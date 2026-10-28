@@ -87,7 +87,10 @@ class MealItems extends Table with SyncColumns {
   TextColumn get foodId => text().nullable()();
   IntColumn get position => integer()();
   TextColumn get foodName => text()();
-  TextColumn get foodEmoji => text()();
+
+  /// Sem uso: os alimentos não têm mais emoji. A coluna fica (vazia) até a
+  /// próxima migração do Supabase, porque o servidor ainda a exige.
+  TextColumn get foodEmoji => text().clientDefault(() => '')();
   RealColumn get kcal100g => real()();
   RealColumn get carbs100g => real()();
   RealColumn get protein100g => real()();
@@ -110,7 +113,6 @@ class Foods extends Table {
 
   /// Nome minúsculo e sem acentos, usado na busca.
   TextColumn get searchName => text()();
-  TextColumn get emoji => text()();
   RealColumn get kcal100g => real()();
   RealColumn get carbs100g => real()();
   RealColumn get protein100g => real()();

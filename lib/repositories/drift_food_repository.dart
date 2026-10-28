@@ -56,8 +56,7 @@ class DriftFoodRepository implements FoodRepository {
             sourceRef: Value(source == FoodSource.off ? barcode : null),
             barcode: Value(barcode),
             name: food.name,
-            searchName: normalizeForSearch(food.name),
-            emoji: food.emoji,
+            searchName: searchNameOf(food),
             kcal100g: food.kcalPer100g,
             carbs100g: food.carbsPer100g,
             protein100g: food.proteinPer100g,
@@ -87,7 +86,6 @@ class DriftFoodRepository implements FoodRepository {
         Food(
           id: row.id,
           name: row.name,
-          emoji: row.emoji,
           kcalPer100g: row.kcal100g,
           carbsPer100g: row.carbs100g,
           proteinPer100g: row.protein100g,

@@ -23,6 +23,7 @@ class AppColors {
   static const protein = Color(0xFF6AA8F0); // azul: construção, força
   static const carbs = Color(0xFFFBBF24); // âmbar: energia (âncora da paleta)
   static const fat = Color(0xFFC88BF0); // lilás: neutro, sem conotação negativa
+  static const alcohol = onSurfaceMuted; // cinza: calorias que não são macro
 
   static Color caloriesFor({required double consumed, required double goal}) =>
       consumed > goal ? error : calories;

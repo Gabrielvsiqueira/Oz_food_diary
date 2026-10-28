@@ -16,6 +16,8 @@ import 'package:oz_contador_de_calorias/services/date_utils.dart';
 import 'package:oz_contador_de_calorias/services/meal_photo_storage.dart';
 import 'package:oz_contador_de_calorias/services/photo_picker.dart';
 
+import 'support/legacy_database.dart';
+
 /// Seletor que falha com o código de erro do plugin nativo.
 class _FailingPicker extends ImagePicker {
   _FailingPicker(this.code);
@@ -180,12 +182,7 @@ void main() {
   );
 
   test('banco da versão 2 ganha a tabela das fotos', () async {
-    final old = AppDatabase(
-      NativeDatabase.memory(
-        setup: (raw) => raw.execute('PRAGMA user_version = 2'),
-      ),
-    );
-    addTearDown(old.close);
+    final old = await openLegacyDatabase(2);
     expect(await old.select(old.mealPhotos).get(), isEmpty);
   });
 

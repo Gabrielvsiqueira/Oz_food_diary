@@ -14,6 +14,10 @@ import 'tables.dart';
 
 part 'app_database.g.dart';
 
+/// Texto usado na busca: o nome e as palavras-chave, normalizados.
+String searchNameOf(Food food) =>
+    normalizeForSearch([food.name, ...food.keywords].join(' '));
+
 @DriftDatabase(
   tables: [
     Profiles,
@@ -47,7 +51,7 @@ class AppDatabase extends _$AppDatabase {
   final Future<void> Function()? clearUserFiles;
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -55,6 +59,11 @@ class AppDatabase extends _$AppDatabase {
       if (from < 2) await m.createTable(syncState);
       if (from < 3) await m.createTable(mealPhotos);
       if (from < 4) await m.createTable(reminderSettings);
+      if (from < 5) {
+        // Recria as tabelas sem a coluna `emoji` dos alimentos.
+        await m.alterTable(TableMigration(foods));
+        await _replaceTacoCatalog();
+      }
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -64,9 +73,21 @@ class AppDatabase extends _$AppDatabase {
     },
   );
 
+  /// Troca o catálogo da TACO pelo do IBGE. As refeições guardam uma cópia
+  /// de cada alimento, então o histórico não muda. SQL puro porque a origem
+  /// 'taco' não existe mais no enum.
+  Future<void> _replaceTacoCatalog() async {
+    await customStatement(
+      "DELETE FROM food_portions WHERE food_id IN "
+      "(SELECT id FROM foods WHERE source = 'taco')",
+    );
+    await customStatement("DELETE FROM foods WHERE source = 'taco'");
+    if (foodSeed != null) await insertFoods(await foodSeed!());
+  }
+
   Future<void> insertFoods(
     List<Food> catalog, {
-    FoodSource source = FoodSource.taco,
+    FoodSource source = FoodSource.ibge,
   }) => batch((batch) {
     batch.insertAllOnConflictUpdate(foods, [
       for (final food in catalog)
@@ -74,8 +95,7 @@ class AppDatabase extends _$AppDatabase {
           id: food.id,
           source: source,
           name: food.name,
-          searchName: normalizeForSearch(food.name),
-          emoji: food.emoji,
+          searchName: searchNameOf(food),
           kcal100g: food.kcalPer100g,
           carbs100g: food.carbsPer100g,
           protein100g: food.proteinPer100g,
