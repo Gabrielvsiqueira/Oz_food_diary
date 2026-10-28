@@ -49,3 +49,8 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Configuração local (chaves do Supabase e client IDs do Google)
+/config/*.json
+!/config/*.example.json
+/ios/Flutter/Secrets.xcconfig

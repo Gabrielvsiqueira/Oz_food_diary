@@ -7,6 +7,7 @@ import 'package:oz_contador_de_calorias/models/enums/portion_unit.dart';
 import 'package:oz_contador_de_calorias/models/food_portion.dart';
 import 'package:oz_contador_de_calorias/models/meal.dart';
 import 'package:oz_contador_de_calorias/models/meal_item.dart';
+import 'package:oz_contador_de_calorias/repositories/mock_meal_repository.dart';
 import 'package:oz_contador_de_calorias/services/validators.dart';
 
 void main() {
@@ -87,13 +88,17 @@ void main() {
   });
 
   group('MealController', () {
+    late MockMealRepository repository;
     late DailyLogController dailyLog;
     late MealController controller;
 
     setUp(() {
-      dailyLog = DailyLogController();
-      controller = MealController(dailyLog);
+      repository = MockMealRepository();
+      dailyLog = DailyLogController(repository);
+      controller = MealController(repository, dailyLog);
     });
+
+    tearDown(() => dailyLog.dispose());
 
     test('validateItems exige ao menos um alimento', () {
       expect(controller.validateItems(const []), isA<EmptyMealError>());
@@ -105,36 +110,48 @@ void main() {
       );
     });
 
-    test('addMeal registra no dia de hoje e soma no total do dia', () {
-      final before = dailyLog.logFor(DateTime.now()).totalCalories;
-      controller.addMeal(
+    test('addMeal registra no dia de hoje e soma no total do dia', () async {
+      await controller.addMeal(
         type: MealType.lunch,
         items: const [
           MealItem(food: rice, portion: FoodPortion.gram, quantity: 100),
         ],
       );
-      expect(dailyLog.logFor(DateTime.now()).totalCalories, before + 128);
+      await pumpEventQueue();
+      expect(dailyLog.isTodaySelected, isTrue);
+      expect(dailyLog.selectedLog.totalCalories, 128);
     });
 
-    test('updateMeal substitui os itens da refeição', () {
-      final added = controller.addMeal(
+    test('updateMeal substitui os itens da refeição', () async {
+      final added = await controller.addMeal(
         type: MealType.lunch,
         items: const [
           MealItem(food: rice, portion: FoodPortion.gram, quantity: 100),
         ],
       );
-      controller.updateMeal(
+      await controller.updateMeal(
         added.copyWith(
           items: const [
             MealItem(food: rice, portion: FoodPortion.gram, quantity: 200),
           ],
         ),
       );
-      final saved = dailyLog
-          .logFor(DateTime.now())
-          .meals
-          .firstWhere((m) => m.id == added.id);
+      await pumpEventQueue();
+      final saved = dailyLog.selectedLog.meals.single;
+      expect(saved.id, added.id);
       expect(saved.calories, 256);
+    });
+
+    test('deleteMeal tira a refeição do dia', () async {
+      final added = await controller.addMeal(
+        type: MealType.lunch,
+        items: const [
+          MealItem(food: rice, portion: FoodPortion.gram, quantity: 100),
+        ],
+      );
+      await controller.deleteMeal(added);
+      await pumpEventQueue();
+      expect(dailyLog.selectedLog.meals, isEmpty);
     });
   });
 }

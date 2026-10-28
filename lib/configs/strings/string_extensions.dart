@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
+import '../../models/auth_failure.dart';
 import '../../models/enums/activity_level.dart';
 import '../../models/enums/gender.dart';
 import '../../models/enums/goal_type.dart';
@@ -49,6 +50,20 @@ extension ValidationErrorLabels on ValidationError {
     EmptyMealError() => AppStrings.errorEmptyMeal,
     FoodQuantityTooLargeError(:final maxGrams) =>
       AppStrings.errorFoodQuantityTooLarge(maxGrams),
+  };
+}
+
+extension AuthFailureLabels on AuthFailure {
+  /// `null` quando não há o que avisar (o usuário cancelou).
+  String? get message => switch (this) {
+    InvalidCredentialsFailure() => AppStrings.authErrorInvalidCredentials,
+    EmailAlreadyRegisteredFailure() =>
+      AppStrings.authErrorEmailAlreadyRegistered,
+    WeakPasswordFailure() => AppStrings.authErrorWeakPassword,
+    OfflineFailure() => AppStrings.authErrorOffline,
+    SignInCancelledFailure() => null,
+    ProviderUnavailableFailure() => AppStrings.authErrorProviderUnavailable,
+    UnknownAuthFailure() => AppStrings.authErrorUnknown,
   };
 }
 
@@ -140,6 +155,7 @@ extension PortionUnitLabels on PortionUnit {
     PortionUnit.teaspoon => AppStrings.portionTeaspoon(count),
     PortionUnit.cup => AppStrings.portionCup(count),
     PortionUnit.ladle => AppStrings.portionLadle(count),
+    PortionUnit.servingSpoon => AppStrings.portionServingSpoon(count),
   };
 }
 
