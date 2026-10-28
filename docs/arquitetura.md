@@ -241,7 +241,7 @@ As mesmas tabelas (`lib/database/tables.dart`), com as diferenças:
 | `foods.search_name`  | Nome minúsculo e sem acentos; a busca usa `LIKE '%termo%'` para cada palavra                |
 | `sync_state`         | Tabela de uma linha com o último `server_updated_at` recebido (etapa 3)                     |
 | `meal_photos`        | Foto de cada refeição (nome do arquivo); **só local**, não sincroniza                      |
-| `reminder_settings`  | Horários dos lembretes; **só local**, não sincroniza (etapa 5)                              |
+| `reminder_settings`  | Horário e liga/desliga de cada lembrete; **só local**, não sincroniza                       |
 | Seed                 | Catálogo em `assets/data/foods.json`, inserido quando o banco é criado                      |
 
 > **Busca:** com algumas centenas de alimentos, `LIKE` numa coluna já
@@ -510,6 +510,9 @@ flowchart TD
 - **Só no aparelho:** a foto não sincroniza. A tabela fica fora das
   `userTables`, então não conta como pendência e não vai no `push_changes`.
   Mandar para o Supabase Storage fica como evolução.
+- **Miniatura:** o card decodifica a foto já pequena, com o lado menor no
+  tamanho do quadrado (`_CoverFileImage`), para o `BoxFit.cover` não precisar
+  ampliá-la.
 - **Limpeza:** trocar ou remover a foto apaga o arquivo anterior; excluir a
   refeição apaga a foto; o logout apaga a pasta inteira
   (`AppDatabase.clearUserFiles`). Ao abrir o app, `prunePhotos` apaga fotos de
@@ -526,17 +529,35 @@ flowchart TD
 ## 8. Lembretes de refeição
 
 - **Agendados no próprio aparelho** com `flutter_local_notifications` +
-  `timezone`: não dependem de servidor e funcionam offline.
-- **Horários configuráveis** por tipo de refeição (padrão: café 8h, almoço
-  12h30, jantar 19h30; lanche desligado).
+  `timezone` (fuso do aparelho pelo `flutter_timezone`): não dependem de
+  servidor e funcionam offline.
+- **Horários configuráveis** por refeição na tela "Lembretes de refeição",
+  aberta pelo Perfil: café 8h, almoço 12h30 e jantar 19h30 ligados; lanche
+  16h desligado. Cada um tem um seletor de horário e um liga/desliga.
 - **Não incomodar quem já registrou:** os lembretes são agendados um a um para
-  os **próximos 7 dias** (não como alarme diário repetido). Ao registrar o
-  almoço de hoje, o app cancela só o lembrete do almoço de hoje. Ao abrir o app,
-  a janela de 7 dias é reagendada. 3 refeições × 7 dias = 21 agendamentos,
-  abaixo do limite de 64 do iOS.
-- **Permissão:** pedida no fim do onboarding, explicando o motivo (obrigatória
-  no Android 13+ e no iOS).
-- **Configuração só local** (`reminder_settings`): cada aparelho tem a sua.
+  os **próximos 7 dias** (não como alarme diário repetido), pela função pura
+  `planReminders`. Uma refeição registrada hoje tira só o lembrete de hoje
+  daquele tipo. 4 refeições × 7 dias = 28 agendamentos, abaixo do limite de
+  64 do iOS.
+- **Quando reagenda** (`ReminderController`): ao entrar na conta, a cada
+  refeição de hoje salva ou excluída (stream do drift), ao mudar um horário
+  e quando o app volta para a tela (a janela de 7 dias anda; num dia novo, as
+  refeições de "hoje" são outras). Os agendamentos ficam em fila para não se
+  sobreporem.
+- **Android:** agendamento inexato (`inexactAllowWhileIdle`), que pode
+  atrasar alguns minutos mas dispensa a permissão de alarme exato. Receptores
+  do plugin no `AndroidManifest.xml` reagendam depois que o aparelho
+  reinicia, e o Gradle liga o *desugaring* que o plugin exige.
+- **iOS:** o `AppDelegate` define o delegate de notificações, para o aviso
+  aparecer mesmo com o app aberto.
+- **Permissão:** pedida no fim do onboarding ("Começar"), obrigatória no
+  Android 13+ e no iOS. Quem entra pelo login num aparelho novo vê na tela
+  de lembretes um aviso "Notificações desativadas" com "Permitir"; ligar um
+  lembrete sem permissão também a pede. Negada de vez, o app orienta a
+  liberar nos ajustes. Ao voltar para o app, a permissão é verificada de
+  novo.
+- **Configuração só local** (`reminder_settings`, banco local versão 4): cada
+  aparelho tem a sua. O logout cancela todos os lembretes e volta ao padrão.
 
 ---
 
@@ -678,7 +699,7 @@ duas funcionalidades seguras:
 | 2 | Supabase: migrations, RLS, Auth e telas de login/cadastro reais ✅    | 2       |
 | 3 | `SyncService` (push, pull, logout seguro) ✅                          | 2       |
 | 4 | Registro de peso + gráfico de evolução + histórico de metas           | 3       |
-| 5 | Lembretes de refeição                                                 | 3       |
+| 5 | Lembretes de refeição ✅                                              | 3       |
 | 6 | Leitura de código de barras + API da Open Food Facts ✅                | 3       |
 | 7 | Foto da refeição (câmera e galeria) ✅                                 | 3       |
 | 8 | Gráfico de evolução do peso ✅ (sem o histórico de metas na tela)     | 3       |
@@ -696,7 +717,7 @@ duas funcionalidades seguras:
 | `connectivity_plus`           | Detectar volta da conexão para sincronizar       |
 | `uuid` (já existe)            | IDs v4 e v5 gerados no app                       |
 | `fl_chart`                    | Gráfico de evolução do peso                      |
-| `flutter_local_notifications`, `timezone` | Lembretes agendados                  |
+| `flutter_local_notifications`, `timezone`, `flutter_timezone` | Lembretes agendados no fuso do aparelho |
 | `mobile_scanner`              | Leitura de código de barras pela câmera          |
 | `image_picker`                | Foto da refeição pela câmera ou galeria          |
 | `path_provider`               | Pasta de documentos do app, onde ficam as fotos  |

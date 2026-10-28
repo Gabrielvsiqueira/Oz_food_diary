@@ -11,9 +11,10 @@ registrar, editar e excluir refeições, acompanhando o progresso do dia.
 > a mesma conta em outro aparelho, tudo volta. As decisões de arquitetura
 > estão em [`docs/arquitetura.md`](docs/arquitetura.md).
 >
-> **Entrega 3 (em andamento).** Leitura de código de barras pela câmera, com
+> **Entrega 3.** Leitura de código de barras pela câmera, com
 > os dados do produto buscados na API HTTP da Open Food Facts, e foto da
-> refeição pela câmera ou galeria, e gráfico de evolução do peso.
+> refeição pela câmera ou galeria, gráfico de evolução do peso e lembretes de
+> refeição com notificações locais.
 
 ---
 
@@ -57,6 +58,9 @@ registrar, editar e excluir refeições, acompanhando o progresso do dia.
 - **Metas**: edição manual da meta de calorias e de macros.
 - **Perfil**: edição de nome, altura e peso, com recálculo das metas quando
   peso ou altura mudam, estado da sincronização, logout e exclusão de conta.
+- **Lembretes de refeição**: notificações locais nos horários de cada
+  refeição (configuráveis pelo Perfil), agendadas para os próximos 7 dias;
+  quem já registrou a refeição no dia não recebe o lembrete daquele dia.
 - **Evolução do peso**: aba própria com resumo (atual, início e variação),
   gráfico de linha, filtros de 30 dias, 90 dias ou tudo, lista das medições e
   botão para registrar o peso de hoje ou de um dia esquecido.
@@ -165,7 +169,7 @@ lib/
 │   ├── strings/              # Textos (AppStrings), rótulos e formatação de números
 │   ├── routes/               # Nomes de rotas e RouteGenerator
 │   └── theme/                # Cores, tipografia e ThemeData
-├── controllers/              # Session, Sync, Onboarding, Profile, DailyLog, Meal, FoodSearch, WeightHistory
+├── controllers/              # Session, Sync, Onboarding, Profile, DailyLog, Meal, FoodSearch, WeightHistory, Reminder
 ├── database/                 # Banco local (drift): tabelas, IDs e catálogo inicial
 ├── mocks/                    # Conta de demonstração e dados de teste
 ├── models/                   # Entidades e enums
@@ -181,6 +185,7 @@ lib/
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `SessionController`    | Estado de autenticação (login/logout)                                                                                    |
 | `WeightHistoryController` | Histórico de peso da aba Evolução, filtrado por período; criado pela página                             |
+| `ReminderController`   | Configuração dos lembretes e agendamento dos próximos 7 dias, pulando refeições já registradas hoje        |
 | `SyncController`       | Quando sincronizar (login, gravações, volta da internet), estado mostrado no Perfil e parada no logout                   |
 | `OnboardingController` | Guarda as respostas do onboarding e monta o `UserProfile`                                                                |
 | `ProfileController`    | Perfil do usuário e metas; recalcula metas quando peso/altura mudam                                                      |
@@ -197,6 +202,7 @@ Os controllers dependem só de interfaces, injetadas via `Provider` em
 | ------------------- | ----------------------- | ---------------------------------------------------------------------- |
 | `FoodRepository`    | `DriftFoodRepository`   | Busca no catálogo local, sem acentos e maiúsculas; produtos lidos pelo código de barras |
 | `ProductRepository` | `OpenFoodFactsRepository` | Produto pelo código de barras na API HTTP da Open Food Facts         |
+| `ReminderRepository` | `DriftReminderRepository` | Horário e liga/desliga de cada lembrete, só no aparelho              |
 | `MealRepository`    | `DriftMealRepository`   | Refeições do dia como stream: toda gravação atualiza a Home sozinha    |
 | `ProfileRepository` | `DriftProfileRepository`| Perfil, histórico de peso (como stream, para o gráfico) e histórico de metas |
 | `SessionRepository` | `SupabaseSessionRepository` (ou `LocalSessionRepository` sem backend) | Login, cadastro, Google, logout e exclusão de conta; o logout apaga os dados do aparelho |
@@ -257,6 +263,7 @@ flowchart TD
 | `/meal/food-search`                         | Busca de alimentos; fecha retornando o `MealItem` escolhido                        |
 | `/meal/barcode-scanner`                     | Leitor de código de barras (câmera ou digitado); fecha retornando o código         |
 | `/meal/product-form`                        | Completa ou cadastra um produto; recebe e retorna um `ProductInfo`                 |
+| `/reminders`                                | Lembretes de refeição (aberta pelo Perfil)                                         |
 
 Após login, conclusão do onboarding e logout, a pilha de navegação é limpa
 (`pushNamedAndRemoveUntil`) para impedir que o botão "voltar" retorne a
