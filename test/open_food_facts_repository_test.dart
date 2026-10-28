@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -138,6 +139,15 @@ void main() {
       expect(
         repository(
           (_) async => throw http.ClientException('Failed host lookup'),
+        ).findByBarcode('1'),
+        throwsA(isA<ProductLookupOfflineFailure>()),
+      );
+    });
+
+    test('erro de TLS (Wi-Fi com página de login) conta como sem conexão', () {
+      expect(
+        repository(
+          (_) async => throw const HandshakeException('portal cativo'),
         ).findByBarcode('1'),
         throwsA(isA<ProductLookupOfflineFailure>()),
       );
