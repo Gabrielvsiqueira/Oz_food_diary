@@ -26,23 +26,25 @@ class MealController extends ChangeNotifier {
     required List<MealItem> items,
     String? photoPath,
   }) async {
+    final day = _dailyLog.dayForNewMeal;
     final meal = Meal(
       id: _uuid.v4(),
       type: type,
       items: items,
-      createdAt: _eatenAtOnSelectedDay(),
+      createdAt: _eatenAt(day),
       photoPath: photoPath,
     );
     await _repository.save(meal);
+    // Se a data virou com a Home em "hoje", a Home passa para o novo dia.
+    _dailyLog.selectDate(day);
     notifyListeners();
     return meal;
   }
 
   /// A refeição nova vai para o dia aberto na Home (para registrar algo
   /// esquecido ontem), no horário de agora.
-  DateTime _eatenAtOnSelectedDay() {
+  DateTime _eatenAt(DateTime day) {
     final now = DateTime.now();
-    final day = _dailyLog.selectedDate;
     if (isSameDay(day, now)) return now;
     return DateTime(day.year, day.month, day.day, now.hour, now.minute);
   }

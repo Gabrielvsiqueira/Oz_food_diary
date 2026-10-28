@@ -85,8 +85,14 @@ class _OzAppState extends State<OzApp> {
       providers: [
         Provider<FoodRepository>(create: (_) => DriftFoodRepository(database)),
         Provider(
-          create: (context) =>
-              BarcodeLookupService(context.read(), OpenFoodFactsRepository()),
+          create: (_) => OpenFoodFactsRepository(),
+          dispose: (_, repository) => repository.close(),
+        ),
+        Provider(
+          create: (context) => BarcodeLookupService(
+            context.read(),
+            context.read<OpenFoodFactsRepository>(),
+          ),
         ),
         Provider<MealRepository>(
           create: (_) => DriftMealRepository(database, photos: widget.photos),

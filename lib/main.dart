@@ -22,7 +22,15 @@ Future<void> main() async {
     foodSeed: () => loadFoodSeed(rootBundle),
     clearUserFiles: photos.deleteAll,
   );
-  unawaited(DriftMealRepository(database, photos: photos).prunePhotos());
+  // Antes do runApp: rodando junto com o app, a limpeza poderia apagar a
+  // foto de uma refeição salva nesses primeiros instantes.
+  try {
+    await DriftMealRepository(database, photos: photos).prunePhotos();
+  } on Object catch (e, stack) {
+    FlutterError.reportError(
+      FlutterErrorDetails(exception: e, stack: stack, library: 'meal photos'),
+    );
+  }
   SupabaseClient? supabase;
   if (Env.hasSupabase) {
     await Supabase.initialize(

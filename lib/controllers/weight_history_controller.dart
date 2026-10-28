@@ -45,7 +45,10 @@ class WeightHistoryController extends ChangeNotifier {
   List<WeightEntry> get visibleEntries {
     final days = _period.days;
     if (days == null) return _entries;
-    final from = _today().subtract(Duration(days: days - 1));
+    // Pelo calendário, não por 24 h: com horário de verão, subtrair uma
+    // Duration não cai na meia-noite.
+    final today = _today();
+    final from = DateTime(today.year, today.month, today.day - (days - 1));
     return [
       for (final entry in _entries)
         if (!entry.date.isBefore(from)) entry,

@@ -194,7 +194,7 @@ class _MealFormPageState extends State<MealFormPage> {
               Text(
                 formatDayTitle(
                   widget.meal?.createdAt ??
-                      context.read<DailyLogController>().selectedDate,
+                      context.read<DailyLogController>().dayForNewMeal,
                 ),
                 style: textTheme.bodyMedium?.copyWith(
                   color: AppColors.onSurfaceSecondary,

@@ -207,6 +207,10 @@ class _DaySummary extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     String n(num value) => formatNumber(value);
     String grams(num value) => '${n(value)}${AppStrings.unitGrams}';
+    final caloriesColor = AppColors.caloriesFor(
+      consumed: log.totalCalories.toDouble(),
+      goal: goal.caloriesTarget.toDouble(),
+    );
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingLg),
@@ -224,7 +228,7 @@ class _DaySummary extends StatelessWidget {
               arcs: [
                 RainbowArc(
                   progress: _progress(log.totalCalories, goal.caloriesTarget),
-                  color: AppColors.calories,
+                  color: caloriesColor,
                 ),
                 RainbowArc(
                   progress: _progress(log.totalProteinG, goal.proteinTargetG),
@@ -247,7 +251,7 @@ class _DaySummary extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: n(log.totalCalories),
-                          style: const TextStyle(color: AppColors.calories),
+                          style: TextStyle(color: caloriesColor),
                         ),
                         TextSpan(
                           text: ' / ${n(goal.caloriesTarget)}',

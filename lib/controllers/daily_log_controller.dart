@@ -17,7 +17,15 @@ class DailyLogController extends ChangeNotifier {
   late DateTime _selectedDate;
   late DailyLog _selectedLog;
 
+  /// O dia aberto era "hoje" quando foi escolhido: se a data virar com o app
+  /// aberto, a Home deve acompanhar o novo dia.
+  bool _followsToday = true;
+
   DateTime get selectedDate => _selectedDate;
+
+  /// Dia em que uma refeição nova deve entrar: o aberto na Home, ou hoje se
+  /// a Home estava em "hoje" e a data virou desde então.
+  DateTime get dayForNewMeal => _followsToday ? today() : _selectedDate;
 
   DailyLog get selectedLog => _selectedLog;
 
@@ -30,6 +38,7 @@ class DailyLogController extends ChangeNotifier {
   void _watch(DateTime day) {
     _subscription?.cancel();
     _selectedDate = day;
+    _followsToday = isSameDay(day, today());
     _selectedLog = DailyLog(date: day);
     _subscription = _repository.watchMealsOn(day).listen((meals) {
       _selectedLog = DailyLog(date: day, meals: meals);

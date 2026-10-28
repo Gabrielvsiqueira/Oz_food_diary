@@ -29,6 +29,8 @@ class OpenFoodFactsRepository implements ProductRepository {
   final http.Client _client;
   final Duration timeout;
 
+  void close() => _client.close();
+
   @override
   Future<ProductInfo?> findByBarcode(String barcode) async {
     final uri = Uri.https(
@@ -41,7 +43,9 @@ class OpenFoodFactsRepository implements ProductRepository {
       response = await _client
           .get(uri, headers: {'User-Agent': userAgent})
           .timeout(timeout);
-    } on SocketException {
+    } on IOException {
+      // Inclui SocketException e erros de TLS (ex.: Wi-Fi com portal de
+      // login), que o http não converte em ClientException.
       throw const ProductLookupOfflineFailure();
     } on http.ClientException {
       throw const ProductLookupOfflineFailure();

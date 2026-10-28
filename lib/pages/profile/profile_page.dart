@@ -78,8 +78,10 @@ class _ProfilePageState extends State<ProfilePage> {
   void _syncWeight() {
     final weight = _profileController.profile.weight;
     if (weight == _shownWeight) return;
+    // Não descarta um peso escolhido aqui e ainda não salvo.
+    final edited = _weight != _shownWeight;
     _shownWeight = weight;
-    setState(() => _setWeight(weight));
+    if (!edited) setState(() => _setWeight(weight));
   }
 
   @override

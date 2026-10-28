@@ -25,7 +25,10 @@ class WeightLineChart extends StatelessWidget {
     final dayFormat = DateFormat('dd/MM', appLocale);
 
     final first = entries.first.date;
-    double dayOf(DateTime date) => date.difference(first).inDays.toDouble();
+    // Em UTC, todo dia tem 24 h: o horário de verão não encolhe a diferença.
+    DateTime utcDay(DateTime d) => DateTime.utc(d.year, d.month, d.day);
+    double dayOf(DateTime date) =>
+        utcDay(date).difference(utcDay(first)).inDays.toDouble();
     final lastDay = dayOf(entries.last.date);
     final weights = entries.map((e) => e.weightKg);
     // Margem de 1 kg para a linha não encostar nas bordas.
@@ -68,7 +71,13 @@ class WeightLineChart extends StatelessWidget {
               getTitlesWidget: (value, meta) => SideTitleWidget(
                 meta: meta,
                 child: Text(
-                  dayFormat.format(first.add(Duration(days: value.round()))),
+                  dayFormat.format(
+                    DateTime(
+                      first.year,
+                      first.month,
+                      first.day + value.round(),
+                    ),
+                  ),
                   style: labelStyle,
                 ),
               ),
