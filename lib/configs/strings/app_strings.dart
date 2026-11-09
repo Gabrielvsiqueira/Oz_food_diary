@@ -13,16 +13,13 @@ abstract final class AppStrings {
   static const errorInvalidNumber = 'Informe um número válido';
   static const errorMustBePositive = 'Informe um valor maior que zero';
   static const errorMustBeNonNegative = 'O valor não pode ser negativo';
-  static String errorOutOfRange(String min, String max) =>
-      'Informe um valor entre $min e $max';
   static const errorInvalidEmail = 'Informe um e-mail válido';
   static const errorPasswordTooShort =
       'A senha deve ter no mínimo 8 caracteres';
   static const errorPasswordMismatch = 'As senhas não conferem';
-  static const errorInvalidDate = 'Informe uma data válida';
-  static String errorAgeOutOfRange(int min, int max) =>
-      'A idade deve estar entre $min e $max anos';
   static const errorEmptyMeal = 'Adicione ao menos um alimento';
+  static const errorInvalidBarcode =
+      'Digite os números do código de barras (8 a 14 dígitos)';
   static String errorFoodQuantityTooLarge(int max) =>
       'Máximo de $max g por alimento';
 
@@ -73,10 +70,9 @@ abstract final class AppStrings {
   static const onboardingGenderTitle = 'Qual é seu gênero';
   static const onboardingGenderSubtitle =
       'Seu gênero influencia no tipo da dieta';
-  static const onboardingBirthdateTitle = 'Que dia você nasceu?';
-  static const onboardingBirthdateSubtitle =
+  static const onboardingAgeTitle = 'Quantos anos você tem?';
+  static const onboardingAgeSubtitle =
       'Cada faixa etária responde de forma única';
-  static const onboardingBirthdateHint = 'DD/MM/AAAA';
   static const onboardingHeightTitle = 'Qual é sua altura?';
   static const onboardingWeightTitle = 'Qual é seu peso?';
   static const onboardingEstimateSubtitle = 'Você pode inserir uma estimativa';
@@ -104,7 +100,9 @@ abstract final class AppStrings {
 
   static const confirmPasswordLabel = 'Confirmar Senha';
 
-  static const birthDateLabel = 'Data de Nascimento';
+  static const ageLabel = 'Idade';
+  static String ageValue(int years) => '$years anos';
+  static const unitYears = 'anos';
 
   static const heightLabel = 'Altura';
 
@@ -114,6 +112,7 @@ abstract final class AppStrings {
 
   static const tabHome = 'Início';
   static const tabGoals = 'Metas';
+  static const tabEvolution = 'Evolução';
   static const tabProfile = 'Perfil';
 
   static const homeGreeting = 'Olá, 👋';
@@ -136,6 +135,18 @@ abstract final class AppStrings {
   static const mealNoFoods = 'Nenhum alimento adicionado ainda';
   static const mealRemoveFood = 'Remover alimento';
   static const mealTotalLabel = 'Total da refeição';
+  static const mealPhotoLabel = 'Foto';
+  static const mealPhotoHint = 'Opcional. A foto fica salva só neste aparelho.';
+  static const mealPhotoAdd = 'Adicionar foto';
+  static const mealPhotoChange = 'Trocar foto';
+  static const mealPhotoRemove = 'Remover foto';
+  static const mealPhotoCamera = 'Tirar foto';
+  static const mealPhotoGallery = 'Escolher da galeria';
+  static const mealPhotoDenied =
+      'O Oz não tem acesso à câmera ou às fotos. Libere o acesso nos ajustes '
+      'do aparelho.';
+  static const mealPhotoUnavailable =
+      'Não foi possível abrir a câmera ou a galeria.';
 
   static const foodSearchTitle = 'Buscar alimento';
   static const foodSearchHint = 'Ex.: arroz, frango, banana';
@@ -144,12 +155,51 @@ abstract final class AppStrings {
   static const foodSearchError = 'Não foi possível carregar os alimentos';
   static const foodSourceCredit =
       'Fontes: Tabela Brasileira de Composição de Alimentos (TACO), 4ª ed., '
-      'NEPA/UNICAMP, 2011; medidas caseiras: IBGE, POF 2008-2009.';
+      'NEPA/UNICAMP, 2011; medidas caseiras: IBGE, POF 2008-2009; '
+      'produtos industrializados: Open Food Facts (ODbL).';
   static String foodPer100g(String kcal) => '$kcal kcal a cada 100 g';
   static const foodQuantityLabel = 'Quantidade';
   static const foodPortionLabel = 'Medida';
   static const foodAdd = 'Adicionar';
   static const foodUpdate = 'Atualizar';
+
+  static const barcodeScanTooltip = 'Escanear código de barras';
+  static const barcodeScannerTitle = 'Código de barras';
+  static const barcodeScannerHint =
+      'Aponte a câmera para o código de barras da embalagem';
+  static const barcodeTypeCode = 'Digitar código';
+  static const barcodeTorch = 'Lanterna';
+  static const barcodeCameraDenied =
+      'O Oz não tem acesso à câmera. Libere o acesso nos ajustes do aparelho '
+      'ou digite o código.';
+  static const barcodeCameraUnavailable =
+      'Não foi possível abrir a câmera. Você pode digitar o código.';
+  static const barcodeLabel = 'Código de barras';
+  static const barcodeSearch = 'Buscar';
+  static const barcodeSearching = 'Buscando produto…';
+  static const barcodeErrorOffline =
+      'Sem conexão. Conecte-se à internet para buscar produtos novos.';
+  static const barcodeErrorFailed =
+      'Não foi possível buscar o produto. Tente novamente.';
+  static const barcodeNotFoundTitle = 'Produto não encontrado';
+  static String barcodeNotFoundMessage(String barcode) =>
+      'O código $barcode não está na Open Food Facts. Quer cadastrar o '
+      'produto com os dados da embalagem?';
+  static const barcodeRegister = 'Cadastrar';
+
+  static const productFormNewTitle = 'Novo produto';
+  static const productFormCompleteTitle = 'Completar produto';
+  static const productFormNewHint =
+      'Preencha com a tabela nutricional da embalagem. Os valores são a cada '
+      '100 g (ou 100 ml).';
+  static const productFormCompleteHint =
+      'A Open Food Facts não tem todas as informações deste produto. Confira '
+      'e complete com a tabela nutricional da embalagem, a cada 100 g '
+      '(ou 100 ml).';
+  static const productFormName = 'Nome';
+  static const productFormNameHint = 'Ex.: Iogurte natural integral';
+  static const productFormServing = 'Porção da embalagem';
+  static const productFormServingHelper = 'Opcional. Ex.: 1 pote = 170 g';
 
   static String portionGram(num count) => count == 1 ? 'grama' : 'gramas';
   static String portionUnit(num count) => count == 1 ? 'unidade' : 'unidades';
@@ -162,6 +212,7 @@ abstract final class AppStrings {
   static String portionLadle(num count) => count == 1 ? 'concha' : 'conchas';
   static String portionServingSpoon(num count) =>
       count == 1 ? 'colher de servir' : 'colheres de servir';
+  static String portionServing(num count) => count == 1 ? 'porção' : 'porções';
 
   static const mealDeleteTitle = 'Excluir refeição?';
   static const mealDeleteMessage = 'Essa ação não pode ser desfeita.';
@@ -172,10 +223,46 @@ abstract final class AppStrings {
   static const goalsSaved = 'Metas atualizadas';
 
   static const profileTitle = 'Perfil';
+
+  static const remindersTitle = 'Lembretes de refeição';
+  static const remindersSubtitle = 'Avisos para não esquecer de registrar';
+  static const remindersHint =
+      'Se você já registrou a refeição no dia, o lembrete daquele dia não '
+      'aparece. Os lembretes ficam só neste aparelho.';
+  static const remindersPermissionTitle = 'Notificações desativadas';
+  static const remindersPermissionMessage =
+      'Sem a permissão, os lembretes não aparecem.';
+  static const remindersPermissionAllow = 'Permitir';
+  static const remindersPermissionDenied =
+      'Libere as notificações do Oz nos ajustes do aparelho.';
+  static const reminderChannelName = 'Lembretes de refeição';
+  static const reminderChannelDescription =
+      'Avisos nos horários das refeições para registrar no Oz';
+  static String reminderBody(String meal) =>
+      'Não esqueça de registrar o ${meal.toLowerCase()} no Oz.';
+
+  static const evolutionTitle = 'Evolução do peso';
+  static const weightPeriod30 = '30 dias';
+  static const weightPeriod90 = '90 dias';
+  static const weightPeriodAll = 'Tudo';
+  static const weightCurrent = 'Atual';
+  static const weightPeriodStart = 'Início';
+  static const weightChangeLabel = 'Variação';
+  static const weightHistoryEmptyPeriod = 'Nenhuma medição neste período.';
+  static const weightHistoryOnePoint =
+      'Registre seu peso em outros dias para ver a evolução aqui.';
+  static const weightEntriesTitle = 'Medições';
+  static const weightLogButton = 'Registrar peso';
+  static const weightLogTitle = 'Registrar peso';
+  static const weightLogHint =
+      'Uma medição por dia: registrar de novo no mesmo dia substitui a anterior.';
+  static const weightLogDate = 'Data';
+  static const weightLogSave = 'Registrar';
+  static const weightLogged = 'Peso registrado';
   static const profileSaved = 'Perfil atualizado';
   static const profileRecalculateTitle = 'Tem certeza?';
   static const profileRecalculateMessage =
-      'Você alterou seu peso ou sua altura. Suas metas de calorias e macros serão recalculadas.';
+      'Você alterou seu peso, sua altura ou sua idade. Suas metas de calorias e macros serão recalculadas.';
   static const profileGoalsRecalculated =
       'Perfil atualizado e metas recalculadas';
   static const profileLogout = 'Sair';

@@ -8,8 +8,12 @@ import '../../models/enums/goal_type.dart';
 import '../../models/enums/meal_type.dart';
 import '../../models/enums/portion_unit.dart';
 import '../../models/enums/sync_status.dart';
+import '../../models/enums/weight_period.dart';
 import '../../models/food_portion.dart';
 import '../../models/meal_item.dart';
+import '../../models/product_lookup_failure.dart';
+import '../../services/date_utils.dart';
+import '../../services/photo_picker.dart';
 import '../../services/validators.dart';
 import 'app_strings.dart';
 
@@ -36,21 +40,13 @@ extension ValidationErrorLabels on ValidationError {
     InvalidNumberError() => AppStrings.errorInvalidNumber,
     MustBePositiveError() => AppStrings.errorMustBePositive,
     MustBeNonNegativeError() => AppStrings.errorMustBeNonNegative,
-    OutOfRangeError(:final min, :final max) => AppStrings.errorOutOfRange(
-      min.toString(),
-      max.toString(),
-    ),
     InvalidEmailError() => AppStrings.errorInvalidEmail,
     PasswordTooShortError() => AppStrings.errorPasswordTooShort,
     PasswordMismatchError() => AppStrings.errorPasswordMismatch,
-    InvalidDateError() => AppStrings.errorInvalidDate,
-    AgeOutOfRangeError(:final min, :final max) => AppStrings.errorAgeOutOfRange(
-      min,
-      max,
-    ),
     EmptyMealError() => AppStrings.errorEmptyMeal,
     FoodQuantityTooLargeError(:final maxGrams) =>
       AppStrings.errorFoodQuantityTooLarge(maxGrams),
+    InvalidBarcodeError() => AppStrings.errorInvalidBarcode,
   };
 }
 
@@ -75,6 +71,55 @@ extension SyncStatusLabels on SyncStatus {
     SyncStatus.failed => AppStrings.syncErrorFailed,
     SyncStatus.idle || SyncStatus.syncing => null,
   };
+}
+
+extension WeightPeriodLabels on WeightPeriod {
+  String get label => switch (this) {
+    WeightPeriod.days30 => AppStrings.weightPeriod30,
+    WeightPeriod.days90 => AppStrings.weightPeriod90,
+    WeightPeriod.all => AppStrings.weightPeriodAll,
+  };
+}
+
+/// Variação com sinal ("+1,5", "−0,8"), com o sinal de menos tipográfico.
+String formatSignedWeight(double kg) {
+  final text = formatEditableNumber(double.parse(kg.abs().toStringAsFixed(1)));
+  return kg < 0 ? '−$text' : '+$text';
+}
+
+extension PhotoPickerFailureLabels on PhotoPickerFailure {
+  String get message => switch (this) {
+    PhotoAccessDeniedFailure() => AppStrings.mealPhotoDenied,
+    PhotoUnavailableFailure() => AppStrings.mealPhotoUnavailable,
+  };
+}
+
+extension ProductLookupFailureLabels on ProductLookupFailure {
+  String get message => switch (this) {
+    ProductLookupOfflineFailure() => AppStrings.barcodeErrorOffline,
+    ProductLookupServerFailure() => AppStrings.barcodeErrorFailed,
+  };
+}
+
+/// "Hoje, 12 de julho" / "Ontem, 11 de julho" / "10 de julho".
+String formatDayTitle(DateTime date) {
+  final now = today();
+  final format = date.year == now.year
+      ? DateFormat.MMMMd(appLocale)
+      : DateFormat.yMMMMd(appLocale);
+  final formatted = format.format(date);
+  final relative = relativeDayLabel(date);
+  return relative == null ? formatted : '$relative, $formatted';
+}
+
+/// "Hoje" / "Ontem", ou `null` para outros dias.
+String? relativeDayLabel(DateTime date) {
+  final now = today();
+  if (isSameDay(date, now)) return AppStrings.homeToday;
+  if (isSameDay(date, now.subtract(const Duration(days: 1)))) {
+    return AppStrings.homeYesterday;
+  }
+  return null;
 }
 
 FormFieldValidator<String> fieldValidator(
@@ -166,6 +211,7 @@ extension PortionUnitLabels on PortionUnit {
     PortionUnit.cup => AppStrings.portionCup(count),
     PortionUnit.ladle => AppStrings.portionLadle(count),
     PortionUnit.servingSpoon => AppStrings.portionServingSpoon(count),
+    PortionUnit.serving => AppStrings.portionServing(count),
   };
 }
 

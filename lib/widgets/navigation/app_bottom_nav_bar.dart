@@ -15,7 +15,8 @@ class AppBottomNavItem {
   final String label;
 }
 
-/// Barra de navegação inferior das abas principais (Home / Metas / Perfil).
+/// Barra de navegação inferior das abas principais (Início / Metas /
+/// Evolução / Perfil).
 class AppBottomNavBar extends StatelessWidget {
   const AppBottomNavBar({
     super.key,

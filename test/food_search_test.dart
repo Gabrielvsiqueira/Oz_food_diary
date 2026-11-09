@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:oz_contador_de_calorias/controllers/food_search_controller.dart';
 import 'package:oz_contador_de_calorias/mocks/mock_foods.dart';
+import 'package:oz_contador_de_calorias/models/enums/food_source.dart';
 import 'package:oz_contador_de_calorias/models/food.dart';
 import 'package:oz_contador_de_calorias/repositories/food_repository.dart';
 import 'package:oz_contador_de_calorias/repositories/mock_food_repository.dart';
@@ -15,11 +16,21 @@ class _ControlledRepository implements FoodRepository {
   @override
   Future<List<Food>> search(String query) =>
       (calls[query] = Completer<List<Food>>()).future;
+
+  @override
+  Future<Food?> findByBarcode(String barcode) async => null;
+
+  @override
+  Future<void> saveProduct(
+    Food food, {
+    required String barcode,
+    required FoodSource source,
+  }) async {}
 }
 
 void main() {
   group('MockFoodRepository', () {
-    const repository = MockFoodRepository(latency: Duration.zero);
+    final repository = MockFoodRepository(latency: Duration.zero);
 
     test('com busca vazia retorna todos os alimentos em ordem', () async {
       final results = await repository.search('');
@@ -45,7 +56,7 @@ void main() {
 
     test('carrega todos os alimentos ao abrir', () async {
       final controller = FoodSearchController(
-        const MockFoodRepository(latency: Duration.zero),
+        MockFoodRepository(latency: Duration.zero),
       );
       expect(controller.status, FoodSearchStatus.loading);
       await flush();

@@ -22,8 +22,7 @@ class OnboardingGenderPage extends StatelessWidget {
       subtitle: AppStrings.onboardingGenderSubtitle,
       onNext: controller.gender == null
           ? null
-          : () =>
-                Navigator.of(context).pushNamed(AppRoutes.onboardingBirthdate),
+          : () => Navigator.of(context).pushNamed(AppRoutes.onboardingAge),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

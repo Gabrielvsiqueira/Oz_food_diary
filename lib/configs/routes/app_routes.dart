@@ -6,7 +6,7 @@ class AppRoutes {
   static const login = '/login';
   static const onboardingGoal = '/onboarding/goal';
   static const onboardingGender = '/onboarding/gender';
-  static const onboardingBirthdate = '/onboarding/birthdate';
+  static const onboardingAge = '/onboarding/age';
   static const onboardingHeight = '/onboarding/height';
   static const onboardingWeight = '/onboarding/weight';
   static const onboardingActivity = '/onboarding/activity';
@@ -22,4 +22,12 @@ class AppRoutes {
 
   /// Retorna o `MealItem` escolhido ao fechar.
   static const foodSearch = '/meal/food-search';
+
+  static const reminders = '/reminders';
+
+  /// Retorna o código de barras lido (`String`).
+  static const barcodeScanner = '/meal/barcode-scanner';
+
+  /// Argumento: `ProductInfo`. Retorna o `ProductInfo` completo.
+  static const productForm = '/meal/product-form';
 }

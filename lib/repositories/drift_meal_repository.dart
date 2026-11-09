@@ -7,24 +7,29 @@ import '../models/food_portion.dart';
 import '../models/meal.dart';
 import '../models/meal_item.dart';
 import '../services/date_utils.dart';
+import '../services/meal_photo_storage.dart';
 import 'drift_food_repository.dart';
 import 'meal_repository.dart';
 
 class DriftMealRepository implements MealRepository {
-  const DriftMealRepository(this._db);
+  /// Sem [photos], as fotos são ignoradas (testes que não usam arquivos).
+  const DriftMealRepository(this._db, {this._photos});
 
   final AppDatabase _db;
+  final MealPhotoStorage? _photos;
 
   @override
   Stream<List<Meal>> watchMealsOn(DateTime day) {
     final meals = _db.meals;
     final items = _db.mealItems;
+    final photos = _db.mealPhotos;
     final query =
         _db.select(meals).join([
             leftOuterJoin(
               items,
               items.mealId.equalsExp(meals.id) & items.deletedAt.isNull(),
             ),
+            leftOuterJoin(photos, photos.mealId.equalsExp(meals.id)),
           ])
           ..where(meals.localDate.equalsValue(day) & meals.deletedAt.isNull())
           ..orderBy([
@@ -34,9 +39,12 @@ class DriftMealRepository implements MealRepository {
     return query.watch().asyncMap((rows) async {
       final mealRows = <String, MealRow>{};
       final itemRows = <String, List<MealItemRow>>{};
+      final photoFiles = <String, String>{};
       for (final row in rows) {
         final meal = row.readTable(meals);
         mealRows[meal.id] = meal;
+        final photo = row.readTableOrNull(photos);
+        if (photo != null) photoFiles[meal.id] = photo.fileName;
         final item = row.readTableOrNull(items);
         if (item != null) (itemRows[meal.id] ??= []).add(item);
       }
@@ -50,6 +58,10 @@ class DriftMealRepository implements MealRepository {
             id: meal.id,
             type: meal.type,
             createdAt: meal.eatenAt.toLocal(),
+            photoPath: switch ((_photos, photoFiles[meal.id])) {
+              (final storage?, final fileName?) => storage.pathOf(fileName),
+              _ => null,
+            },
             items: [
               for (final item in itemRows[meal.id] ?? const <MealItemRow>[])
                 _toMealItem(item, portions[item.foodId] ?? const []),
@@ -60,7 +72,35 @@ class DriftMealRepository implements MealRepository {
   }
 
   @override
-  Future<void> save(Meal meal) => _db.transaction(() async {
+  Future<void> save(Meal meal) async {
+    final photos = _photos;
+    if (photos == null) return _db.transaction(() => _saveRows(meal));
+
+    final current = await _photoOf(meal.id);
+    final path = meal.photoPath;
+    // A cópia acontece antes da transação; se a gravação falhar, o arquivo
+    // que sobrar é apagado por [prunePhotos].
+    final newFile = path != null && !photos.isStored(path)
+        ? await photos.keep(path, mealId: meal.id)
+        : null;
+    final replaced = newFile != null || path == null ? current : null;
+
+    await _db.transaction(() async {
+      await _saveRows(meal);
+      if (newFile != null) {
+        await _db
+            .into(_db.mealPhotos)
+            .insertOnConflictUpdate(
+              MealPhotosCompanion.insert(mealId: meal.id, fileName: newFile),
+            );
+      } else if (path == null && current != null) {
+        await _deletePhotoRow(meal.id);
+      }
+    });
+    if (replaced != null) await photos.delete(replaced);
+  }
+
+  Future<void> _saveRows(Meal meal) async {
     final now = DateTime.now().toUtc();
     await _db
         .into(_db.meals)
@@ -123,10 +163,19 @@ class DriftMealRepository implements MealRepository {
               i.deletedAt.isNull(),
         ))
         .write(_tombstone(now));
-  });
+  }
 
   @override
-  Future<void> delete(Meal meal) => _db.transaction(() async {
+  Future<void> delete(Meal meal) async {
+    final photo = _photos == null ? null : await _photoOf(meal.id);
+    await _db.transaction(() async {
+      await _deleteRows(meal);
+      if (photo != null) await _deletePhotoRow(meal.id);
+    });
+    if (photo != null) await _photos!.delete(photo);
+  }
+
+  Future<void> _deleteRows(Meal meal) async {
     final now = DateTime.now().toUtc();
     await (_db.update(_db.meals)..where((m) => m.id.equals(meal.id))).write(
       MealsCompanion(
@@ -138,7 +187,32 @@ class DriftMealRepository implements MealRepository {
     await (_db.update(_db.mealItems)
           ..where((i) => i.mealId.equals(meal.id) & i.deletedAt.isNull()))
         .write(_tombstone(now));
-  });
+  }
+
+  /// Limpa fotos de refeições excluídas (inclusive em outro aparelho, que
+  /// chegam pela sincronização) e arquivos sem refeição. Roda ao abrir o app.
+  Future<void> prunePhotos() async {
+    final photos = _photos;
+    if (photos == null) return;
+    final deleted = _db.selectOnly(_db.meals)
+      ..addColumns([_db.meals.id])
+      ..where(_db.meals.deletedAt.isNotNull());
+    await (_db.delete(
+      _db.mealPhotos,
+    )..where((p) => p.mealId.isInQuery(deleted))).go();
+    final kept = await _db.select(_db.mealPhotos).get();
+    await photos.prune({for (final row in kept) row.fileName});
+  }
+
+  Future<String?> _photoOf(String mealId) async {
+    final row = await (_db.select(
+      _db.mealPhotos,
+    )..where((p) => p.mealId.equals(mealId))).getSingleOrNull();
+    return row?.fileName;
+  }
+
+  Future<int> _deletePhotoRow(String mealId) =>
+      (_db.delete(_db.mealPhotos)..where((p) => p.mealId.equals(mealId))).go();
 
   MealItemsCompanion _tombstone(DateTime now) => MealItemsCompanion(
     deletedAt: Value(now),

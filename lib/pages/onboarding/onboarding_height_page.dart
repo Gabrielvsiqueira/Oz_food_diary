@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../configs/constants/nutrition_constants.dart';
 import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
 import '../../controllers/onboarding_controller.dart';
-import '../../services/validators.dart';
+import '../../models/enums/gender.dart';
+import '../../widgets/inputs/wheel_picker.dart';
 import '../../widgets/layout/onboarding_scaffold.dart';
-import 'onboarding_measure_body.dart';
 
 class OnboardingHeightPage extends StatefulWidget {
   const OnboardingHeightPage({super.key});
@@ -16,31 +17,16 @@ class OnboardingHeightPage extends StatefulWidget {
 }
 
 class _OnboardingHeightPageState extends State<OnboardingHeightPage> {
-  final _formKey = GlobalKey<FormState>();
-  late final TextEditingController _textController;
-
-  @override
-  void initState() {
-    super.initState();
-    final saved = context.read<OnboardingController>().height;
-    _textController = TextEditingController(
-      text: saved?.round().toString() ?? '',
-    );
-  }
-
-  @override
-  void dispose() {
-    _textController.dispose();
-    super.dispose();
-  }
-
-  bool get _isValid => Validators.height(_textController.text) == null;
+  /// Começa perto da altura média de adultos no Brasil (IBGE), para rolar
+  /// pouco.
+  late int _height = () {
+    final controller = context.read<OnboardingController>();
+    return controller.height?.round() ??
+        (controller.gender == Gender.female ? 160 : 173);
+  }();
 
   void _submit() {
-    if (!_formKey.currentState!.validate()) return;
-    context.read<OnboardingController>().setHeight(
-      Validators.parseDecimal(_textController.text)!,
-    );
+    context.read<OnboardingController>().setHeight(_height.toDouble());
     Navigator.of(context).pushNamed(AppRoutes.onboardingWeight);
   }
 
@@ -50,17 +36,15 @@ class _OnboardingHeightPageState extends State<OnboardingHeightPage> {
       step: 4,
       title: AppStrings.onboardingHeightTitle,
       subtitle: AppStrings.onboardingEstimateSubtitle,
-      onNext: _isValid ? _submit : null,
-      body: OnboardingMeasureBody(
-        formKey: _formKey,
-        controller: _textController,
-        label: AppStrings.heightLabel,
-        unit: AppStrings.unitCm,
-        hint: '175',
-        allowDecimal: false,
-        validator: Validators.height,
-        onChanged: (_) => setState(() {}),
-        onSubmitted: _submit,
+      onNext: _submit,
+      body: Center(
+        child: IntWheelPicker(
+          min: NutritionConstants.minHeightCm.toInt(),
+          max: NutritionConstants.maxHeightCm.toInt(),
+          value: _height,
+          unit: AppStrings.unitCm,
+          onChanged: (height) => setState(() => _height = height),
+        ),
       ),
     );
   }

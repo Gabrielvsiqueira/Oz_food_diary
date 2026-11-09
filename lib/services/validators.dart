@@ -20,12 +20,6 @@ class MustBeNonNegativeError extends ValidationError {
   const MustBeNonNegativeError();
 }
 
-class OutOfRangeError extends ValidationError {
-  const OutOfRangeError(this.min, this.max);
-  final num min;
-  final num max;
-}
-
 class InvalidEmailError extends ValidationError {
   const InvalidEmailError();
 }
@@ -38,16 +32,6 @@ class PasswordMismatchError extends ValidationError {
   const PasswordMismatchError();
 }
 
-class InvalidDateError extends ValidationError {
-  const InvalidDateError();
-}
-
-class AgeOutOfRangeError extends ValidationError {
-  const AgeOutOfRangeError(this.min, this.max);
-  final int min;
-  final int max;
-}
-
 class EmptyMealError extends ValidationError {
   const EmptyMealError();
 }
@@ -55,6 +39,10 @@ class EmptyMealError extends ValidationError {
 class FoodQuantityTooLargeError extends ValidationError {
   const FoodQuantityTooLargeError(this.maxGrams);
   final int maxGrams;
+}
+
+class InvalidBarcodeError extends ValidationError {
+  const InvalidBarcodeError();
 }
 
 class Validators {
@@ -67,21 +55,6 @@ class Validators {
   static double? parseDecimal(String? value) {
     if (value == null) return null;
     return double.tryParse(value.trim().replaceAll(',', '.'));
-  }
-
-  static DateTime? parseDate(String? value) {
-    final match = RegExp(
-      r'^(\d{2})/(\d{2})/(\d{4})$',
-    ).firstMatch(value?.trim() ?? '');
-    if (match == null) return null;
-    final day = int.parse(match.group(1)!);
-    final month = int.parse(match.group(2)!);
-    final year = int.parse(match.group(3)!);
-    final date = DateTime(year, month, day);
-    if (date.day != day || date.month != month || date.year != year) {
-      return null;
-    }
-    return date;
   }
 
   static ValidationError? required(String? value) =>
@@ -125,25 +98,6 @@ class Validators {
     return number < 0 ? const MustBeNonNegativeError() : null;
   }
 
-  static ValidationError? numberInRange(String? value, num min, num max) {
-    final error = positiveNumber(value);
-    if (error != null) return error;
-    final number = parseDecimal(value)!;
-    return (number < min || number > max) ? OutOfRangeError(min, max) : null;
-  }
-
-  static ValidationError? height(String? value) => numberInRange(
-    value,
-    NutritionConstants.minHeightCm,
-    NutritionConstants.maxHeightCm,
-  );
-
-  static ValidationError? weight(String? value) => numberInRange(
-    value,
-    NutritionConstants.minWeightKg,
-    NutritionConstants.maxWeightKg,
-  );
-
   /// Quantidade na medida escolhida (ex.: 2 fatias de 25 g).
   static ValidationError? foodQuantity(String? value, double gramsPerPortion) {
     final error = positiveNumber(value);
@@ -154,21 +108,16 @@ class Validators {
         : null;
   }
 
-  static ValidationError? birthDate(DateTime? date, {DateTime? now}) {
-    if (date == null) return const InvalidDateError();
-    final today = now ?? DateTime.now();
-    if (date.isAfter(today)) return const InvalidDateError();
-    var age = today.year - date.year;
-    if (today.month < date.month ||
-        (today.month == date.month && today.day < date.day)) {
-      age--;
-    }
-    if (age < NutritionConstants.minAge || age > NutritionConstants.maxAge) {
-      return const AgeOutOfRangeError(
-        NutritionConstants.minAge,
-        NutritionConstants.maxAge,
-      );
-    }
-    return null;
+  /// EAN-8, UPC-A (12), EAN-13 ou GTIN-14: só dígitos.
+  static ValidationError? barcode(String? value) {
+    final error = required(value);
+    if (error != null) return error;
+    return RegExp(r'^\d{8,14}$').hasMatch(value!.trim())
+        ? null
+        : const InvalidBarcodeError();
   }
+
+  /// Porção da embalagem, em gramas; opcional.
+  static ValidationError? servingGrams(String? value) =>
+      (value == null || value.trim().isEmpty) ? null : foodQuantity(value, 1);
 }

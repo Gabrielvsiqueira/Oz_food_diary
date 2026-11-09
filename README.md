@@ -10,6 +10,11 @@ registrar, editar e excluir refeições, acompanhando o progresso do dia.
 > dados sincronizam com o Postgres do Supabase em segundo plano: entrando com
 > a mesma conta em outro aparelho, tudo volta. As decisões de arquitetura
 > estão em [`docs/arquitetura.md`](docs/arquitetura.md).
+>
+> **Entrega 3.** Leitura de código de barras pela câmera, com
+> os dados do produto buscados na API HTTP da Open Food Facts, e foto da
+> refeição pela câmera ou galeria, gráfico de evolução do peso e lembretes de
+> refeição com notificações locais.
 
 ---
 
@@ -29,9 +34,10 @@ registrar, editar e excluir refeições, acompanhando o progresso do dia.
 
 - **Splash e boas-vindas** com opção de criar conta ou entrar.
 - **Login** com validação de e-mail e senha.
-- **Onboarding em 7 etapas**: objetivo, sexo, data de nascimento, altura,
-  peso, nível de atividade e criação de conta, seguido de tela de
-  carregamento e resultado com a meta calculada.
+- **Onboarding em 7 etapas**: objetivo, sexo, idade, altura, peso, nível de
+  atividade e criação de conta, seguido de tela de carregamento e resultado
+  com a meta calculada. Idade, altura e peso são escolhidos em roletas
+  (*wheel pickers*), sem teclado.
 - **Cálculo de metas** pela fórmula de Mifflin-St Jeor × fator de atividade,
   com ajuste pelo objetivo (−500 kcal para perder, +300 kcal para ganhar) e
   distribuição de macros (2,2 g de proteína/kg, 25% das calorias em gordura,
@@ -42,9 +48,22 @@ registrar, editar e excluir refeições, acompanhando o progresso do dia.
   O usuário busca cada alimento e informa só a quantidade (em gramas ou em
   medida caseira, como fatia ou colher); calorias e macros vêm da base de
   alimentos e são somados automaticamente.
+- **Código de barras**: na busca de alimentos, o botão de leitura abre a
+  câmera (ou permite digitar o código). O produto vem da API da Open Food
+  Facts e fica salvo no aparelho; se faltar algum dado, o app abre um
+  formulário já preenchido com o que veio, e um produto desconhecido pode ser
+  cadastrado com a tabela nutricional da embalagem.
+- **Foto da refeição**: opcional, tirada na câmera ou escolhida na galeria;
+  aparece em miniatura no card da Home e fica salva só no aparelho.
 - **Metas**: edição manual da meta de calorias e de macros.
 - **Perfil**: edição de nome, altura e peso, com recálculo das metas quando
   peso ou altura mudam, estado da sincronização, logout e exclusão de conta.
+- **Lembretes de refeição**: notificações locais nos horários de cada
+  refeição (configuráveis pelo Perfil), agendadas para os próximos 7 dias;
+  quem já registrou a refeição no dia não recebe o lembrete daquele dia.
+- **Evolução do peso**: aba própria com resumo (atual, início e variação),
+  gráfico de linha, filtros de 30 dias, 90 dias ou tudo, lista das medições e
+  botão para registrar o peso de hoje ou de um dia esquecido.
 - **Sincronização offline-first**: tudo é gravado primeiro no aparelho e
   enviado ao servidor alguns segundos depois, quando a internet volta ou ao
   puxar a Home para baixo. Ao sair, o app tenta enviar o que falta e avisa se
@@ -150,13 +169,13 @@ lib/
 │   ├── strings/              # Textos (AppStrings), rótulos e formatação de números
 │   ├── routes/               # Nomes de rotas e RouteGenerator
 │   └── theme/                # Cores, tipografia e ThemeData
-├── controllers/              # Session, Sync, Onboarding, Profile, DailyLog, Meal, FoodSearch
+├── controllers/              # Session, Sync, Onboarding, Profile, DailyLog, Meal, FoodSearch, WeightHistory, Reminder
 ├── database/                 # Banco local (drift): tabelas, IDs e catálogo inicial
 ├── mocks/                    # Conta de demonstração e dados de teste
 ├── models/                   # Entidades e enums
 ├── pages/                    # Uma pasta por tela/fluxo
 ├── repositories/             # Interfaces de acesso a dados e implementações
-├── services/                 # SyncService, NutritionCalculator, Validators, DateUtils, TextUtils
+├── services/                 # SyncService, BarcodeLookupService, MealPhotoStorage, PhotoPicker, NutritionCalculator, Validators, …
 └── widgets/                  # Botões, inputs, cards, gráficos, navbar, etc.
 ```
 
@@ -165,6 +184,8 @@ lib/
 | Controller             | Responsabilidade                                                                                                         |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `SessionController`    | Estado de autenticação (login/logout)                                                                                    |
+| `WeightHistoryController` | Histórico de peso da aba Evolução, filtrado por período; criado pela página                             |
+| `ReminderController`   | Configuração dos lembretes e agendamento dos próximos 7 dias, pulando refeições já registradas hoje        |
 | `SyncController`       | Quando sincronizar (login, gravações, volta da internet), estado mostrado no Perfil e parada no logout                   |
 | `OnboardingController` | Guarda as respostas do onboarding e monta o `UserProfile`                                                                |
 | `ProfileController`    | Perfil do usuário e metas; recalcula metas quando peso/altura mudam                                                      |
@@ -179,16 +200,19 @@ Os controllers dependem só de interfaces, injetadas via `Provider` em
 
 | Interface           | Implementação no app    | Responsabilidade                                                       |
 | ------------------- | ----------------------- | ---------------------------------------------------------------------- |
-| `FoodRepository`    | `DriftFoodRepository`   | Busca no catálogo local, sem acentos e maiúsculas                      |
+| `FoodRepository`    | `DriftFoodRepository`   | Busca no catálogo local, sem acentos e maiúsculas; produtos lidos pelo código de barras |
+| `ProductRepository` | `OpenFoodFactsRepository` | Produto pelo código de barras na API HTTP da Open Food Facts         |
+| `ReminderRepository` | `DriftReminderRepository` | Horário e liga/desliga de cada lembrete, só no aparelho              |
 | `MealRepository`    | `DriftMealRepository`   | Refeições do dia como stream: toda gravação atualiza a Home sozinha    |
-| `ProfileRepository` | `DriftProfileRepository`| Perfil, histórico de peso e histórico de metas                         |
+| `ProfileRepository` | `DriftProfileRepository`| Perfil, histórico de peso (como stream, para o gráfico) e histórico de metas |
 | `SessionRepository` | `SupabaseSessionRepository` (ou `LocalSessionRepository` sem backend) | Login, cadastro, Google, logout e exclusão de conta; o logout apaga os dados do aparelho |
 | `SyncRemote`        | `SupabaseSyncRemote`    | Envio pela função `push_changes` e download do que mudou no servidor   |
 
 Os testes usam `MockFoodRepository` e `MockMealRepository` (em memória), e os
 repositórios do drift são testados com um banco SQLite em memória. A
 sincronização é testada com dois "aparelhos" (dois bancos em memória) e um
-servidor falso com as mesmas regras do `push_changes`.
+servidor falso com as mesmas regras do `push_changes`. O cliente da Open
+Food Facts é testado com respostas HTTP simuladas (`MockClient`), sem rede.
 
 Cada `MealItem` guarda uma cópia do alimento, com seus nutrientes. Assim,
 correções futuras na base não alteram o histórico de refeições do usuário.
@@ -206,7 +230,7 @@ flowchart TD
     Splash --> Welcome
     Welcome -->|Entrar| Login
     Welcome -->|Começar| Goal[Objetivo]
-    Goal --> Gender[Sexo] --> Birth[Nascimento] --> Height[Altura]
+    Goal --> Gender[Sexo] --> Age[Idade] --> Height[Altura]
     Height --> Weight[Peso] --> Activity[Atividade] --> Account[Criar conta]
     Account --> Loading[Carregando] --> Result[Resultado]
     Login --> Main
@@ -214,11 +238,16 @@ flowchart TD
     subgraph Main[Shell com Bottom Navigation]
         Home
         Metas
+        Evolução
         Perfil
     end
     Home -->|Nova / editar refeição| MealForm[Formulário de refeição]
     MealForm -->|Adicionar alimento| FoodSearch[Busca de alimentos]
     FoodSearch -->|Quantidade e medida| MealForm
+    FoodSearch -->|Escanear| Scanner[Leitor de código de barras]
+    Scanner -->|Produto incompleto ou desconhecido| ProductForm[Formulário do produto]
+    Scanner -->|Produto encontrado| FoodSearch
+    ProductForm --> FoodSearch
     Perfil -->|Logout| Welcome
 ```
 
@@ -229,9 +258,12 @@ flowchart TD
 | `/login`                                    | Login                                                                              |
 | `/onboarding/goal` … `/onboarding/account`  | 7 etapas do onboarding                                                             |
 | `/onboarding/loading`, `/onboarding/result` | Cálculo e resultado da meta                                                        |
-| `/main`                                     | Shell com abas Home, Metas e Perfil (`IndexedStack` preserva o estado de cada aba) |
+| `/main`                                     | Shell com abas Home, Metas, Evolução e Perfil (`IndexedStack` preserva o estado de cada aba) |
 | `/meal/form`                                | Cadastro de refeição; recebe um `Meal` opcional como argumento para edição         |
 | `/meal/food-search`                         | Busca de alimentos; fecha retornando o `MealItem` escolhido                        |
+| `/meal/barcode-scanner`                     | Leitor de código de barras (câmera ou digitado); fecha retornando o código         |
+| `/meal/product-form`                        | Completa ou cadastra um produto; recebe e retorna um `ProductInfo`                 |
+| `/reminders`                                | Lembretes de refeição (aberta pelo Perfil)                                         |
 
 Após login, conclusão do onboarding e logout, a pilha de navegação é limpa
 (`pushNamedAndRemoveUntil`) para impedir que o botão "voltar" retorne a
@@ -254,32 +286,46 @@ mantendo as regras de validação separadas dos textos da interface.
 | E-mail                 | Formato `usuario@dominio.ext`                                               | E-mail inválido                         |
 | Senha                  | Mínimo de 8 caracteres                                                      | Senha muito curta                       |
 | Confirmação de senha   | Igual à senha                                                               | As senhas não coincidem                 |
-| Data de nascimento     | Formato `DD/MM/AAAA`, data existente, não futura, idade entre 13 e 100 anos | Data inválida / Idade fora do intervalo |
-| Altura                 | Número entre 100 e 250 cm                                                   | Fora do intervalo (mín–máx)             |
-| Peso                   | Número entre 30 e 300 kg                                                    | Fora do intervalo (mín–máx)             |
 | Calorias (meta)        | Número maior que zero                                                       | Deve ser positivo                       |
 | Macros (meta)          | Número maior ou igual a zero                                                | Não pode ser negativo                   |
 | Quantidade do alimento | Número maior que zero e até 5 kg por alimento, em qualquer medida           | Máximo de 5000 g por alimento           |
 | Refeição               | Ao menos um alimento                                                        | Adicione ao menos um alimento           |
+| Código de barras       | Só dígitos, de 8 a 14 (EAN-8, UPC-A, EAN-13, GTIN-14)                       | Digite os números do código de barras   |
+| Porção da embalagem    | Opcional; se preenchida, maior que zero e até 5 kg                          | Máximo de 5000 g por alimento           |
 
 ### Tratamento de variáveis e entrada de dados
 
 - **Números decimais** aceitam vírgula ou ponto (`Validators.parseDecimal`),
   e texto inválido vira `null` em vez de lançar exceção.
-- **Datas** são digitadas com máscara (`DateTextInputFormatter`) e datas
-  inexistentes (ex.: 31/02) são rejeitadas.
+- **Idade, altura e peso** são escolhidos em roletas (`IntWheelPicker` e
+  `WeightWheelPicker`, sobre o `CupertinoPicker`) que só oferecem valores
+  válidos: idade de 13 a 100 anos, altura de 100 a 250 cm e peso de 30 a
+  300 kg, com uma casa decimal. Por isso esses campos não têm mensagem de
+  erro. No Perfil, tocar no campo abre a roleta numa folha inferior.
+- **Idade** vira uma data de nascimento estimada (o mesmo dia de hoje, N anos
+  atrás; 29/02 vira 28/02), guardada em `birth_date`. A idade sobe sozinha a
+  cada ano, e a diferença para o aniversário real (menos de um ano) muda a
+  meta em cerca de 5 kcal. Mudar a idade no Perfil, como peso e altura, pede
+  confirmação e recalcula as metas.
 - **Campos nulos no onboarding**: o `OnboardingController` usa campos
   anuláveis e só monta o perfil quando `isComplete` é verdadeiro; caso
   contrário lança `StateError`, evitando perfis parciais.
 - **Botões de avançar** ficam desabilitados enquanto a etapa atual não é
   válida (ex.: nenhuma opção selecionada, altura fora do intervalo).
 - **Textos** passam por `trim()` antes de serem salvos.
-- **Seletor de dia** nunca permite escolher uma data futura.
+- **Seletor de dia** nunca permite escolher uma data futura. Uma refeição nova
+  é registrada no dia aberto na Home (com o horário atual), e o formulário
+  mostra esse dia, para registrar algo esquecido em dias anteriores.
+- **Peso** pode ser registrado em qualquer dia até hoje; um dia anterior à
+  última medição entra só no histórico e não muda o peso atual nem as metas.
 - **Troca de medida** (ex.: de "unidade" para "gramas") converte a quantidade
   para manter o mesmo peso.
 - **Busca de alimentos** ignora acentos e maiúsculas, espera o usuário parar
   de digitar antes de buscar e mostra estados de carregando, erro (com
   "Tentar novamente") e nenhum resultado.
+- **Dados da Open Food Facts**: números em texto (`"450,5"`) são aceitos,
+  negativos são tratados como ausentes, energia só em kJ é convertida para
+  kcal e a marca é somada ao nome quando não aparece nele.
 - **Ações destrutivas** (excluir refeição, logout, alterar peso/altura que
   recalcula metas) pedem confirmação em diálogo.
 - **Feedback** de sucesso (refeição salva, metas atualizadas, perfil

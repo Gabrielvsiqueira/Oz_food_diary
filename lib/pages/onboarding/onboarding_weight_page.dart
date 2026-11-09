@@ -4,9 +4,9 @@ import 'package:provider/provider.dart';
 import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
 import '../../controllers/onboarding_controller.dart';
-import '../../services/validators.dart';
+import '../../models/enums/gender.dart';
+import '../../widgets/inputs/wheel_picker.dart';
 import '../../widgets/layout/onboarding_scaffold.dart';
-import 'onboarding_measure_body.dart';
 
 class OnboardingWeightPage extends StatefulWidget {
   const OnboardingWeightPage({super.key});
@@ -16,31 +16,14 @@ class OnboardingWeightPage extends StatefulWidget {
 }
 
 class _OnboardingWeightPageState extends State<OnboardingWeightPage> {
-  final _formKey = GlobalKey<FormState>();
-  late final TextEditingController _textController;
-
-  @override
-  void initState() {
-    super.initState();
-    final saved = context.read<OnboardingController>().weight;
-    _textController = TextEditingController(
-      text: saved == null ? '' : formatEditableNumber(saved),
-    );
-  }
-
-  @override
-  void dispose() {
-    _textController.dispose();
-    super.dispose();
-  }
-
-  bool get _isValid => Validators.weight(_textController.text) == null;
+  late double _weight = () {
+    final controller = context.read<OnboardingController>();
+    return controller.weight ??
+        (controller.gender == Gender.female ? 65.0 : 75.0);
+  }();
 
   void _submit() {
-    if (!_formKey.currentState!.validate()) return;
-    context.read<OnboardingController>().setWeight(
-      Validators.parseDecimal(_textController.text)!,
-    );
+    context.read<OnboardingController>().setWeight(_weight);
     Navigator.of(context).pushNamed(AppRoutes.onboardingActivity);
   }
 
@@ -50,16 +33,12 @@ class _OnboardingWeightPageState extends State<OnboardingWeightPage> {
       step: 5,
       title: AppStrings.onboardingWeightTitle,
       subtitle: AppStrings.onboardingEstimateSubtitle,
-      onNext: _isValid ? _submit : null,
-      body: OnboardingMeasureBody(
-        formKey: _formKey,
-        controller: _textController,
-        label: AppStrings.weightLabel,
-        unit: AppStrings.unitKg,
-        hint: '80',
-        validator: Validators.weight,
-        onChanged: (_) => setState(() {}),
-        onSubmitted: _submit,
+      onNext: _submit,
+      body: Center(
+        child: WeightWheelPicker(
+          value: _weight,
+          onChanged: (weight) => setState(() => _weight = weight),
+        ),
       ),
     );
   }
