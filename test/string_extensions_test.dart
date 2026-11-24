@@ -19,9 +19,6 @@ void main() {
 
   test('mensagens de validação em português', () {
     expect(const RequiredError().message, 'Campo obrigatório');
-    expect(
-      const OutOfRangeError(100, 250).message,
-      'Informe um valor entre 100 e 250',
-    );
+    expect(const MustBePositiveError().message, isNotEmpty);
   });
 }

@@ -1,6 +1,7 @@
 import 'enums/activity_level.dart';
 import 'enums/gender.dart';
 import 'enums/goal_type.dart';
+import '../services/date_utils.dart';
 
 class UserProfile {
   const UserProfile({
@@ -23,14 +24,7 @@ class UserProfile {
 
   int get age => ageAt(DateTime.now());
 
-  int ageAt(DateTime date) {
-    var years = date.year - birthDate.year;
-    final hadBirthday =
-        date.month > birthDate.month ||
-        (date.month == birthDate.month && date.day >= birthDate.day);
-    if (!hadBirthday) years--;
-    return years;
-  }
+  int ageAt(DateTime date) => ageOn(birthDate, date);
 
   UserProfile copyWith({
     String? name,

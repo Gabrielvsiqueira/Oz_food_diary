@@ -4,6 +4,7 @@ import '../models/enums/activity_level.dart';
 import '../models/enums/gender.dart';
 import '../models/enums/goal_type.dart';
 import '../models/user_profile.dart';
+import '../services/date_utils.dart';
 
 class OnboardingController extends ChangeNotifier {
   GoalType? _goal;
@@ -16,7 +17,9 @@ class OnboardingController extends ChangeNotifier {
 
   GoalType? get goal => _goal;
   Gender? get gender => _gender;
-  DateTime? get birthDate => _birthDate;
+
+  /// Idade informada; por baixo, guarda a data de nascimento estimada.
+  int? get age => _birthDate == null ? null : ageOn(_birthDate!, today());
   double? get height => _height;
   double? get weight => _weight;
   ActivityLevel? get activityLevel => _activityLevel;
@@ -34,8 +37,8 @@ class OnboardingController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setBirthDate(DateTime date) {
-    _birthDate = date;
+  void setAge(int age) {
+    _birthDate = birthDateForAge(age);
     notifyListeners();
   }
 

@@ -82,5 +82,9 @@
 			</array>
 		</dict>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>O Oz usa a câmera para ler o código de barras dos produtos e tirar fotos das suas refeições.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>O Oz usa suas fotos para você escolher a foto de uma refeição.</string>
 </dict>
 </plist>

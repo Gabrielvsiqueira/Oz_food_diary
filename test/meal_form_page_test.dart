@@ -25,7 +25,7 @@ void main() {
       MultiProvider(
         providers: [
           Provider<FoodRepository>(
-            create: (_) => const MockFoodRepository(latency: Duration.zero),
+            create: (_) => MockFoodRepository(latency: Duration.zero),
           ),
           ChangeNotifierProvider.value(value: dailyLog),
           ChangeNotifierProvider(

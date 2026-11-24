@@ -87,7 +87,10 @@ class MealItems extends Table with SyncColumns {
   TextColumn get foodId => text().nullable()();
   IntColumn get position => integer()();
   TextColumn get foodName => text()();
-  TextColumn get foodEmoji => text()();
+
+  /// Sem uso: os alimentos não têm mais emoji. A coluna fica (vazia) até a
+  /// próxima migração do Supabase, porque o servidor ainda a exige.
+  TextColumn get foodEmoji => text().clientDefault(() => '')();
   RealColumn get kcal100g => real()();
   RealColumn get carbs100g => real()();
   RealColumn get protein100g => real()();
@@ -110,7 +113,6 @@ class Foods extends Table {
 
   /// Nome minúsculo e sem acentos, usado na busca.
   TextColumn get searchName => text()();
-  TextColumn get emoji => text()();
   RealColumn get kcal100g => real()();
   RealColumn get carbs100g => real()();
   RealColumn get protein100g => real()();
@@ -142,4 +144,30 @@ class SyncState extends Table {
 
   @override
   Set<Column> get primaryKey => {entity};
+}
+
+/// Foto de uma refeição. Só existe no aparelho: não sincroniza e é apagada
+/// no logout. Guarda o nome do arquivo, não o caminho, porque a pasta do app
+/// muda entre instalações no iOS.
+@DataClassName('MealPhotoRow')
+class MealPhotos extends Table {
+  TextColumn get mealId => text().references(Meals, #id)();
+  TextColumn get fileName => text()();
+
+  @override
+  Set<Column> get primaryKey => {mealId};
+}
+
+/// Horário de cada lembrete de refeição. Só existe no aparelho: cada
+/// aparelho tem a sua configuração, e o logout volta ao padrão.
+@DataClassName('ReminderSettingRow')
+class ReminderSettings extends Table {
+  TextColumn get mealType => textEnum<MealType>()();
+  BoolColumn get enabled => boolean()();
+
+  /// Minutos desde a meia-noite (ex.: 12h30 = 750).
+  IntColumn get minuteOfDay => integer()();
+
+  @override
+  Set<Column> get primaryKey => {mealType};
 }

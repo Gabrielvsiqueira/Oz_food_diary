@@ -5,6 +5,7 @@ import '../database/date_only_converter.dart';
 import '../database/ids.dart';
 import '../models/nutrition_goal.dart';
 import '../models/user_profile.dart';
+import '../models/weight_entry.dart';
 import '../services/date_utils.dart';
 import 'profile_repository.dart';
 
@@ -61,7 +62,7 @@ class DriftProfileRepository implements ProfileRepository {
             updatedAt: now,
           ),
         );
-    await _saveWeight(userId, profile.weight);
+    await _saveWeight(userId, today(), profile.weight);
     await _saveGoal(userId, goal);
   });
 
@@ -81,14 +82,29 @@ class DriftProfileRepository implements ProfileRepository {
       ),
     );
     if ((await _latestWeight())?.weightKg != profile.weight) {
-      await _saveWeight(row.id, profile.weight);
+      await _saveWeight(row.id, today(), profile.weight);
     }
   });
+
+  @override
+  Future<void> saveWeight(DateTime day, double weightKg) => _db.transaction(
+    () async {
+      await _saveWeight((await _requireProfile()).id, dateOnly(day), weightKg);
+    },
+  );
 
   @override
   Future<void> saveGoal(NutritionGoal goal) => _db.transaction(() async {
     await _saveGoal((await _requireProfile()).id, goal);
   });
+
+  @override
+  Stream<List<WeightEntry>> watchWeightHistory() =>
+      (_db.select(_db.weightEntries)
+            ..where((w) => w.deletedAt.isNull())
+            ..orderBy([(w) => OrderingTerm.asc(w.measuredOn)]))
+          .map((w) => WeightEntry(date: w.measuredOn, weightKg: w.weightKg))
+          .watch();
 
   Future<ProfileRow?> _profileRow() =>
       (_db.select(_db.profiles)
@@ -126,9 +142,8 @@ class DriftProfileRepository implements ProfileRepository {
     return await latest(untilToday: true) ?? await latest(untilToday: false);
   }
 
-  Future<void> _saveWeight(String userId, double weightKg) {
+  Future<void> _saveWeight(String userId, DateTime day, double weightKg) {
     final now = DateTime.now().toUtc();
-    final day = today();
     return _db
         .into(_db.weightEntries)
         .insert(

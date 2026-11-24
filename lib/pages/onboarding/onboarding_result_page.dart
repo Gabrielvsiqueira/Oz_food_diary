@@ -6,6 +6,7 @@ import '../../configs/strings/string_extensions.dart';
 import '../../configs/routes/app_routes.dart';
 import '../../configs/theme/app_colors.dart';
 import '../../controllers/profile_controller.dart';
+import '../../controllers/reminder_controller.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/charts/macro_rainbow_chart.dart';
 import '../../widgets/charts/macro_summary_row.dart';
@@ -134,9 +135,15 @@ class OnboardingResultPage extends StatelessWidget {
               padding: const EdgeInsets.all(AppConstants.spacingXl),
               child: PrimaryButton(
                 label: AppStrings.onboardingResultStart,
-                onPressed: () => Navigator.of(
-                  context,
-                ).pushNamedAndRemoveUntil(AppRoutes.main, (_) => false),
+                onPressed: () async {
+                  // Fim do onboarding: momento de pedir a permissão dos
+                  // lembretes (Android 13+ e iOS), uma vez só.
+                  await context.read<ReminderController>().requestPermission();
+                  if (!context.mounted) return;
+                  await Navigator.of(
+                    context,
+                  ).pushNamedAndRemoveUntil(AppRoutes.main, (_) => false);
+                },
               ),
             ),
           ],

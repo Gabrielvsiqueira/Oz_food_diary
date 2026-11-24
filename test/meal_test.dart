@@ -8,6 +8,7 @@ import 'package:oz_contador_de_calorias/models/food_portion.dart';
 import 'package:oz_contador_de_calorias/models/meal.dart';
 import 'package:oz_contador_de_calorias/models/meal_item.dart';
 import 'package:oz_contador_de_calorias/repositories/mock_meal_repository.dart';
+import 'package:oz_contador_de_calorias/services/date_utils.dart';
 import 'package:oz_contador_de_calorias/services/validators.dart';
 
 void main() {
@@ -122,6 +123,26 @@ void main() {
       expect(dailyLog.selectedLog.totalCalories, 128);
     });
 
+    test('addMeal registra no dia aberto na Home, sem trocar o dia', () async {
+      dailyLog.goToPreviousDay();
+      final yesterday = dailyLog.selectedDate;
+
+      final added = await controller.addMeal(
+        type: MealType.dinner,
+        items: const [
+          MealItem(food: rice, portion: FoodPortion.gram, quantity: 100),
+        ],
+      );
+      await pumpEventQueue();
+
+      expect(isSameDay(added.createdAt, yesterday), isTrue);
+      expect(dailyLog.selectedDate, yesterday);
+      expect(dailyLog.selectedLog.meals.single.id, added.id);
+      dailyLog.selectDate(today());
+      await pumpEventQueue();
+      expect(dailyLog.selectedLog.meals, isEmpty);
+    });
+
     test('updateMeal substitui os itens da refeição', () async {
       final added = await controller.addMeal(
         type: MealType.lunch,
@@ -152,6 +173,67 @@ void main() {
       await controller.deleteMeal(added);
       await pumpEventQueue();
       expect(dailyLog.selectedLog.meals, isEmpty);
+    });
+  });
+
+  group('virada do dia', () {
+    // O relógio do teste: segunda-feira, depois terça.
+    final monday = DateTime(2026, 10, 26);
+    final tuesday = DateTime(2026, 10, 27);
+    late DateTime clock;
+    late MockMealRepository repository;
+    late DailyLogController dailyLog;
+    late MealController controller;
+
+    setUp(() {
+      clock = monday;
+      repository = MockMealRepository();
+      dailyLog = DailyLogController(repository, today: () => clock);
+      controller = MealController(repository, dailyLog);
+    });
+
+    tearDown(() => dailyLog.dispose());
+
+    Future<Meal> addLunch() => controller.addMeal(
+      type: MealType.lunch,
+      items: const [
+        MealItem(food: rice, portion: FoodPortion.gram, quantity: 100),
+      ],
+    );
+
+    test('com a Home em "hoje", a refeição vai para o novo dia', () async {
+      clock = tuesday;
+
+      final added = await addLunch();
+
+      expect(isSameDay(added.createdAt, tuesday), isTrue);
+      expect(dailyLog.selectedDate, tuesday, reason: 'a Home acompanha');
+    });
+
+    test('voltar ao app num dia novo leva a Home para hoje', () {
+      var notified = 0;
+      dailyLog.addListener(() => notified++);
+      clock = tuesday;
+
+      dailyLog.followToday();
+
+      expect(dailyLog.selectedDate, tuesday);
+      expect(dailyLog.isTodaySelected, isTrue);
+      expect(notified, 1);
+      dailyLog.followToday();
+      expect(notified, 1, reason: 'já está em hoje');
+    });
+
+    test('um dia passado escolhido de propósito não muda', () async {
+      dailyLog.goToPreviousDay();
+      final sunday = dailyLog.selectedDate;
+      clock = tuesday;
+
+      dailyLog.followToday();
+      final added = await addLunch();
+
+      expect(dailyLog.selectedDate, sunday);
+      expect(isSameDay(added.createdAt, sunday), isTrue);
     });
   });
 }

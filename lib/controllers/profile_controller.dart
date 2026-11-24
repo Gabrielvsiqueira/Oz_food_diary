@@ -42,8 +42,11 @@ class ProfileController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Peso, altura e idade entram na fórmula das metas.
   bool requiresRecalculation(UserProfile updated) =>
-      updated.weight != _profile.weight || updated.height != _profile.height;
+      updated.weight != _profile.weight ||
+      updated.height != _profile.height ||
+      updated.age != _profile.age;
 
   Future<void> updateProfile(
     UserProfile updated, {
@@ -53,6 +56,23 @@ class ProfileController extends ChangeNotifier {
     _profile = updated;
     if (recalculateGoal) {
       _goal = _calculator.calculateGoal(updated);
+      await _repository.saveGoal(_goal);
+    }
+    notifyListeners();
+  }
+
+  /// Registra o peso de [day]. O peso atual passa a ser o da medição mais
+  /// recente; com [recalculateGoal], as metas acompanham esse peso.
+  Future<void> logWeight(
+    DateTime day,
+    double weightKg, {
+    bool recalculateGoal = false,
+  }) async {
+    await _repository.saveWeight(day, weightKg);
+    final data = await _repository.load();
+    if (data != null) _profile = data.profile;
+    if (recalculateGoal) {
+      _goal = _calculator.calculateGoal(_profile);
       await _repository.saveGoal(_goal);
     }
     notifyListeners();
