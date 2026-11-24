@@ -47,7 +47,9 @@ registrar, editar e excluir refeições, acompanhando o progresso do dia.
 - **Refeições**: cadastro, edição e exclusão (com diálogo de confirmação).
   O usuário busca cada alimento e informa só a quantidade (em gramas ou em
   medida caseira, como fatia ou colher); calorias e macros vêm da base de
-  alimentos e são somados automaticamente.
+  alimentos e são somados automaticamente. A base tem 1.566 alimentos das
+  tabelas do IBGE (POF 2008-2009), incluindo pratos prontos, quase todos com
+  medidas caseiras.
 - **Código de barras**: na busca de alimentos, o botão de leitura abre a
   câmera (ou permite digitar o código). O produto vem da API da Open Food
   Facts e fica salvo no aparelho; se faltar algum dado, o app abre um
@@ -135,7 +137,7 @@ flutter doctor
 | Dependências           | `pubspec.yaml`                                   | `provider`, `intl`, `uuid`, `drift`, `supabase_flutter`, `google_sign_in`, `flutter_secure_storage` |
 | Backend                | `supabase/migrations/`, `config/dev.json`        | Schema, RLS e exclusão de conta; chaves fora do git (modelo em `config/dev.example.json`) |
 | Banco local            | `lib/database/`                                  | Tabelas do drift; após alterá-las, rode `dart run build_runner build`            |
-| Catálogo de alimentos  | `assets/data/foods.json`                         | TACO 4ª ed. + medidas caseiras do IBGE; gerado por `tool/food_catalog/build_catalog.py` |
+| Catálogo de alimentos  | `assets/data/foods.json`                         | Tabelas de composição e de medidas caseiras do IBGE (POF 2008-2009); gerado por `tool/food_catalog/build_catalog.py` |
 | Textos                 | `lib/configs/strings/app_strings.dart`           | Todos os textos da interface, em português                                       |
 | Tema e cores           | `lib/configs/theme/`                             | Apenas tema escuro                                                               |
 | Constantes de nutrição | `lib/configs/constants/nutrition_constants.dart` | Fatores de atividade, kcal por grama de cada macro, limites de altura/peso/idade |
@@ -322,7 +324,10 @@ mantendo as regras de validação separadas dos textos da interface.
   para manter o mesmo peso.
 - **Busca de alimentos** ignora acentos e maiúsculas, espera o usuário parar
   de digitar antes de buscar e mostra estados de carregando, erro (com
-  "Tentar novamente") e nenhum resultado.
+  "Tentar novamente") e nenhum resultado. Os alimentos mais registrados pelo
+  usuário vêm primeiro, depois os que começam pela palavra buscada; preparos
+  ("ovo cozido") e nomes regionais ("pão francês") também encontram o
+  alimento.
 - **Dados da Open Food Facts**: números em texto (`"450,5"`) são aceitos,
   negativos são tratados como ausentes, energia só em kJ é convertida para
   kcal e a marca é somada ao nome quando não aparece nele.

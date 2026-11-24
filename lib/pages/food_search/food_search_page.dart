@@ -13,9 +13,9 @@ import '../../models/product_lookup_failure.dart';
 import '../../repositories/food_repository.dart';
 import '../../services/barcode_lookup_service.dart';
 import '../../widgets/buttons/primary_button.dart';
+import '../../widgets/charts/macro_split_bar.dart';
 import '../../widgets/dialogs/confirm_dialog.dart';
 import '../../widgets/dialogs/progress_dialog.dart';
-import '../../widgets/layout/emoji_box.dart';
 import '../../widgets/sheets/food_quantity_sheet.dart';
 
 /// Busca um alimento e pede a quantidade. Fecha retornando o `MealItem`.
@@ -188,18 +188,26 @@ class _FoodTile extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(
         horizontal: AppConstants.spacingLg,
       ),
-      leading: EmojiBox(emoji: food.emoji),
       title: Text(food.name),
-      subtitle: Text(
-        AppStrings.foodPer100g(formatNumber(food.kcalPer100g)),
-        style: const TextStyle(color: AppColors.onSurfaceSecondary),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            AppStrings.foodPer100g(formatNumber(food.kcalPer100g)),
+            style: const TextStyle(color: AppColors.onSurfaceSecondary),
+          ),
+          MacroSplitBar(
+            food: food,
+            margin: const EdgeInsets.only(top: AppConstants.spacingXs),
+          ),
+        ],
       ),
       trailing: const Icon(Icons.add_rounded, color: AppColors.primary),
     );
   }
 }
 
-/// A TACO e o IBGE permitem reproduzir os dados desde que citada a fonte.
+/// O IBGE permite reproduzir os dados desde que citada a fonte.
 class _SourceCredit extends StatelessWidget {
   const _SourceCredit();
 

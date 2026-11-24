@@ -57,6 +57,8 @@ abstract final class AppStrings {
 
   static const fat = 'Gorduras';
 
+  static const alcohol = 'Álcool';
+
   static const kcal = 'Kcal';
 
   static const unitKcal = 'kcal';
@@ -154,8 +156,8 @@ abstract final class AppStrings {
       'Nenhum alimento encontrado para "$query"';
   static const foodSearchError = 'Não foi possível carregar os alimentos';
   static const foodSourceCredit =
-      'Fontes: Tabela Brasileira de Composição de Alimentos (TACO), 4ª ed., '
-      'NEPA/UNICAMP, 2011; medidas caseiras: IBGE, POF 2008-2009; '
+      'Fontes: IBGE, POF 2008-2009 — Tabelas de Composição Nutricional e '
+      'Tabela de Medidas Referidas para os Alimentos Consumidos no Brasil; '
       'produtos industrializados: Open Food Facts (ODbL).';
   static String foodPer100g(String kcal) => '$kcal kcal a cada 100 g';
   static const foodQuantityLabel = 'Quantidade';
@@ -208,10 +210,42 @@ abstract final class AppStrings {
       count == 1 ? 'colher de sopa' : 'colheres de sopa';
   static String portionTeaspoon(num count) =>
       count == 1 ? 'colher de chá' : 'colheres de chá';
+  static String portionDessertSpoon(num count) =>
+      count == 1 ? 'colher de sobremesa' : 'colheres de sobremesa';
+  static String portionKnifeTip(num count) =>
+      count == 1 ? 'ponta de faca' : 'pontas de faca';
   static String portionCup(num count) => count == 1 ? 'xícara' : 'xícaras';
+  static String portionCoffeeCup(num count) =>
+      count == 1 ? 'xícara de café' : 'xícaras de café';
   static String portionLadle(num count) => count == 1 ? 'concha' : 'conchas';
   static String portionServingSpoon(num count) =>
       count == 1 ? 'colher de servir' : 'colheres de servir';
+  static String portionSkimmer(num count) =>
+      count == 1 ? 'escumadeira' : 'escumadeiras';
+  static String portionTongs(num count) => count == 1 ? 'pegador' : 'pegadores';
+  static String portionSmallUnit(num count) =>
+      count == 1 ? 'unidade pequena' : 'unidades pequenas';
+  static String portionPiece(num count) => count == 1 ? 'pedaço' : 'pedaços';
+  static String portionRound(num count) => count == 1 ? 'rodela' : 'rodelas';
+  static String portionSteak(num count) => count == 1 ? 'bife' : 'bifes';
+  static String portionFillet(num count) => count == 1 ? 'filé' : 'filés';
+  static String portionFishSteak(num count) => count == 1 ? 'posta' : 'postas';
+  static String portionBreast(num count) => count == 1 ? 'peito' : 'peitos';
+  static String portionDrumstick(num count) => count == 1 ? 'coxa' : 'coxas';
+  static String portionThigh(num count) =>
+      count == 1 ? 'sobrecoxa' : 'sobrecoxas';
+  static String portionWing(num count) => count == 1 ? 'asa' : 'asas';
+  static String portionGlass(num count) => count == 1 ? 'copo' : 'copos';
+  static String portionAmericanGlass(num count) =>
+      count == 1 ? 'copo americano' : 'copos americanos';
+  static String portionWineGlass(num count) => count == 1 ? 'taça' : 'taças';
+  static String portionCan(num count) => count == 1 ? 'lata' : 'latas';
+  static String portionDose(num count) => count == 1 ? 'dose' : 'doses';
+  static String portionBowl(num count) => count == 1 ? 'tigela' : 'tigelas';
+  static String portionPot(num count) => count == 1 ? 'pote' : 'potes';
+  static String portionPacket(num count) => count == 1 ? 'pacote' : 'pacotes';
+  static String portionBar(num count) => count == 1 ? 'barra' : 'barras';
+  static String portionLeaf(num count) => count == 1 ? 'folha' : 'folhas';
   static String portionServing(num count) => count == 1 ? 'porção' : 'porções';
 
   static const mealDeleteTitle = 'Excluir refeição?';

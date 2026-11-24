@@ -15,9 +15,9 @@ import '../../models/meal_item.dart';
 import '../../services/photo_picker.dart';
 import '../../services/validators.dart';
 import '../../widgets/buttons/form_actions_bar.dart';
+import '../../widgets/charts/macro_split_bar.dart';
 import '../../widgets/charts/nutrients_summary.dart';
 import '../../widgets/dialogs/confirm_dialog.dart';
-import '../../widgets/layout/emoji_box.dart';
 import '../../widgets/sheets/food_quantity_sheet.dart';
 
 /// Formulário de refeição: cria quando [meal] é nulo, edita caso contrário.
@@ -309,12 +309,20 @@ class _MealItemTile extends StatelessWidget {
     return ListTile(
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
-      leading: EmojiBox(emoji: item.food.emoji),
       title: Text(item.food.name),
-      subtitle: Text(
-        '${item.quantityLabel} · '
-        '${formatNumber(item.calories)} ${AppStrings.unitKcal}',
-        style: const TextStyle(color: AppColors.onSurfaceSecondary),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            '${item.quantityLabel} · '
+            '${formatNumber(item.calories)} ${AppStrings.unitKcal}',
+            style: const TextStyle(color: AppColors.onSurfaceSecondary),
+          ),
+          MacroSplitBar(
+            food: item.food,
+            margin: const EdgeInsets.only(top: AppConstants.spacingXs),
+          ),
+        ],
       ),
       trailing: IconButton(
         tooltip: AppStrings.mealRemoveFood,

@@ -15,8 +15,6 @@ class ProductInfo {
     this.servingGrams,
   });
 
-  static const emoji = '🛒';
-
   final String barcode;
   final String? name;
   final double? kcalPer100g;
@@ -46,7 +44,6 @@ class ProductInfo {
   Food toFood({required String id}) => Food(
     id: id,
     name: name!.trim(),
-    emoji: emoji,
     kcalPer100g: kcalPer100g!,
     carbsPer100g: carbsPer100g!,
     proteinPer100g: proteinPer100g!,

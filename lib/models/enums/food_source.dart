@@ -1,1 +1,1 @@
-enum FoodSource { taco, off, custom }
+enum FoodSource { ibge, off, custom }

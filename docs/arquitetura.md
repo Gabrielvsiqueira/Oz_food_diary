@@ -82,7 +82,7 @@ controllers não sabem se o dado veio do disco ou da rede.
 | IDs                             | **UUID gerado no app**                       | Registro criado offline já tem ID definitivo; reenvios caem na mesma linha                                       |
 | Idempotência                    | **PK + constraints únicas + upsert**         | Reenvio da fila nunca duplica; `UNIQUE` em chaves naturais cobre duplicatas com IDs diferentes                   |
 | Exclusão                        | **Soft delete** (`deleted_at`)               | A exclusão precisa chegar aos outros aparelhos                                                                   |
-| Catálogo de alimentos           | **TACO + medidas do IBGE, embarcado no app** | 592 alimentos, ~180 KB; busca funciona offline. Ver [Catálogo de alimentos](#catálogo-de-alimentos)              |
+| Catálogo de alimentos           | **Tabelas do IBGE (POF 2008-2009), embarcadas no app** | 1.566 alimentos, ~580 KB; busca funciona offline. Ver [Catálogo de alimentos](#catálogo-de-alimentos)              |
 | Enums no Postgres               | **`text` + `CHECK`**                         | Mais fácil acrescentar valores que `CREATE TYPE ... AS ENUM`                                                     |
 | Leitura nas regras de acesso    | **Função `can_read_user(target)`**           | Hoje só compara com `auth.uid()`; na [plataforma para nutricionistas](#plataforma-para-nutricionistas) basta trocar a função, sem reescrever as policies |
 
@@ -157,11 +157,11 @@ meals (
 
 meal_items (
   meal_id         uuid NOT NULL REFERENCES meals ON DELETE CASCADE,
-  food_id         text NULL,   -- sem FK: o catálogo TACO vive no app
+  food_id         text NULL,   -- sem FK: o catálogo vive no app
   position        int  NOT NULL,
   -- cópia do alimento: correções na base não alteram o histórico
   food_name       text    NOT NULL,
-  food_emoji      text    NOT NULL,
+  food_emoji      text    NOT NULL,   -- sem uso desde a versão 5 do app (vazio)
   kcal_100g       numeric NOT NULL,
   carbs_100g      numeric NOT NULL,
   protein_100g    numeric NOT NULL,
@@ -173,13 +173,12 @@ meal_items (
 
 -- Catálogo: público (owner_id null) ou criado pelo usuário
 foods (
-  id              text PK,            -- 'taco-…' no catálogo; uuid nos custom
-  source          text NOT NULL CHECK (source IN ('taco','off','custom')),
-  source_ref      text NULL,          -- id na TACO ou código na OFF
+  id              text PK,            -- 'ibge-…' no catálogo; uuid nos custom
+  source          text NOT NULL CHECK (source IN ('ibge','off','custom')),
+  source_ref      text NULL,          -- código no IBGE ou na OFF
   barcode         text NULL UNIQUE,
   owner_id        uuid NULL REFERENCES auth.users,
   name            text NOT NULL,
-  emoji           text NOT NULL,      -- TACO não tem: mapeado pela categoria
   kcal_100g       numeric NOT NULL,
   carbs_100g      numeric NOT NULL,
   protein_100g    numeric NOT NULL,
@@ -238,13 +237,13 @@ As mesmas tabelas (`lib/database/tables.dart`), com as diferenças:
 | `server_updated_at`  | Guardado como veio do servidor (não é gerado localmente)                                    |
 | Datas sem horário    | Texto `AAAA-MM-DD` (`DateOnlyConverter`), imune a fuso; ordena corretamente como texto     |
 | Timestamps           | Texto ISO-8601 (`store_date_time_values_as_text`), com milissegundos                        |
-| `foods.search_name`  | Nome minúsculo e sem acentos; a busca usa `LIKE '%termo%'` para cada palavra                |
+| `foods.search_name`  | Nome e palavras-chave, minúsculos e sem acentos; a busca usa `LIKE '%termo%'` para cada palavra |
 | `sync_state`         | Tabela de uma linha com o último `server_updated_at` recebido (etapa 3)                     |
 | `meal_photos`        | Foto de cada refeição (nome do arquivo); **só local**, não sincroniza                      |
 | `reminder_settings`  | Horário e liga/desliga de cada lembrete; **só local**, não sincroniza                       |
-| Seed                 | Catálogo em `assets/data/foods.json`, inserido quando o banco é criado                      |
+| Seed                 | Catálogo em `assets/data/foods.json`, inserido quando o banco é criado e na migração para a versão 5 |
 
-> **Busca:** com algumas centenas de alimentos, `LIKE` numa coluna já
+> **Busca:** com cerca de 1.500 alimentos, `LIKE` numa coluna já
 > normalizada é rápido e mantém o comportamento atual (encontra "rroz" em
 > "Arroz"). FTS5 só busca por início de palavra; fica como opção se o
 > catálogo crescer muito.
@@ -253,25 +252,58 @@ As mesmas tabelas (`lib/database/tables.dart`), com as diferenças:
 
 | Fonte | Uso | Licença |
 | --- | --- | --- |
-| **TACO**, 4ª ed. rev. e ampl., NEPA/UNICAMP, 2011 | Nutrientes dos 597 alimentos (kcal, carboidratos, proteínas, gorduras por 100 g) | "É permitida a reprodução total ou parcial do material, desde que seja citada a fonte" (ficha catalográfica) |
-| **IBGE**, POF 2008-2009: *Tabela de Medidas Referidas para os Alimentos Consumidos no Brasil*, 2011 | Medidas caseiras (concha, colher de servir, fatia, unidade…) de 119 alimentos comuns | Publicação pública do IBGE, citando a fonte |
+| **IBGE**, POF 2008-2009: *Tabelas de Composição Nutricional dos Alimentos Consumidos no Brasil*, 2011 (Tabela 1) | Energia, proteína, gordura e carboidrato por 100 g de 1.121 alimentos, em cada preparo (cru, cozido, frito, ao molho…) | Publicação pública do IBGE, citando a fonte |
+| **IBGE**, POF 2008-2009: *Tabela de Medidas Referidas para os Alimentos Consumidos no Brasil*, 2011 | Medidas caseiras (unidade, fatia, concha, copo…) em gramas e a medida padrão de cada alimento | Publicação pública do IBGE, citando a fonte |
+| ~~TACO~~ 4ª ed. (NEPA/UNICAMP) | **Substituída** pelo IBGE na versão 5 do banco local | Reprodução permitida citando a fonte |
 | ~~TBCA~~ (USP/FoRC) | **Não usada** | O site proíbe reprodução e alteração do material, e uso comercial exige autorização dos coordenadores |
 
-- O crédito das fontes aparece no fim da lista da busca de alimentos.
+- **Por que o IBGE no lugar da TACO:** a TACO tem 592 alimentos, quase todos
+  ingredientes (228 crus) e só 119 com medida caseira; faltavam pratos e
+  produtos comuns (pizza, pão de queijo, sushi, granola, iogurte natural,
+  pasta de amendoim). A tabela do IBGE foi feita a partir do que os
+  brasileiros dizem comer, usa principalmente os valores da própria TACO e
+  traz 1.566 alimentos no Oz, 1.545 com medidas caseiras.
 - `tool/food_catalog/build_catalog.py` gera `assets/data/foods.json` a partir
-  da planilha oficial da TACO (`taco_4ed_2011.xlsx`) e das medidas curadas em
-  `household_portions.json`. Cada medida guarda a descrição de referência do
-  IBGE usada.
-- **Fora do catálogo:** os 4 alimentos marcados pela TACO como "em
-  reavaliação" (`*`), incluindo leite de vaca integral e desnatado UHT, e o
-  item 540, cujo nome está truncado na planilha oficial. Leite em caixa entra
-  pela leitura de código de barras (Open Food Facts) ou como alimento
-  personalizado.
-- `Tr` (traço) e `NA` (não se aplica) viram zero.
-- As medidas caseiras não foram importadas em lote: no PDF do IBGE os gramas
-  aparecem grudados no código da fonte (ex.: `1401` = 140 g, fonte 1), e
-  muitos alimentos do IBGE não batem 1:1 com a TACO. Por isso a curadoria é
-  manual e conferida item a item.
+  das planilhas oficiais (`ibge_composicao_tab01.zip` e
+  `ibge_medidas_bd.zip`, baixadas do FTP do IBGE sem alteração). Como estão
+  em `.xls`, o script precisa do pacote `xlrd`.
+- **Preparos:** o IBGE só muda os valores quando o preparo muda a composição
+  (fritura, molho, sopa). Os preparos com os mesmos valores do preparo base
+  viram **um alimento só** ("Ovo de galinha"), e os nomes deles entram como
+  palavras de busca (`keywords`): "ovo cozido" encontra "Ovo de galinha". Os
+  outros ganham nome próprio, com o preparo no gênero do alimento ("Banana,
+  frita", "Ovo de galinha, frito").
+- **Medidas caseiras:** a medida padrão do IBGE é a sugerida (fatia para
+  pizza, concha para feijão, unidade para pão), seguida de até quatro
+  outras. Pratos, garrafas e medidas vagas (punhado, garfada) ficam de fora,
+  e as colheres têm limite de gramas, porque algumas medidas do IBGE foram
+  estimadas a partir de outras e saíram absurdas (colher de chá de 110 g).
+- **Nomes regionais:** uma lista curta de apelidos entra nas palavras de
+  busca ("pão francês" encontra "Pão de sal").
+- **Fora do catálogo:** os 9 alimentos sem calorias informadas (adoçantes e
+  refrigerantes diet/light). Nos macros, "-" (valor ausente) vale zero, como
+  o "NA" da TACO (carboidrato da carne, gordura do açúcar).
+- **Correção:** o código 8500904 aparece como "Lasanha pronta light" na
+  tabela de composição, mas é a lasanha comum (a tabela de medidas o chama de
+  "LAZANHA", e o light é o 8508004).
+- **Migração (versão 5):** apaga os alimentos `source = 'taco'` e as medidas
+  deles e insere o catálogo do IBGE (`source = 'ibge'`, id
+  `ibge-{código}-{preparo}`). As refeições não mudam, porque cada item guarda
+  uma cópia do alimento; os produtos do código de barras ficam.
+- **Sem emoji:** a TACO e o IBGE não têm imagem dos alimentos, e adivinhar o
+  emoji pelo nome errava muito (macaxeira com maçã, carne de soja com bife).
+  No lugar, a busca, os itens da refeição e o painel de quantidade mostram
+  uma **barra de macros**: quanto das calorias vem de carboidrato, proteína
+  e gordura (4, 4 e 9 kcal por grama), calculada dos próprios valores. Nas
+  bebidas alcoólicas, as calorias que os macros não explicam (ao menos 25% e
+  10 kcal a cada 100 g) aparecem como **álcool**; sem nada para dividir
+  (café, chá, refrigerante zero), a barra não aparece. A
+  coluna `meal_items.food_emoji` fica vazia até a próxima migração do
+  Supabase, porque o servidor ainda a exige.
+- **Busca:** primeiro os alimentos que o usuário mais registrou, depois os
+  que começam pela palavra buscada ("Ovo de galinha" antes de "Ovomaltine" e
+  de "Arroz com ovo") e, por fim, os de nome mais curto.
+- O crédito das fontes aparece no fim da lista da busca de alimentos.
 
 ---
 
@@ -426,7 +458,7 @@ flowchart TD
    elas serão perdidas."* O usuário escolhe entre cancelar e **sair mesmo
    assim** (decisão: avisar e deixar sair, sem prender o usuário no app).
 4. Para a sincronização em andamento, para ela não gravar mais nada.
-5. Apaga as **tabelas do usuário** e `sync_state`. O catálogo TACO fica, pois é
+5. Apaga as **tabelas do usuário** e `sync_state`. O catálogo fica, pois é
    igual para todos.
 6. Cancela os lembretes agendados (Entrega 3).
 
@@ -442,7 +474,7 @@ flowchart TD
     Scan[Câmera lê o código<br/>ou o usuário digita] --> Local{Existe no SQLite?}
     Local -->|Sim| Show[Escolhe a quantidade — funciona offline]
     Local -->|Não| OFF[GET Open Food Facts]
-    OFF -->|sem conexão / erro| Msg[Avisa e mantém a busca da TACO]
+    OFF -->|sem conexão / erro| Msg[Avisa e mantém a busca do catálogo]
     OFF -->|completo| Save[Salva em foods no SQLite] --> Show
     OFF -->|faltam dados| Form[Formulário já preenchido]
     OFF -->|não achou| Ask{Cadastrar?}
@@ -451,7 +483,7 @@ flowchart TD
     Blank --> Save
 ```
 
-- A TACO não tem código de barras; a leitura serve para **produtos
+- O catálogo do IBGE não tem código de barras; a leitura serve para **produtos
   industrializados**.
 - **API:** `GET https://world.openfoodfacts.org/api/v2/product/{código}`,
   pública e sem chave, pedindo só os campos usados (`fields=`). Produto
@@ -475,7 +507,7 @@ flowchart TD
 - **Cache local:** o produto é gravado em `foods` (id `off-{código}` ou
   `custom-{código}`, coluna `barcode` única) e passa a aparecer na busca por
   nome. A segunda leitura do mesmo código não usa a internet. O logout não
-  apaga esses produtos, assim como o catálogo da TACO.
+  apaga esses produtos, assim como o catálogo.
 - **Sincronização:** os produtos ficam só no aparelho. As refeições continuam
   sincronizando normalmente, porque cada item guarda uma cópia do nome e dos
   nutrientes do alimento.
@@ -493,7 +525,7 @@ flowchart TD
   `BarcodeLookupService` (aparelho primeiro, depois a API, e gravação),
   `BarcodeScannerPage`, `ProductFormPage` e o fluxo na `FoodSearchPage`.
 - **Crédito:** os dados da Open Food Facts são ODbL; a fonte aparece no fim
-  da lista da busca de alimentos, junto com TACO e IBGE.
+  da lista da busca de alimentos, junto com o IBGE.
 
 ### Foto da refeição
 
@@ -695,7 +727,7 @@ duas funcionalidades seguras:
 
 | # | Etapa                                                                 | Entrega |
 | - | --------------------------------------------------------------------- | ------- |
-| 1 | drift: schema local, seed da TACO, repositórios lendo/gravando no disco ✅ | 2       |
+| 1 | drift: schema local, seed do catálogo, repositórios lendo/gravando no disco ✅ | 2       |
 | 2 | Supabase: migrations, RLS, Auth e telas de login/cadastro reais ✅    | 2       |
 | 3 | `SyncService` (push, pull, logout seguro) ✅                          | 2       |
 | 4 | Registro de peso + gráfico de evolução + histórico de metas           | 3       |

@@ -17,6 +17,7 @@ import 'package:oz_contador_de_calorias/services/date_utils.dart';
 import 'package:oz_contador_de_calorias/services/sync_service.dart';
 
 import 'support/fake_sync_remote.dart';
+import 'support/legacy_database.dart';
 
 /// Um aparelho: banco local próprio, falando com o servidor falso.
 class _Device {
@@ -266,13 +267,7 @@ void main() {
   });
 
   test('banco da versão 1 ganha a tabela do cursor', () async {
-    final executor = NativeDatabase.memory(
-      setup: (raw) {
-        raw.execute('PRAGMA user_version = 1');
-      },
-    );
-    final db = AppDatabase(executor);
-    addTearDown(db.close);
+    final db = await openLegacyDatabase(1);
 
     // Sem a migração, falharia com "no such table: sync_state".
     expect(await db.select(db.syncState).get(), isEmpty);

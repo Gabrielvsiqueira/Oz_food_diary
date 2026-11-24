@@ -130,7 +130,6 @@ class DriftMealRepository implements MealRepository {
         foodId: Value(item.food.id),
         position: position,
         foodName: item.food.name,
-        foodEmoji: item.food.emoji,
         kcal100g: item.food.kcalPer100g,
         carbs100g: item.food.carbsPer100g,
         protein100g: item.food.proteinPer100g,
@@ -228,7 +227,6 @@ class DriftMealRepository implements MealRepository {
       food: Food(
         id: row.foodId ?? row.id,
         name: row.foodName,
-        emoji: row.foodEmoji,
         kcalPer100g: row.kcal100g,
         carbsPer100g: row.carbs100g,
         proteinPer100g: row.protein100g,

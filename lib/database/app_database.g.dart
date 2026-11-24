@@ -2632,7 +2632,8 @@ class $MealItemsTable extends MealItems
     aliasedName,
     false,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    clientDefault: () => '',
   );
   static const VerificationMeta _kcal100gMeta = const VerificationMeta(
     'kcal100g',
@@ -2819,8 +2820,6 @@ class $MealItemsTable extends MealItems
         _foodEmojiMeta,
         foodEmoji.isAcceptableOrUnknown(data['food_emoji']!, _foodEmojiMeta),
       );
-    } else if (isInserting) {
-      context.missing(_foodEmojiMeta);
     }
     if (data.containsKey('kcal100g')) {
       context.handle(
@@ -2982,6 +2981,9 @@ class MealItemRow extends DataClass implements Insertable<MealItemRow> {
   final String? foodId;
   final int position;
   final String foodName;
+
+  /// Sem uso: os alimentos não têm mais emoji. A coluna fica (vazia) até a
+  /// próxima migração do Supabase, porque o servidor ainda a exige.
   final String foodEmoji;
   final double kcal100g;
   final double carbs100g;
@@ -3322,7 +3324,7 @@ class MealItemsCompanion extends UpdateCompanion<MealItemRow> {
     this.foodId = const Value.absent(),
     required int position,
     required String foodName,
-    required String foodEmoji,
+    this.foodEmoji = const Value.absent(),
     required double kcal100g,
     required double carbs100g,
     required double protein100g,
@@ -3337,7 +3339,6 @@ class MealItemsCompanion extends UpdateCompanion<MealItemRow> {
        mealId = Value(mealId),
        position = Value(position),
        foodName = Value(foodName),
-       foodEmoji = Value(foodEmoji),
        kcal100g = Value(kcal100g),
        carbs100g = Value(carbs100g),
        protein100g = Value(protein100g),
@@ -3591,15 +3592,6 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, FoodRow> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _emojiMeta = const VerificationMeta('emoji');
-  @override
-  late final GeneratedColumn<String> emoji = GeneratedColumn<String>(
-    'emoji',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
   static const VerificationMeta _kcal100gMeta = const VerificationMeta(
     'kcal100g',
   );
@@ -3652,7 +3644,6 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, FoodRow> {
     barcode,
     name,
     searchName,
-    emoji,
     kcal100g,
     carbs100g,
     protein100g,
@@ -3702,14 +3693,6 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, FoodRow> {
       );
     } else if (isInserting) {
       context.missing(_searchNameMeta);
-    }
-    if (data.containsKey('emoji')) {
-      context.handle(
-        _emojiMeta,
-        emoji.isAcceptableOrUnknown(data['emoji']!, _emojiMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_emojiMeta);
     }
     if (data.containsKey('kcal100g')) {
       context.handle(
@@ -3781,10 +3764,6 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, FoodRow> {
         DriftSqlType.string,
         data['${effectivePrefix}search_name'],
       )!,
-      emoji: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}emoji'],
-      )!,
       kcal100g: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}kcal100g'],
@@ -3822,7 +3801,6 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
 
   /// Nome minúsculo e sem acentos, usado na busca.
   final String searchName;
-  final String emoji;
   final double kcal100g;
   final double carbs100g;
   final double protein100g;
@@ -3834,7 +3812,6 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
     this.barcode,
     required this.name,
     required this.searchName,
-    required this.emoji,
     required this.kcal100g,
     required this.carbs100g,
     required this.protein100g,
@@ -3857,7 +3834,6 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
     }
     map['name'] = Variable<String>(name);
     map['search_name'] = Variable<String>(searchName);
-    map['emoji'] = Variable<String>(emoji);
     map['kcal100g'] = Variable<double>(kcal100g);
     map['carbs100g'] = Variable<double>(carbs100g);
     map['protein100g'] = Variable<double>(protein100g);
@@ -3877,7 +3853,6 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
           : Value(barcode),
       name: Value(name),
       searchName: Value(searchName),
-      emoji: Value(emoji),
       kcal100g: Value(kcal100g),
       carbs100g: Value(carbs100g),
       protein100g: Value(protein100g),
@@ -3899,7 +3874,6 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
       barcode: serializer.fromJson<String?>(json['barcode']),
       name: serializer.fromJson<String>(json['name']),
       searchName: serializer.fromJson<String>(json['searchName']),
-      emoji: serializer.fromJson<String>(json['emoji']),
       kcal100g: serializer.fromJson<double>(json['kcal100g']),
       carbs100g: serializer.fromJson<double>(json['carbs100g']),
       protein100g: serializer.fromJson<double>(json['protein100g']),
@@ -3918,7 +3892,6 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
       'barcode': serializer.toJson<String?>(barcode),
       'name': serializer.toJson<String>(name),
       'searchName': serializer.toJson<String>(searchName),
-      'emoji': serializer.toJson<String>(emoji),
       'kcal100g': serializer.toJson<double>(kcal100g),
       'carbs100g': serializer.toJson<double>(carbs100g),
       'protein100g': serializer.toJson<double>(protein100g),
@@ -3933,7 +3906,6 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
     Value<String?> barcode = const Value.absent(),
     String? name,
     String? searchName,
-    String? emoji,
     double? kcal100g,
     double? carbs100g,
     double? protein100g,
@@ -3945,7 +3917,6 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
     barcode: barcode.present ? barcode.value : this.barcode,
     name: name ?? this.name,
     searchName: searchName ?? this.searchName,
-    emoji: emoji ?? this.emoji,
     kcal100g: kcal100g ?? this.kcal100g,
     carbs100g: carbs100g ?? this.carbs100g,
     protein100g: protein100g ?? this.protein100g,
@@ -3961,7 +3932,6 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
       searchName: data.searchName.present
           ? data.searchName.value
           : this.searchName,
-      emoji: data.emoji.present ? data.emoji.value : this.emoji,
       kcal100g: data.kcal100g.present ? data.kcal100g.value : this.kcal100g,
       carbs100g: data.carbs100g.present ? data.carbs100g.value : this.carbs100g,
       protein100g: data.protein100g.present
@@ -3980,7 +3950,6 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
           ..write('barcode: $barcode, ')
           ..write('name: $name, ')
           ..write('searchName: $searchName, ')
-          ..write('emoji: $emoji, ')
           ..write('kcal100g: $kcal100g, ')
           ..write('carbs100g: $carbs100g, ')
           ..write('protein100g: $protein100g, ')
@@ -3997,7 +3966,6 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
     barcode,
     name,
     searchName,
-    emoji,
     kcal100g,
     carbs100g,
     protein100g,
@@ -4013,7 +3981,6 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
           other.barcode == this.barcode &&
           other.name == this.name &&
           other.searchName == this.searchName &&
-          other.emoji == this.emoji &&
           other.kcal100g == this.kcal100g &&
           other.carbs100g == this.carbs100g &&
           other.protein100g == this.protein100g &&
@@ -4027,7 +3994,6 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
   final Value<String?> barcode;
   final Value<String> name;
   final Value<String> searchName;
-  final Value<String> emoji;
   final Value<double> kcal100g;
   final Value<double> carbs100g;
   final Value<double> protein100g;
@@ -4040,7 +4006,6 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
     this.barcode = const Value.absent(),
     this.name = const Value.absent(),
     this.searchName = const Value.absent(),
-    this.emoji = const Value.absent(),
     this.kcal100g = const Value.absent(),
     this.carbs100g = const Value.absent(),
     this.protein100g = const Value.absent(),
@@ -4054,7 +4019,6 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
     this.barcode = const Value.absent(),
     required String name,
     required String searchName,
-    required String emoji,
     required double kcal100g,
     required double carbs100g,
     required double protein100g,
@@ -4064,7 +4028,6 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
        source = Value(source),
        name = Value(name),
        searchName = Value(searchName),
-       emoji = Value(emoji),
        kcal100g = Value(kcal100g),
        carbs100g = Value(carbs100g),
        protein100g = Value(protein100g),
@@ -4076,7 +4039,6 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
     Expression<String>? barcode,
     Expression<String>? name,
     Expression<String>? searchName,
-    Expression<String>? emoji,
     Expression<double>? kcal100g,
     Expression<double>? carbs100g,
     Expression<double>? protein100g,
@@ -4090,7 +4052,6 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
       if (barcode != null) 'barcode': barcode,
       if (name != null) 'name': name,
       if (searchName != null) 'search_name': searchName,
-      if (emoji != null) 'emoji': emoji,
       if (kcal100g != null) 'kcal100g': kcal100g,
       if (carbs100g != null) 'carbs100g': carbs100g,
       if (protein100g != null) 'protein100g': protein100g,
@@ -4106,7 +4067,6 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
     Value<String?>? barcode,
     Value<String>? name,
     Value<String>? searchName,
-    Value<String>? emoji,
     Value<double>? kcal100g,
     Value<double>? carbs100g,
     Value<double>? protein100g,
@@ -4120,7 +4080,6 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
       barcode: barcode ?? this.barcode,
       name: name ?? this.name,
       searchName: searchName ?? this.searchName,
-      emoji: emoji ?? this.emoji,
       kcal100g: kcal100g ?? this.kcal100g,
       carbs100g: carbs100g ?? this.carbs100g,
       protein100g: protein100g ?? this.protein100g,
@@ -4152,9 +4111,6 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
     if (searchName.present) {
       map['search_name'] = Variable<String>(searchName.value);
     }
-    if (emoji.present) {
-      map['emoji'] = Variable<String>(emoji.value);
-    }
     if (kcal100g.present) {
       map['kcal100g'] = Variable<double>(kcal100g.value);
     }
@@ -4182,7 +4138,6 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
           ..write('barcode: $barcode, ')
           ..write('name: $name, ')
           ..write('searchName: $searchName, ')
-          ..write('emoji: $emoji, ')
           ..write('kcal100g: $kcal100g, ')
           ..write('carbs100g: $carbs100g, ')
           ..write('protein100g: $protein100g, ')
@@ -6726,7 +6681,7 @@ typedef $$MealItemsTableCreateCompanionBuilder =
       Value<String?> foodId,
       required int position,
       required String foodName,
-      required String foodEmoji,
+      Value<String> foodEmoji,
       required double kcal100g,
       required double carbs100g,
       required double protein100g,
@@ -7191,7 +7146,7 @@ class $$MealItemsTableTableManager
                 Value<String?> foodId = const Value.absent(),
                 required int position,
                 required String foodName,
-                required String foodEmoji,
+                Value<String> foodEmoji = const Value.absent(),
                 required double kcal100g,
                 required double carbs100g,
                 required double protein100g,
@@ -7296,7 +7251,6 @@ typedef $$FoodsTableCreateCompanionBuilder =
       Value<String?> barcode,
       required String name,
       required String searchName,
-      required String emoji,
       required double kcal100g,
       required double carbs100g,
       required double protein100g,
@@ -7311,7 +7265,6 @@ typedef $$FoodsTableUpdateCompanionBuilder =
       Value<String?> barcode,
       Value<String> name,
       Value<String> searchName,
-      Value<String> emoji,
       Value<double> kcal100g,
       Value<double> carbs100g,
       Value<double> protein100g,
@@ -7378,11 +7331,6 @@ class $$FoodsTableFilterComposer extends Composer<_$AppDatabase, $FoodsTable> {
 
   ColumnFilters<String> get searchName => $composableBuilder(
     column: $table.searchName,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get emoji => $composableBuilder(
-    column: $table.emoji,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -7471,11 +7419,6 @@ class $$FoodsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get emoji => $composableBuilder(
-    column: $table.emoji,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<double> get kcal100g => $composableBuilder(
     column: $table.kcal100g,
     builder: (column) => ColumnOrderings(column),
@@ -7525,9 +7468,6 @@ class $$FoodsTableAnnotationComposer
     column: $table.searchName,
     builder: (column) => column,
   );
-
-  GeneratedColumn<String> get emoji =>
-      $composableBuilder(column: $table.emoji, builder: (column) => column);
 
   GeneratedColumn<double> get kcal100g =>
       $composableBuilder(column: $table.kcal100g, builder: (column) => column);
@@ -7603,7 +7543,6 @@ class $$FoodsTableTableManager
                 Value<String?> barcode = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String> searchName = const Value.absent(),
-                Value<String> emoji = const Value.absent(),
                 Value<double> kcal100g = const Value.absent(),
                 Value<double> carbs100g = const Value.absent(),
                 Value<double> protein100g = const Value.absent(),
@@ -7616,7 +7555,6 @@ class $$FoodsTableTableManager
                 barcode: barcode,
                 name: name,
                 searchName: searchName,
-                emoji: emoji,
                 kcal100g: kcal100g,
                 carbs100g: carbs100g,
                 protein100g: protein100g,
@@ -7631,7 +7569,6 @@ class $$FoodsTableTableManager
                 Value<String?> barcode = const Value.absent(),
                 required String name,
                 required String searchName,
-                required String emoji,
                 required double kcal100g,
                 required double carbs100g,
                 required double protein100g,
@@ -7644,7 +7581,6 @@ class $$FoodsTableTableManager
                 barcode: barcode,
                 name: name,
                 searchName: searchName,
-                emoji: emoji,
                 kcal100g: kcal100g,
                 carbs100g: carbs100g,
                 protein100g: protein100g,

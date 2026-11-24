@@ -13,11 +13,19 @@ class DriftFoodRepository implements FoodRepository {
   final AppDatabase _db;
   final int limit;
 
+  /// Ordem: os alimentos que o usuário mais registrou, depois os que
+  /// começam pela palavra buscada ("ovo de galinha" antes de "ovomaltine" e
+  /// de "arroz com ovo") e os de nome mais curto, que costumam ser os mais
+  /// genéricos.
   @override
   Future<List<Food>> search(String query) async {
     final terms = normalizeForSearch(
       query,
-    ).split(' ').where((t) => t.isNotEmpty).map(_escapeLike);
+    ).split(' ').where((t) => t.isNotEmpty).map(_escapeLike).toList();
+    final timesLogged = const CustomExpression<int>(
+      '(SELECT count(*) FROM meal_items i '
+      'WHERE i.food_id = foods.id AND i.deleted_at IS NULL)',
+    );
     final rows =
         await (_db.select(_db.foods)
               ..where(
@@ -26,7 +34,20 @@ class DriftFoodRepository implements FoodRepository {
                     f.searchName.like('%$term%', escapeChar: r'\'),
                 ]),
               )
-              ..orderBy([(f) => OrderingTerm.asc(f.searchName)])
+              ..orderBy([
+                (_) => OrderingTerm.desc(timesLogged),
+                if (terms.isNotEmpty) ...[
+                  (f) => OrderingTerm.desc(
+                    f.searchName.like('${terms.first} %', escapeChar: r'\') |
+                        f.searchName.equals(terms.first),
+                  ),
+                  (f) => OrderingTerm.desc(
+                    f.searchName.like('${terms.first}%', escapeChar: r'\'),
+                  ),
+                ],
+                (f) => OrderingTerm.asc(f.name.length),
+                (f) => OrderingTerm.asc(f.searchName),
+              ])
               ..limit(limit))
             .get();
     return _toFoods(rows);
@@ -56,8 +77,7 @@ class DriftFoodRepository implements FoodRepository {
             sourceRef: Value(source == FoodSource.off ? barcode : null),
             barcode: Value(barcode),
             name: food.name,
-            searchName: normalizeForSearch(food.name),
-            emoji: food.emoji,
+            searchName: searchNameOf(food),
             kcal100g: food.kcalPer100g,
             carbs100g: food.carbsPer100g,
             protein100g: food.proteinPer100g,
@@ -87,7 +107,6 @@ class DriftFoodRepository implements FoodRepository {
         Food(
           id: row.id,
           name: row.name,
-          emoji: row.emoji,
           kcalPer100g: row.kcal100g,
           carbsPer100g: row.carbs100g,
           proteinPer100g: row.protein100g,

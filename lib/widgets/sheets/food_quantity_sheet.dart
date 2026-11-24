@@ -9,9 +9,9 @@ import '../../models/food_portion.dart';
 import '../../models/meal_item.dart';
 import '../../services/validators.dart';
 import '../buttons/primary_button.dart';
+import '../charts/macro_split_bar.dart';
 import '../charts/nutrients_summary.dart';
 import '../inputs/app_text_field.dart';
-import '../layout/emoji_box.dart';
 
 /// Pede quantidade e medida de [food]. Com [initial], edita um item já
 /// adicionado. Retorna o [MealItem] confirmado ou `null` se fechado.
@@ -100,27 +100,17 @@ class _FoodQuantitySheetState extends State<_FoodQuantitySheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Row(
-                children: [
-                  EmojiBox(emoji: food.emoji, size: 48),
-                  const SizedBox(width: AppConstants.spacingMd),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(food.name, style: textTheme.titleMedium),
-                        Text(
-                          AppStrings.foodPer100g(
-                            formatNumber(food.kcalPer100g),
-                          ),
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: AppColors.onSurfaceSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              Text(food.name, style: textTheme.titleMedium),
+              Text(
+                AppStrings.foodPer100g(formatNumber(food.kcalPer100g)),
+                style: textTheme.bodyMedium?.copyWith(
+                  color: AppColors.onSurfaceSecondary,
+                ),
+              ),
+              MacroSplitBar(
+                food: food,
+                showLegend: true,
+                margin: const EdgeInsets.only(top: AppConstants.spacingSm),
               ),
               const SizedBox(height: AppConstants.spacingLg),
               Row(

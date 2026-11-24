@@ -17,6 +17,8 @@ import 'package:oz_contador_de_calorias/repositories/session_repository.dart';
 import 'package:oz_contador_de_calorias/services/reminder_planner.dart';
 import 'package:oz_contador_de_calorias/services/reminder_scheduler.dart';
 
+import 'support/legacy_database.dart';
+
 class _Session implements SessionRepository {
   @override
   Stream<void> get sessionRevoked => const Stream.empty();
@@ -156,12 +158,7 @@ void main() {
     });
 
     test('banco da versão 3 ganha a tabela dos lembretes', () async {
-      final old = AppDatabase(
-        NativeDatabase.memory(
-          setup: (raw) => raw.execute('PRAGMA user_version = 3'),
-        ),
-      );
-      addTearDown(old.close);
+      final old = await openLegacyDatabase(3);
       expect(await old.select(old.reminderSettings).get(), isEmpty);
     });
   });

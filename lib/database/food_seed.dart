@@ -16,7 +16,6 @@ List<Food> parseFoodSeed(String source) => [
     Food(
       id: json['id'] as String,
       name: json['name'] as String,
-      emoji: json['emoji'] as String,
       kcalPer100g: (json['kcal'] as num).toDouble(),
       carbsPer100g: (json['carbs'] as num).toDouble(),
       proteinPer100g: (json['protein'] as num).toDouble(),
@@ -28,5 +27,6 @@ List<Food> parseFoodSeed(String source) => [
             (portion['grams'] as num).toDouble(),
           ),
       ],
+      keywords: [...?(json['keywords'] as List?)?.cast<String>()],
     ),
 ];
